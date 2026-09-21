@@ -44,13 +44,8 @@ button{font:inherit;cursor:pointer}
 .evidence{margin-top:9px;background:#efe0bd;color:#312820;border:2px solid #765a39;padding:8px}.evidence h3{font-size:12px;margin:0 0 6px}.evidence-row{font-size:10px;padding:4px 0;border-bottom:1px solid #c4ab81}.evidence-row:last-child{border-bottom:0}
 .log{margin-top:10px;font-size:10px;max-height:125px;overflow:auto}.log div{padding:4px 0;border-bottom:1px solid #59463b}
 .note{text-align:center;font-size:10px;color:#c8b897;margin-top:6px}
-.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:20px;z-index:20;overflow:auto}.modal.show{display:grid}
-.modalbox{max-width:620px;width:100%;max-height:calc(100dvh - 40px);overflow:auto;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29;margin-top:7px}
-.seal-inspect-box{max-height:calc(100dvh - 28px)}
-.feedback-good{border:2px solid #496b4c;background:#dfeadf;color:#263a28;padding:9px;margin-top:8px;font-size:11px;line-height:1.5}
-.feedback-warn{border:2px solid #8a5b3c;background:#f0dfbd;color:#4a3024;padding:9px;margin-top:8px;font-size:11px;line-height:1.5}
-.ask-question{margin-top:7px!important;text-align:left!important;font-weight:bold}
-.ask-answer{padding:9px;background:#efe0bd;border:2px solid #765a39;margin-top:8px;line-height:1.5;font-size:11px}.cargoSearchTitle{font-weight:bold;color:#5a3d25;margin-bottom:5px}
+.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:20px;z-index:20}.modal.show{display:grid}
+.modalbox{max-width:620px;width:100%;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29}
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.summary-item{border:1px solid #9a815d;padding:7px;background:#ead7af;font-size:11px}.night-choice{cursor:pointer}.night-choice:hover{outline:2px solid #a57b40}
 
 /* MOBILE COLLAPSIBLE UI */
@@ -528,8 +523,6 @@ button{font:inherit;cursor:pointer}
 </main></div>
 
 <div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div>
-<div class="modal" id="sealInspectModal"><div class="modalbox seal-inspect-box"><h2>인장 확대 검사</h2><div id="sealInspectVisual"></div><div id="sealInspectText" class="compare-result"></div><button id="sealInspectCompare">이 인장을 공식 견본과 대조</button><button id="sealInspectClose" style="margin-top:7px">닫기</button></div></div>
-<div class="modal" id="cargoModal"><div class="modalbox"><h2>소지품 수색 · 검문 결과</h2><p id="cargoIntro"></p><div id="cargoSearchList" class="summary-grid"></div><div id="cargoResult" class="ask-answer"></div><button id="cargoClose">수색 결과 확인</button></div></div><div class="modal" id="askModal"><div class="modalbox"><h2>재질문 · 방문객 진술 확인</h2><p id="askIntro"></p><div id="askQuestions"></div><div id="askAnswer"></div><button id="askClose">질문 끝내기</button></div></div>
 <div class="modal" id="faceLabModal"><div class="modalbox"><h2>얼굴 특징 조합판</h2><p>기존 검문 도구와 별개로 얼굴 특징을 겹쳐 기록합니다.</p><div class="face-lab"><div class="face-preview"><div class="face-canvas"><div class="face-skin"></div><div class="face-hair" id="faceHair"></div><div class="face-eye left"></div><div class="face-eye right"></div><div class="face-nose"></div><div class="face-mouth"></div><div class="face-layer" id="faceLayers"></div></div></div><div class="face-options"><h3>머리색</h3><div class="face-option-grid" id="hairOptions"><button class="face-option" data-hair="black">검은색</button><button class="face-option" data-hair="brown">갈색</button><button class="face-option" data-hair="blond">금발</button><button class="face-option" data-hair="red">붉은색</button><button class="face-option" data-hair="gray">회색</button></div><h3 style="margin-top:12px">특징 · 복수 선택</h3><div class="face-option-grid" id="featureOptions"><button class="face-option" data-feature="leftDot">왼쪽 점</button><button class="face-option" data-feature="rightDot">오른쪽 점</button><button class="face-option" data-feature="cheekScar">볼 흉터</button><button class="face-option" data-feature="chinScar">턱 흉터</button><button class="face-option" data-feature="knifeScar">칼자국</button><button class="face-option" data-feature="bread">빵 모양 자국</button></div><div class="face-note">인장 확대·인장 수첩·외모 대조·소지품 수색·재질문 등 기존 FM 검문은 그대로 유지됩니다.</div><button id="faceApplyBtn" class="face-lab-btn">관찰 기록에 추가</button><button id="faceCloseBtn" class="face-lab-btn">닫기</button></div></div></div></div><div class="modal" id="sealModal"><div class="modalbox">
   <h2>영주의 검문 수첩 · 각지의 인장</h2>
   <p id="sealBookIntro">통행증의 <b>발급 도시</b>를 먼저 확인한 뒤 해당 도시의 공식 인장 견본과 현재 문서를 눈으로 대조하십시오.</p>
@@ -791,140 +784,109 @@ function addEvidence(text,minutes=10){
 function inspect(tool){
   const v=s.case;
   let clue="";
-  if(tool==="seal"){ openSealInspect(v.documentSeal); return; }
+  if(tool==="seal"){
+    const q=SEALS[v.documentSeal];
+    clue="인장 확대: "+q.edge+" / 중심 문양은 "+q.core+" / 식별점은 "+q.mark+"로 기록됩니다. 공식 견본과 비교하십시오.";
+  }
   if(tool==="sealbook"){openSealBook(v.from);return;}
+  // IMAGE CHECK: 외모 대조 / 용도: 방문객 캐릭터 이미지와 수배전단 이미지를 비교하는 검사.
   if(tool==="appearance"){
-    const p=(v.type==="wanted"&&wanted.active)
-      ?"수배전단 대조: 전단의 "+heightWord(wanted.height)+" · "+wanted.eye+"빛 눈 · "+wanted.feature+"와 현재 방문객을 비교했습니다."
-      :"외모 관찰: "+heightDetail(v.height)+" "+v.eyes+"빛 눈 · "+v.feature+"가 보입니다.";
-    addEvidence(p,5);
-    showInspectFeedback("외모 대조","현재 방문객의 얼굴·키·눈·특징을 기록에 남겼습니다. 수배전단이 있다면 같은 항목을 비교해 수배 여부를 추론할 수 있습니다.",v.type==="wanted");
-    return;
+    const p=(v.type==="wanted"&&wanted.active)?"수배전단 대조 기록: 전단에는 "+heightWord(wanted.height)+", "+wanted.eye+"빛 눈, "+wanted.feature+"가 적혀 있습니다. 현재 방문객은 "+heightWord(v.height)+", "+v.eyes+"빛 눈, "+v.feature+"로 관찰됩니다.":("외모 관찰: "+heightDetail(v.height)+" "+v.eyes+"빛 눈, "+v.feature+"가 보입니다.");
+    clue=p;
   }
-  if(tool==="cargo"){
-    openCargoSearch();
-    return;
-  }
-  if(tool==="ask"){openAskModal();return;}
-  if(tool==="medical") clue=v.health==="정상"?"신체 검사: 체온과 호흡에서 특이사항이 보이지 않습니다.":"신체 검사: "+v.health+" · "+v.symptoms+"이 확인됩니다.";
-  if(tool==="holy") clue=v.holyReaction||v.magicReaction||"성수 검사: 눈에 띄는 반응이 없습니다.";
-  if(clue){addEvidence(clue,10);showInspectFeedback(tool==="medical"?"신체 검사":"성수 반응",clue,/비정상|39도|기침|반점|검게|금속성/.test(clue));}
+  if(tool==="cargo") clue=v.cargoDeclared===false?"수색 결과: 신고 목록에 없는 이중 구조와 비정상적인 무게 중심이 확인됩니다.":"수색 결과: 신고 화물과 실제 화물의 형태·무게가 대체로 일치합니다.";
+  if(tool==="ask") clue="재질문 답변: "+v.second;
+  if(tool==="medical") clue=v.health==="정상"?"검사 결과: 체온과 호흡에서 특이사항이 보이지 않습니다.":"검사 결과: "+v.health+" · "+v.symptoms+"이 확인됩니다.";
+  if(tool==="holy") clue=v.holyReaction||v.magicReaction||"성수 검사: 눈에 띄는 반응이 없습니다.";if(tool==="bribe") clue="방문객이 주변을 살피며 작은 주머니를 내밉니다. 서로 피곤하게 하지 맙시다.";
+  addEvidence(clue);
 }
-function showInspectFeedback(title,text,bad){
-  $("vstatus").textContent=title+" 결과가 기록되었습니다.";
-  toast(title+" 완료 · 검문 기록에 추가");
-  const old=document.querySelector(".inspect-feedback"); if(old)old.remove();
-  const box=document.createElement("div");
-  box.className="inspect-feedback "+(bad?"feedback-warn":"feedback-good");
-  box.innerHTML="<b>"+esc(title)+"</b><br>"+esc(text);
-  $("evidenceList").prepend(box);
-}
-function openCargoSearch(){
-  const v=s.case;
-  if(!v)return;
-  const items=[];
-  items.push("신고 화물: "+v.cargo);
-  if(v.cargoDeclared===false){
-    items.push("상자 외부·봉인 상태 확인");
-    items.push("바닥/벽면의 이중 구조 확인");
-    items.push("손으로 들어 무게 중심 확인");
-    if(v.hiddenCargo)items.push("숨겨진 내용물 확인: "+v.hiddenCargo);
-  }else{
-    items.push("봉인·끈·포장 상태 확인");
-    items.push("내부 형태와 신고 화물 대조");
-    items.push("무게와 흔들림 여부 확인");
-  }
-  const found=v.cargoDeclared===false
-    ?"수색 결과: 신고하지 않은 구조 또는 내용물이 확인됩니다. 화물 신고와 실제 소지품이 일치하지 않습니다."
-    :"수색 결과: 신고한 화물과 포장·무게가 대체로 일치합니다. 현재 수색에서 별도 은닉물은 발견되지 않았습니다.";
-  $("cargoIntro").textContent="검문관이 실제로 확인한 항목입니다. 수색 후 아래 결과가 현재 사건의 단서로 기록됩니다.";
-  $("cargoSearchList").innerHTML=items.map(x=>"<div class='summary-item'>"+esc(x)+"</div>").join("");
-  $("cargoResult").innerHTML="<b>"+esc(found)+"</b>";
-  $("cargoModal").classList.add("show");
-  addEvidence("소지품 수색: "+items.join(" · ")+" / "+found,10);
-  showInspectFeedback("소지품 수색",found,v.cargoDeclared===false);
-}
-function openAskModal(){
-  const v=s.case;
-  if(!v)return;
-  const questionsByType={
-    normal:[
-      ["오늘 어디에서 출발했소?", "집에서 출발해 "+v.from+" 방면으로 왔다고 답합니다.", false],
-      ["무슨 일을 하며 생계를 잇소?", "직업은 "+v.job+"이며 방문 목적은 "+v.purpose+"라고 답합니다.", false],
-      ["가져온 화물은 본인이 준비했소?", "신고한 "+v.cargo+"는 본인이 준비했다고 설명합니다.", false]
-    ],
-    expired:[
-      ["통행증은 언제 발급받았소?", "발급일은 문서에 적힌 날짜와 같다고 답하지만, 유효기간은 이미 지났습니다.", true],
-      ["왜 만료된 통행증을 그대로 제출했소?", "오늘 하루만 지나면 될 줄 알았다고 변명합니다.", true],
-      ["오늘 안에 꼭 성문을 지나야 하는 이유가 있소?", "급한 용무가 있다며 입경을 서두릅니다. 그러나 만료 문제는 해결되지 않습니다.", true]
-    ],
-    forged:[
-      ["이 통행증은 어느 관청에서 발급받았소?", "발급 관청의 위치를 설명하지만 문서의 발급 도시와 인장 견본이 맞지 않습니다.", true],
-      ["인장의 중심 문양을 본인이 직접 확인했소?", "정상 인장이라고 주장하지만 공식 견본과 다른 문양을 설명합니다.", true],
-      ["발급 담당자의 이름을 기억하오?", "담당자 이름을 얼버무립니다. 문서 진위 확인에 필요한 정보가 부족합니다.", true]
-    ],
-    mismatch:[
-      ["성 안에서는 어떤 일을 하러 왔소?", "처음 제출한 서류와 달리 "+v.purpose+"를 하러 왔다고 설명합니다. 직업 정보와도 어긋나는 부분이 있습니다.", true],
-      ["평소 무슨 일을 하오?", "자신을 "+v.job+"라고 소개하지만 제출 문서에는 "+v.docJob+"로 적혀 있습니다.", true],
-      ["그 일을 오래 했소? 손을 보니 흔적이 있군.", "손의 굳은살과 직업 설명이 서로 맞는지 확인하려고 말을 돌립니다.", true]
-    ],
-    lie:[
-      ["성 안에서 가장 먼저 어디로 갈 거요?", "처음에는 성당이라고 했지만 다시 묻자 친척 집에 들르겠다고 말합니다.", true],
-      ["누구를 만나러 가는 거요?", "처음 진술과 다른 방문 목적을 꺼냅니다. 앞선 설명과 연결되지 않습니다.", true],
-      ["방문 목적을 한 문장으로 다시 말해보시오.", "대답을 바꾸며 설명이 흔들립니다. 서류의 방문 목적과도 대조가 필요합니다.", true]
-    ],
-    wanted:[
-      ["어디에서 출발해 이 성문까지 왔소?", "출발 경로를 설명하지만 수배전단에 기록된 인물과 얼굴·키·특징이 겹치는지 확인해야 합니다.", false],
-      ["본인의 이름과 나이를 다시 말해보시오.", "이름을 다시 밝힙니다. 수배전단의 이름과 얼굴을 함께 대조할 단서가 됩니다.", false],
-      ["왜 이렇게 급하게 성문을 지나려 하오?", "마차가 늦었다며 서둘러 달라고 재촉합니다. 행동 자체는 외모 대조 결과와 함께 판단해야 합니다.", false]
-    ],
-    smuggle:[
-      ["이 상자는 어디서 받았소?", "도중에 남이 맡겼다고 말하며 출처를 명확히 설명하지 못합니다.", true],
-      ["상자 안에 무엇이 들어 있소?", "사적인 물건뿐이라고 하지만 실제 수색에서 숨겨진 "+(v.hiddenCargo||"내용물")+"이(가) 확인됩니다.", true],
-      ["누가 이 화물을 맡겼는지 이름을 대시오.", "맡긴 사람의 이름을 얼버무립니다. 화물 신고 내용과 함께 확인할 필요가 있습니다.", true]
-    ],
-    plague:[
-      ["최근 며칠 동안 어디를 다녀왔소?", "최근 이동 경로를 설명합니다. 체온 "+v.health+" 및 "+v.symptoms+" 증상과 함께 신체 검사로 확인해야 합니다.", true],
-      ["기침이나 오한은 언제부터 시작됐소?", v.symptoms+"이 시작된 시점을 얼버무립니다. 현재 증상과 건강증명서를 함께 확인해야 합니다.", true],
-      ["건강증명서는 어디 있소?", "건강증명서를 제출하지 못합니다. 신체 검사 결과와 함께 판단해야 합니다.", true]
-    ],
-    monster:[
-      ["고향과 가족에 대해 말해보시오.", "평범한 신상 이야기를 하려 하지만 "+v.eyes+" 눈과 "+v.feature+" 같은 외형 단서가 남습니다.", true],
-      ["성문 앞에서 그림자가 이상해 보이는데 설명해보시오.", "대수롭지 않은 일이라고 넘기려 합니다. 성수 반응과 함께 확인할 필요가 있습니다.", true],
-      ["사람이라면 성수에 손을 대도 문제없겠지?", "문제없다고 주장하지만 실제 성수 검사 결과와 대조해야 합니다.", true]
-    ],
-    heretic:[
-      ["어느 교단의 신자요?", "단순한 순례자라고 주장하면서도 "+v.symbol+" 문양의 의미를 설명하지 못합니다.", true],
-      ["목깃 안쪽의 문양은 무엇이오?", v.symbol+" 문양은 장식일 뿐이라고 둘러댑니다. 성수 반응과 함께 확인해야 합니다.", true],
-      ["성수에 손을 대고 맹세할 수 있겠소?", "주저하거나 피하려 합니다. 실제 성수 반응을 확인해야 합니다.", true]
-    ],
-    mage:[
-      ["마법사 등록번호를 말해보시오.", v.reg?"등록번호가 기재된 등록증을 제시합니다.":"등록번호를 제시하지 못합니다.", !v.reg],
-      ["어느 마법학교 또는 연구기관 소속이오?", v.reg?"소속과 연구 목적을 설명합니다.":"학자일 뿐이라며 등록 의무를 피하려 합니다.", !v.reg],
-      ["지팡이와 수정병은 어떤 용도로 쓰오?", "연구 도구라고 설명합니다. 특수 등록증과 등록번호를 함께 대조해야 합니다.", !v.reg]
-    ],
-    merc:[
-      ["무기는 어디에 반납했소?", v.weaponReturned?"성문 경비대에 반납증을 제출했다고 답합니다.":"반납증이 없는데도 무기를 가지고 있어야 한다고 주장합니다.", !v.weaponReturned],
-      ["용병 임무와 방문 목적을 설명하시오.", "경호 임무라고 설명합니다. 용병 신분증과 무기 반납 여부를 함께 확인해야 합니다.", !v.weaponReturned],
-      ["반납증 원본을 보여주시오.", v.weaponReturned?"반납증을 제시합니다.":"원본을 제시하지 못합니다.", !v.weaponReturned]
-    ]
-  };
-  const questions=questionsByType[v.type]||questionsByType.normal;
-  $("askIntro").textContent="질문을 고르면 방문객의 대사가 실제로 바뀝니다. 답변은 서류·외모·소지품과 비교해 판단하십시오.";
-  $("askQuestions").innerHTML=questions.map((q,i)=>"<button class='ask-question' data-q='"+i+"'>"+esc(q[0])+"</button>").join("");
-  $("askAnswer").innerHTML="<div class='ask-answer'>질문을 선택하면 캐릭터의 답변과 그 답변에서 확인할 추론 단서가 표시됩니다.</div>";
-  document.querySelectorAll(".ask-question").forEach(btn=>btn.onclick=()=>{
-    const q=questions[Number(btn.dataset.q)];
-    const response=q[1];
-    const note=q[2]?"추론 단서: 기존 서류·검사 결과와 대조하면 이상 징후를 확인할 수 있습니다.":"추론 단서: 현재 정보와 크게 어긋나지 않는 답변입니다. 다른 증거와 함께 판단하십시오.";
-    v.speech=response;
-    $("speech").textContent=response;
-    $("vstatus").textContent="재질문 답변이 캐릭터 대사와 검문 기록에 반영되었습니다.";
-    $("askAnswer").innerHTML="<div class='ask-answer'><b>방문객:</b> "+esc(response)+"<br><br><b>"+esc(note)+"</b></div>";
-    addEvidence("재질문: "+q[0]+" → "+response+" / "+note,8);
+
+function judge(action){const v=s.case;if(!v)return;const used=s.tools.length;const elapsed=40+used*10+(action==="arrest"?5:0);s.time=Math.min(1080,s.time+elapsed);if(action==="bribe"){if(!v.bribeOffer){toast("건넨 돈이 없습니다.");return;}s.money+=v.bribeAmount;s.corruption++;s.heat+=v.noble?2:1;s.pending.push({day:s.day,name:v.name,action:"귀띔값 수락",correct:null,amount:v.bribeAmount,noble:v.noble});if(v.noble)s.delayed.push({after:2+Math.floor(Math.random()*2),type:"noble",name:v.nobleName||v.name,sourceDay:s.day});log("조용히 주머니가 무거워졌다. · "+v.bribeAmount+" 동전");toast("돈은 받았지만 장부에는 남기지 않았습니다.");setTimeout(nextCase,520);return;}if(action==="secret"){s.money+=3;s.corruption+=2;s.heat++;s.pending.push({day:s.day,name:v.name,action:"비밀 처리",correct:null,amount:3,noble:v.noble});if(v.noble)s.delayed.push({after:1+Math.floor(Math.random()*3),type:"noble",name:v.nobleName||v.name,sourceDay:s.day});log("공식 장부에서 이름을 지웠다. · +3 동전");toast("비밀리에 처리했습니다.");setTimeout(nextCase,520);return;}const correct=action===v.verdict;
+  if(v.noble&&!correct)s.delayed.push({after:1+Math.floor(Math.random()*3),type:"noble",name:v.nobleName||v.name,sourceDay:s.day,wrongAction:labelAction(action)});
+  const priorWrong=s.pending.filter(r=>r.correct===false).length;
+  s.pending.push({day:s.day,name:v.name,action:labelAction(action),correct,amount:correct?5:0,type:v.type,noble:v.noble});
+  log("판정 접수: "+v.name+" · "+labelAction(action)+" · 단서 "+used+"개");toast("판정이 장부에 기록되었습니다.");$("vstatus").textContent="판정이 접수되었습니다. 결과는 아직 알 수 없습니다.";setTimeout(nextCase,520);}
+function resolveDelayed(){
+  const notices=[];
+  s.delayed.forEach(x=>x.after--);
+  const due=s.delayed.filter(x=>x.after<=0);
+  s.delayed=s.delayed.filter(x=>x.after>0);
+  due.forEach(x=>{
+    if(x.type==="noble"){
+      const action=x.wrongAction||"비공식 처리";
+      notices.push("며칠 전 성문에서 처리한 사람이 귀족 가문의 사람으로 밝혀졌습니다. 당시 "+action+" 처분에 대한 조사가 시작되었습니다.");
+      if(action==="경비대 호출"||action==="입경 거부"){
+        notices.push("상관이 차갑게 말합니다. \"검문관의 목은 한 번뿐이다.\"");
+      }
+      if(s.corruption>0){
+        s.familyRisk++;
+        notices.push("장부와 목격자의 진술이 맞지 않습니다. 성문 근무자의 이름이 조용히 조사 대상에 올랐습니다.");
+      }
+    }
   });
-  $("askModal").classList.add("show");
+  return notices;
 }
+function night(){const notices=resolveDelayed();$("modalTitle").textContent="해가 졌습니다";$("modalText").innerHTML=(notices.length?notices.map(x=>"<p>"+esc(x)+"</p>").join(""):"오늘은 별다른 소식이 없습니다.")+"<p>오늘 번 돈을 어디에 쓸까요?</p>";$("summary").innerHTML="<div class='summary-item night-choice' data-night='tavern'><b>🍺 선술집</b><br>8동전 · 술과 소문</div><div class='summary-item night-choice' data-night='home'><b>🏠 숙소</b><br>무료 · 조용한 밤</div><div class='summary-item night-choice' data-night='gamble'><b>🎲 주사위판</b><br>5동전 · 운에 맡긴다</div><div class='summary-item'><b>현재 주머니</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="밤을 마친다";document.querySelectorAll(".night-choice").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));$("modal").classList.add("show");}
+function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");if(s.day>=5){finishGame();return;}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];
+document.querySelectorAll(".mobile-toggle").forEach(btn=>{
+  const target=$(btn.dataset.target);
+  if(!target)return;
+  target.classList.add("mobile-collapsed");
+  btn.onclick=()=>{
+    const open=!target.classList.contains("mobile-collapsed");
+    target.classList.toggle("mobile-collapsed",open);
+    btn.setAttribute("aria-expanded",String(!open));
+    if(btn.dataset.target==="leftPanel"){
+      btn.textContent=open?"📖 검문 수첩 · 규정 / 수배전단 펼치기":"📕 검문 수첩 · 규정 / 수배전단 접기";
+    }else if(btn.dataset.target==="rightPanel"){
+      btn.textContent=open?"👤 방문객 기록 펼치기":"👤 방문객 기록 접기";
+    }else if(btn.dataset.target==="mobileDocPanel"){
+      btn.textContent=open?"📜 서류 / 검사도구 펼치기":"📜 서류 / 검사도구 접기";
+    }
+  };
+});
+
+resetWanted();makeCases();rules();nextCase();};}
+function setupMobilePanels(){
+  document.querySelectorAll(".mobile-toggle").forEach(btn=>{
+    const target=$(btn.dataset.target);
+    if(!target)return;
+    target.classList.add("mobile-collapsed");
+    btn.setAttribute("aria-expanded","false");
+    btn.onclick=()=>{
+      const open=!target.classList.contains("mobile-collapsed");
+      target.classList.toggle("mobile-collapsed",open);
+      btn.setAttribute("aria-expanded",String(!open));
+      if(btn.dataset.target==="leftPanel"){
+        btn.textContent=open?"📖 검문 수첩 · 규정 / 수배전단 펼치기":"📕 검문 수첩 · 규정 / 수배전단 접기";
+      }else if(btn.dataset.target==="rightPanel"){
+        btn.textContent=open?"👤 방문객 기록 펼치기":"👤 방문객 기록 접기";
+      }else if(btn.dataset.target==="mobileDocPanel"){
+        btn.textContent=open?"📜 서류 / 검사도구 펼치기":"📜 서류 / 검사도구 접기";
+      }
+    };
+  });
+}
+function finishGame(){
+  const nobleTrouble=s.delayed.length>0||s.familyRisk>0;
+  const corrupt=s.corruption>=4;
+  const rich=s.money>=45;
+  const poor=s.money<=0;
+  const clean=s.corruption===0&&s.familyRisk===0;
+  let title,text;
+  if(nobleTrouble&&corrupt){title="처형대의 새벽";text="귀족 사건과 뒷거래가 한꺼번에 드러났습니다. 성문 기록은 당신을 범인으로 지목했고, 마지막 밤은 오지 않았습니다.";}
+  else if(nobleTrouble){title="목숨값을 치르다";text="귀족의 심기를 건드린 대가가 돌아왔습니다. 경비병 하나의 목숨으로 사건은 조용히 마무리되었습니다.";}
+  else if(rich&&clean){title="성문의 모범 경비병";text="큰돈은 벌지 못했지만 장부와 양심을 지켰습니다. 5일을 버틴 당신은 정식 경비병으로 인정받았습니다.";}
+  else if(corrupt&&rich){title="돈 냄새를 아는 경비병";text="당신은 성문보다 뒷골목에서 더 많은 것을 배웠습니다. 살아남았고 돈도 벌었지만, 이제 당신을 찾는 사람이 생겼습니다.";}
+  else if(poor){title="빈 주머니의 마지막 근무";text="5일을 버텼지만 생활비와 실수의 대가는 컸습니다. 성문을 떠나 다른 일자리를 찾아야 합니다.";}
+  else {title="오늘도 살아남았다";text="완벽하지도, 영웅적이지도 않았습니다. 그래도 5일 동안 성문을 지켜냈습니다. 내일도 출근해야 합니다.";}
+  $("modalTitle").textContent=title;
+  $("modalText").innerHTML="<p>카를스반 성문에서의 5일이 끝났습니다.</p><p>"+esc(text)+"</p>";
+  $("summary").innerHTML="<div class='summary-item'><b>최종 소지금</b><br>"+s.money+" 동전</div><div class='summary-item'><b>받은 뒷돈</b><br>"+s.corruption+"회</div><div class='summary-item'><b>가족에게 남긴 위험</b><br>"+s.familyRisk+"</div><div class='summary-item'><b>당신의 기록</b><br>5일간 성문 근무 완료</div>";
+  $("modalNext").style.display="none";
+  $("modal").classList.add("show");
+}
+function endDay(){let earned=0,correct=0;s.pending.forEach(r=>{if(r.correct===true){earned+=5;correct++;}});s.money=Math.max(0,s.money+earned-15);s.correct=correct;s.mistakes=s.pending.filter(r=>r.correct===false).length;$("modalTitle").textContent="근무 종료 · 판정 감사";$("modalText").innerHTML="<p>오늘 장부를 대조했습니다. 이제야 각 판정의 결과가 공개됩니다.</p>";$("summary").innerHTML=s.pending.map((r,i)=>{const result=r.correct===null?"비공식 처리":"당시 판단 "+(r.correct?"적중":"오판");const reward=r.correct===true?"+5":r.correct===false?"0":"비공개";return "<div class='summary-item'><b>사건 "+(i+1)+" · "+esc(r.name)+"</b><br>"+esc(r.action)+"<br>"+result+" · "+reward+" 동전</div>";}).join("")+"<div class='summary-item'><b>생활비</b><br>-15 동전</div><div class='summary-item'><b>현재 잔액</b><br>"+s.money+" 동전</div><div class='summary-item'><b>수상한 거래</b><br>"+s.corruption+"회</div>";$("modalNext").textContent="밤으로";$("modalNext").onclick=()=>{$("modal").classList.remove("show");night();};$("modal").classList.add("show");}
 function openSealBook(city){
   $("sealModal").classList.add("show");
   $("compareResult").style.display="none";
@@ -953,17 +915,11 @@ function compareSeal(city){
 $("sealBookBtn").onclick=()=>openSealBook(s.case?s.case.from:"카를스반");
 $("compareSealBtn").onclick=()=>compareSeal($("compareSealBtn").dataset.city||s.case?.from||"카를스반");
 $("closeSealBtn").onclick=()=>$("sealModal").classList.remove("show");
-$("sealInspectClose").onclick=()=>$("sealInspectModal").classList.remove("show");
-$("askClose").onclick=()=>$("askModal").classList.remove("show");
-$("cargoClose").onclick=()=>$("cargoModal").classList.remove("show");
 
 function labelAction(a){return a==="pass"?"통과":a==="deny"?"거부":"경비대 호출"}
 
 function nextCase(){
   $("sealModal").classList.remove("show");
-  $("sealInspectModal").classList.remove("show");
-  $("askModal").classList.remove("show");
-  $("cargoModal").classList.remove("show");
   if(s.caseNo>=8||s.time>=1080){endDay();return}
   s.caseNo++;s.tools=[];s.case=s.cases[s.caseNo-1]||makeCase();render();
 }
