@@ -18,15 +18,52 @@ button{font:inherit;cursor:pointer}
 .panel{background:linear-gradient(#382a23,#241b17);padding:13px}.panel h2{font-size:16px;color:#e5c98d;border-bottom:1px solid #806b4c;padding-bottom:7px;margin:0 0 8px}
 .rule{font-size:12px;padding:7px 0;border-bottom:1px solid #514138;line-height:1.45}.rule.lock{opacity:.45}
 .wanted{margin-top:12px;background:#e9d7ae;color:#332820;padding:9px;border:3px solid #5c4530}
-.wanted .wanted-head{display:flex;justify-content:space-between;align-items:center}.wanted .wanted-face{height:70px;background:#b59c73;display:grid;place-items:center;font-size:40px;margin:5px 0}
+.wanted .wanted-head{display:flex;justify-content:space-between;align-items:center}.wanted .wanted-face{height:105px;background:#2b211a;display:grid;place-items:center;font-size:14px;margin:5px 0;border:2px solid #5c4530;overflow:hidden}
+.wanted-portrait-img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.2) contrast(1.05)}
 .wanted small{display:block;line-height:1.45}.tag{display:inline-block;padding:2px 6px;margin:2px;border:1px solid #8f774e;background:#f0dfbd;font-size:10px}
-.scene{height:500px;position:relative;overflow:hidden;background:linear-gradient(#58676b 0 54%,#3e3028 54%);border:2px solid #5c4934}
-.sky{position:absolute;inset:0 0 45%;background:linear-gradient(#29363b,#68716c)}
-.wall{position:absolute;left:0;right:0;bottom:43%;height:150px;background:repeating-linear-gradient(90deg,#625448 0 68px,#51443b 68px 72px),repeating-linear-gradient(0deg,transparent 0 36px,#342b27 36px 39px)}
-.gate{position:absolute;bottom:39%;left:50%;transform:translateX(-50%);width:45%;height:245px;border:22px solid #392b25;border-bottom:0;border-radius:160px 160px 0 0;background:repeating-linear-gradient(90deg,#171313 0 12px,#382720 12px 19px);box-shadow:inset 0 0 40px #000}
-.flag{position:absolute;top:35px;left:8%;font-size:40px}
-.visitor{position:absolute;bottom:36%;left:50%;transform:translateX(-50%);z-index:2;text-align:center;min-width:270px}
-.portrait{font-size:100px;filter:drop-shadow(0 7px 5px #0008)}.speech{background:#efe0bd;color:#2b241d;border:3px solid #44352a;padding:7px 10px;min-width:240px;font-size:13px;box-shadow:0 4px 10px #0005}
+.scene{height:500px;position:relative;overflow:hidden;background:linear-gradient(#0003,#0006),url('assets/images/checkpoint_bg.jpg') center bottom / cover no-repeat;border:2px solid #5c4934;box-shadow:inset 0 0 60px #000c}
+.sky,.wall,.gate,.flag{display:none}
+.visitor{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:2;text-align:center;min-width:270px;display:flex;flex-direction:column;align-items:center}
+.portrait{width:170px;height:240px;background:transparent;border:none;border-radius:0;box-shadow:none;margin:0 auto 4px;position:relative;display:flex;align-items:flex-end;justify-content:center;filter:drop-shadow(0 14px 10px rgba(0,0,0,0.85));transition:all 0.3s ease}
+.portrait.body-tall{height:255px;transform:scale(1.08);transform-origin:bottom center}
+.portrait.body-short{height:185px;transform:scale(0.86);transform-origin:bottom center}
+.portrait.body-stout{width:205px;transform:scaleX(1.18);transform-origin:bottom center}
+.portrait.body-thin{width:145px;transform:scaleX(0.88);transform-origin:bottom center}
+.char-portrait-img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block}
+.portrait-wrap{position:relative;width:100%;height:100%;background:transparent;display:flex;align-items:flex-end;justify-content:center}
+.portrait-wrap .base-img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block;user-select:none}
+.portrait-overlay{position:absolute;inset:0;pointer-events:none}
+.hair-overlay{position:absolute;inset:0 0 35% 0;pointer-events:none}
+.hair-blond{background:radial-gradient(ellipse at 50% 20%, rgba(245, 215, 95, 0.6) 0%, rgba(210, 165, 45, 0.4) 50%, transparent 75%);mix-blend-mode:color-dodge;opacity:0.88}
+.hair-red{background:radial-gradient(ellipse at 50% 20%, rgba(205, 65, 30, 0.65) 0%, rgba(145, 38, 20, 0.45) 50%, transparent 75%);mix-blend-mode:color;opacity:0.92}
+.hair-gray{background:radial-gradient(ellipse at 50% 20%, rgba(225, 225, 230, 0.8) 0%, rgba(160, 160, 170, 0.5) 50%, transparent 75%);filter:grayscale(0.85);mix-blend-mode:saturation;opacity:0.95}
+.hair-brown{background:radial-gradient(ellipse at 50% 20%, rgba(95, 55, 30, 0.6) 0%, rgba(65, 35, 18, 0.4) 50%, transparent 75%);mix-blend-mode:multiply;opacity:0.8}
+.hair-black{background:radial-gradient(ellipse at 50% 20%, rgba(15, 12, 10, 0.75) 0%, rgba(25, 20, 15, 0.45) 55%, transparent 75%);mix-blend-mode:multiply;opacity:0.85}
+.eye-glow{position:absolute;width:7px;height:7px;border-radius:50%;top:43%;pointer-events:none;opacity:0.85}
+.eye-left{left:41%}.eye-right{left:56%}
+.eye-blue{background:#4ea4f5;box-shadow:0 0 5px #2185eb}
+.eye-green{background:#4ecf6e;box-shadow:0 0 5px #24a845}
+.eye-gray{background:#c0c0c5;box-shadow:0 0 4px #999}
+.eye-brown{background:#7a4422;box-shadow:0 0 3px #442210}
+.eye-gold{background:#ffea00;box-shadow:0 0 8px #ffbb00,0 0 14px #ff6600;filter:drop-shadow(0 0 3px #ff0);opacity:1;animation:monsterPulse 1.8s infinite alternate}
+@keyframes monsterPulse{0%{transform:scale(0.9);filter:drop-shadow(0 0 2px #ff0)}100%{transform:scale(1.2);filter:drop-shadow(0 0 6px #ff4400)}}
+.feature-mark{position:absolute;pointer-events:none;z-index:4}
+.mark-leftDot{left:39%;top:55%;width:6px;height:6px;border-radius:50%;background:#261713;box-shadow:0 0 2px #0a0504;border:1px solid #150d0a}
+.mark-rightDot{left:60%;top:58%;width:6px;height:6px;border-radius:50%;background:#261713;box-shadow:0 0 2px #0a0504;border:1px solid #150d0a}
+.mark-cheekScar{left:30%;top:51%;width:32px;height:12px;border-top:3px solid #732a24;border-radius:50%;transform:rotate(-22deg);filter:drop-shadow(0 1px 1px #200)}
+.mark-chinScar{left:52%;top:68%;width:26px;height:9px;border-top:3px solid #732a24;border-radius:50%;transform:rotate(24deg);filter:drop-shadow(0 1px 1px #200)}
+.mark-knifeScar{left:37%;top:30%;width:3px;height:44px;background:#7a2420;transform:rotate(17deg);box-shadow:0 0 2px #330d0a,inset 1px 0 1px #e58888;border-radius:1px}
+.mark-earRing{left:23%;top:51%;width:10px;height:10px;border:2px solid #d4d4d8;border-radius:50%;box-shadow:0 0 4px #ffffff99}
+.mark-bread{left:44%;top:65%;width:22px;height:14px;background:radial-gradient(circle,#683b28 25%,transparent 75%);border-radius:40%;opacity:0.8}
+.mark-plague{left:35%;top:48%;width:35px;height:30px;background:radial-gradient(circle,#9c2e28 15%,transparent 35%),radial-gradient(circle,#85221c 20%,transparent 45%);background-size:12px 12px;opacity:0.85}
+.compare-tri-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.compare-col{background:#ead7af;border:2px solid #745638;padding:8px;text-align:center}
+.compare-col h3{font-size:12px;margin:0 0 6px;color:#30251c}
+.compare-viewer-frame{width:100%;height:180px;background:#1d1612;border:2px solid #5a422d;overflow:hidden;position:relative}
+.compare-hint{font-size:10px;color:#5a432f;margin-top:6px;line-height:1.35;min-height:28px}
+.face-compare-modalbox{max-width:760px!important}
+@media(max-width:700px){.compare-tri-grid{grid-template-columns:1fr}}
+.speech{background:#efe0bd;color:#2b241d;border:3px solid #44352a;padding:7px 10px;min-width:240px;font-size:13px;box-shadow:0 4px 10px #0009;position:relative}
 .traits{position:absolute;left:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:4px;max-width:44%}.trait{background:#201814dd;border:1px solid #8a6a40;color:#ead9b5;padding:4px 6px;font-size:10px}
 .casebar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:7px 0 0;font-size:11px}.caseid{color:#dcc08a}.used{color:#b8aa92}
 .desk{background:linear-gradient(135deg,#775239,#493225);padding:12px}
@@ -38,7 +75,7 @@ button{font:inherit;cursor:pointer}
 .tool,.decision{border:2px solid #392820;background:#261c18;color:#ead9b5;padding:9px 11px;box-shadow:2px 3px #0006}.tool.active{outline:2px solid var(--gold)}.tool.locked{opacity:.45;cursor:not-allowed}
 .decision{flex:1;min-width:120px;font-weight:bold}.pass{background:#3f6348}.deny{background:#6f3b36}.arrest{background:#632b2b}.secret{background:#29221e}.bribe{background:#725523}
 .visitor-card{background:#f5e8cc;color:#2b241d;padding:10px;border:3px solid #5d4933}
-.bigface{height:115px;background:#b49b73;display:grid;place-items:center;font-size:80px;border:2px solid #6d563d;margin-bottom:7px}
+.bigface{height:140px;background:#241c18;display:flex;align-items:center;justify-content:center;border:2px solid #6d563d;margin-bottom:7px;overflow:hidden;position:relative}
 .field{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #9a815d;padding:4px 0;font-size:11px}.field span:last-child{font-weight:bold;text-align:right}
 .status{margin-top:8px;padding:7px;background:#2d2520;color:#eeddbb;font-size:11px;line-height:1.45}
 .evidence{margin-top:9px;background:#efe0bd;color:#312820;border:2px solid #765a39;padding:8px}.evidence h3{font-size:12px;margin:0 0 6px}.evidence-row{font-size:10px;padding:4px 0;border-bottom:1px solid #c4ab81}.evidence-row:last-child{border-bottom:0}
@@ -269,9 +306,9 @@ button{font:inherit;cursor:pointer}
   .visitor{
     min-width:0;
     width:90%;
-    bottom:34%
+    bottom:14px
   }
-  .portrait{font-size:76px}
+  .portrait{width:140px;height:190px}
   .speech{
     min-width:0;
     width:100%;
@@ -331,8 +368,7 @@ button{font:inherit;cursor:pointer}
     padding:8px
   }
   .bigface{
-    height:90px;
-    font-size:64px
+    height:120px
   }
   .field{
     font-size:10px;
@@ -413,12 +449,14 @@ button{font:inherit;cursor:pointer}
   .title{font-size:18px}
   .stats{font-size:10px}
   .scene{height:300px}
-  .portrait{font-size:68px}
-  .gate{height:160px}
+  .portrait{width:120px;height:165px}
   #rules .rule{font-size:9px}
   .tool,.decision{font-size:9px;padding:8px 4px}
   .visitor-card{padding:7px}
 }
+.story-art-frame{width:100%;height:220px;border:3px solid #594230;overflow:hidden;margin-bottom:12px;background:#181210;box-shadow:0 6px 20px #000a}
+.story-scene-img{width:100%;height:100%;object-fit:cover;display:block}
+.story-caption{font-size:12px;line-height:1.6;margin:10px 0;background:#ead7af;padding:9px;border:1px solid #9c7b51}
 .face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:300px;display:grid;place-items:center}.face-canvas{width:220px;height:270px;position:relative}.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48%;background:#c8956e;border:3px solid #513b2c}.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}.face-eye.left{left:68px}.face-eye.right{left:137px}.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;z-index:3}.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;z-index:3}.face-layer{position:absolute;inset:0;z-index:5}.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}.face-scar{position:absolute;width:48px;height:7px;border-top:3px solid #713e36;border-radius:50%;transform:rotate(-18deg)}.face-scar.cheek{left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg)}.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}.face-option.active{outline:2px solid #d3a95d;background:#4b3829}.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}@media(max-width:600px){.face-lab{grid-template-columns:1fr}}
 <style>
 /* FINAL MOBILE OVERRIDES: mobile-first main scene + collapsible secondary panels */
@@ -507,11 +545,13 @@ button{font:inherit;cursor:pointer}
     <!-- IMAGE SLOT: 검문 기록 초상화 / 용도: 현재 방문객의 얼굴 확대 이미지. 수배전단과 직접 대조하는 핵심 이미지 -->
     <div id="bigface" class="bigface">🧑‍🌾</div>
     <div class="field"><span>이름</span><span id="vname">-</span></div>
+    <div class="field"><span>성별</span><span id="vgender">-</span></div>
     <div class="field"><span>출신지</span><span id="vfrom">-</span></div>
     <div class="field"><span>직업</span><span id="vjob">-</span></div>
     <div class="field"><span>방문 목적</span><span id="vpurpose">-</span></div>
     <div class="field"><span>체류</span><span id="vstay">-</span></div>
     <div class="field"><span>키</span><span id="vheight">-</span></div>
+    <div class="field"><span>체형</span><span id="vbody">-</span></div>
     <div class="field"><span>눈</span><span id="veyes">-</span></div>
     <div class="field"><span>특징</span><span id="vfeature">-</span></div>
     <div class="status" id="vstatus">서류와 실제 인물을 대조하십시오.</div>
@@ -523,7 +563,7 @@ button{font:inherit;cursor:pointer}
 </main></div>
 
 <div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div><div class="modal" id="sealInspectModal"><div class="modalbox seal-inspect-box"><h2>인장 확대 검사</h2><div id="sealInspectVisual"></div><div id="sealInspectText" class="compare-result"></div><button id="sealInspectCompare">이 인장을 공식 견본과 대조</button><button id="sealInspectClose">닫기</button></div></div><div class="modal" id="cargoModal"><div class="modalbox"><h2>소지품 수색</h2><p id="cargoIntro"></p><div id="cargoSearchList" class="summary-grid"></div><div id="cargoResult" class="ask-answer"></div><button id="cargoClose">수색 결과 확인</button></div></div><div class="modal" id="askModal"><div class="modalbox"><h2>재질문 · 방문객 진술 확인</h2><p id="askIntro"></p><div id="askQuestions"></div><div id="askAnswer"></div><button id="askClose">질문 끝내기</button></div></div>
-<div class="modal" id="faceLabModal"><div class="modalbox"><h2>얼굴 특징 조합판</h2><p>기존 검문 도구와 별개로 얼굴 특징을 겹쳐 기록합니다.</p><div class="face-lab"><div class="face-preview"><div class="face-canvas"><div class="face-skin"></div><div class="face-hair" id="faceHair"></div><div class="face-eye left"></div><div class="face-eye right"></div><div class="face-nose"></div><div class="face-mouth"></div><div class="face-layer" id="faceLayers"></div></div></div><div class="face-options"><h3>머리색</h3><div class="face-option-grid" id="hairOptions"><button class="face-option" data-hair="black">검은색</button><button class="face-option" data-hair="brown">갈색</button><button class="face-option" data-hair="blond">금발</button><button class="face-option" data-hair="red">붉은색</button><button class="face-option" data-hair="gray">회색</button></div><h3 style="margin-top:12px">특징 · 복수 선택</h3><div class="face-option-grid" id="featureOptions"><button class="face-option" data-feature="leftDot">왼쪽 점</button><button class="face-option" data-feature="rightDot">오른쪽 점</button><button class="face-option" data-feature="cheekScar">볼 흉터</button><button class="face-option" data-feature="chinScar">턱 흉터</button><button class="face-option" data-feature="knifeScar">칼자국</button><button class="face-option" data-feature="bread">빵 모양 자국</button></div><div class="face-note">인장 확대·인장 수첩·외모 대조·소지품 수색·재질문 등 기존 FM 검문은 그대로 유지됩니다.</div><button id="faceApplyBtn" class="face-lab-btn">관찰 기록에 추가</button><button id="faceCloseBtn" class="face-lab-btn">닫기</button></div></div></div></div><div class="modal" id="sealModal"><div class="modalbox">
+<div class="modal" id="faceLabModal"><div class="modalbox face-compare-modalbox"><h2>얼굴 특징 조합 및 실물 대조판</h2><p>실제 방문객 일러스트의 얼굴 특징(머리색, 눈동자, 흉터, 점)을 육안으로 대조하고 조합하여 일치 여부를 판별합니다.</p><div class="compare-tri-grid"><div class="compare-col"><h3>🔍 방문객 실물 확대경</h3><div id="faceLabVisitorView" class="compare-viewer-frame"></div><div class="compare-hint">실제 인물의 머리색과 흉터·점을 육안으로 관찰하십시오.</div></div><div class="compare-col"><h3>🎨 특징 조합 몽타주</h3><div class="face-preview" style="min-height:180px"><div class="face-canvas" style="transform:scale(0.85);transform-origin:center center"><div class="face-skin"></div><div class="face-hair" id="faceHair"></div><div class="face-eye left"></div><div class="face-eye right"></div><div class="face-nose"></div><div class="face-mouth"></div><div class="face-layer" id="faceLayers"></div></div></div><div class="compare-hint">관찰한 머리색과 특징을 아래에서 선택하십시오.</div></div><div class="compare-col"><h3>📜 당일 수배전단 몽타주</h3><div id="faceLabWantedView" class="compare-viewer-frame"></div><div id="faceLabWantedInfo" class="compare-hint">수배전단 정보</div></div></div><div class="face-options"><h3>머리색 선택</h3><div class="face-option-grid" id="hairOptions"><button class="face-option" data-hair="black">검은색</button><button class="face-option" data-hair="brown">갈색</button><button class="face-option" data-hair="blond">금발</button><button class="face-option" data-hair="red">붉은색</button><button class="face-option" data-hair="gray">회색</button></div><h3 style="margin-top:10px">특징 선택 (복수 선택)</h3><div class="face-option-grid" id="featureOptions"><button class="face-option" data-feature="leftDot">왼쪽 볼 점</button><button class="face-option" data-feature="rightDot">오른쪽 점</button><button class="face-option" data-feature="cheekScar">볼 흉터</button><button class="face-option" data-feature="chinScar">턱 흉터</button><button class="face-option" data-feature="knifeScar">칼자국</button><button class="face-option" data-feature="earRing">귀걸이</button></div></div><div id="faceMatchFeedback" class="compare-result" style="display:none;margin-top:10px"></div><div class="comparebar" style="margin-top:12px"><button id="faceCheckVisitorBtn" style="background:#426147">🔍 방문객 실물과 대조</button><button id="faceCheckWantedBtn" style="background:#703c37">📜 수배전단과 대조</button><button id="faceCloseBtn" style="background:#33251d">닫기</button></div></div></div><div class="modal" id="sealModal"><div class="modalbox">
   <h2>영주의 검문 수첩 · 각지의 인장</h2>
   <p id="sealBookIntro">통행증의 <b>발급 도시</b>를 먼저 확인한 뒤 해당 도시의 공식 인장 견본과 현재 문서를 눈으로 대조하십시오.</p>
   <div id="sealGrid" class="book-grid"></div>
@@ -540,15 +580,89 @@ const RULES=[
   ["교단 징표 확인","성수 반응 검사 가능","마물/이단 의심자는 추가 확인"],
   ["마법사 등록증 확인","용병 무기 반납 여부","특수 직군 서류 대조"]
 ];
-const NAMES=["마르코 벨","엘리나 로슈","도란","세르 라인","페르나","루드","카인","베른","아델","토마","레오","시라","오르트","미라","가렌","니아"];
+const CHAR_SPRITES={
+  "male_tall":"assets/images/characters/char_male_tall.png",
+  "male_short":"assets/images/characters/char_male_short.png",
+  "male_stout":"assets/images/characters/char_male_stout.png",
+  "male_thin":"assets/images/characters/char_male_thin.png",
+  "female_tall":"assets/images/characters/char_female_tall.png",
+  "female_short":"assets/images/characters/char_female_short.png",
+  "female_stout":"assets/images/characters/char_female_stout.png",
+  "female_thin":"assets/images/characters/char_female_thin.png"
+};
+
+const BODY_TYPES={
+  tall:{key:"tall",label:"키가 큰 편",desc:"장신 건장",css:"body-tall",genHeight:()=>183+Math.floor(Math.random()*9)},
+  short:{key:"short",label:"키가 작은 편",desc:"단신 왜소",css:"body-short",genHeight:()=>152+Math.floor(Math.random()*11)},
+  stout:{key:"stout",label:"뚱뚱한 체형",desc:"비만 풍채",css:"body-stout",genHeight:()=>168+Math.floor(Math.random()*10)},
+  thin:{key:"thin",label:"마른 체형",desc:"수척 왜소",css:"body-thin",genHeight:()=>170+Math.floor(Math.random()*12)}
+};
+const BODY_KEYS=["tall","short","stout","thin"];
+
+const MALE_NAMES=["마르코 벨","도란","세르 라인","루드","카인","베른","토마","레오","오르트","가렌"];
+const FEMALE_NAMES=["엘리나 로슈","페르나","아델","시라","미라","니아","브리짓","카밀라"];
+const NAMES=[...MALE_NAMES,...FEMALE_NAMES];
+
+function getSpriteForCharacter(gender, bodyKey){
+  const g=(gender==="여성")?"female":"male";
+  return CHAR_SPRITES[g+"_"+bodyKey]||CHAR_SPRITES["male_tall"];
+}
+
 const ORIGINS=["하르덴","벨로아","카를스반","노르드","아르델","서부 황야","로엔","브레시아"];
 const JOBS=["농부","상인","대장장이","용병","사제","약초꾼","서기관","마부","어부","직공"];
 const PURPOSES=["곡물 거래","염료 판매","납품","호위","성당 방문","가족 방문","장부 전달","마차 수리","약초 판매","친척 방문"];
-// IMAGE ASSET SET: 방문객 기본 초상화 풀 / 용도: 일반 NPC의 외형 랜덤화용. 나중에 직업·성별·연령별 캐릭터 PNG/WebP로 교체
 const FACES=["🧑‍🌾","👩‍🦰","🧔","🧝","🧕","👨‍🌾","🧑‍💼","👩‍🌾","🧙","🧑‍🔧"];
 const EYES=["갈색","회색","청색","녹색","짙은 갈색"];
 const HAIR=["검은 머리","갈색 머리","짧은 금발","붉은 머리","회색 머리"];
 const FEATURES=["왼쪽 볼 점","오른쪽 턱 흉터","두꺼운 눈썹","손가락에 잉크 얼룩","왼쪽 귀에 은고리","짧게 깎은 머리","특징 없음"];
+
+function getHairClass(hair){
+  if(/금발/.test(hair)) return "blond";
+  if(/붉은/.test(hair)) return "red";
+  if(/회색/.test(hair)) return "gray";
+  if(/갈색/.test(hair)) return "brown";
+  return "black";
+}
+
+function getEyeClass(eyes, type){
+  if(type==="monster") return "gold";
+  if(/청색|파란/.test(eyes)) return "blue";
+  if(/녹색|초록/.test(eyes)) return "green";
+  if(/회색/.test(eyes)) return "gray";
+  if(/황금/.test(eyes)) return "gold";
+  return "brown";
+}
+
+function getFeatureMarks(v){
+  if(!v) return "";
+  const f=String(v.feature||"");
+  let marks="";
+  if(/왼쪽.*점/.test(f)) marks += '<span class="feature-mark mark-leftDot" title="왼쪽 볼 점"></span>';
+  if(/오른쪽.*점/.test(f)) marks += '<span class="feature-mark mark-rightDot" title="오른쪽 점"></span>';
+  if(/볼.*흉터/.test(f)) marks += '<span class="feature-mark mark-cheekScar" title="볼 흉터"></span>';
+  if(/턱.*흉터/.test(f)) marks += '<span class="feature-mark mark-chinScar" title="턱 흉터"></span>';
+  if(/칼|베인|자국/.test(f)) marks += '<span class="feature-mark mark-knifeScar" title="칼자국"></span>';
+  if(/은고리|귀걸이/.test(f)) marks += '<span class="feature-mark mark-earRing" title="은고리 귀걸이"></span>';
+  if(/빵/.test(f)) marks += '<span class="feature-mark mark-bread" title="특이 흉터"></span>';
+  if(v.type==="plague") marks += '<span class="feature-mark mark-plague" title="열병 반점"></span>';
+  return marks;
+}
+
+function renderVisualPortrait(v){
+  if(!v) return "";
+  const imgSrc = v.spriteImage || v.faceImage || CHAR_SPRITES["male_tall"];
+  const hairCls = getHairClass(v.hair);
+  const eyeCls = getEyeClass(v.eyes||v.eye, v.type);
+  const marks = getFeatureMarks(v);
+  
+  return '<div class="portrait-wrap">' +
+    '<img src="' + imgSrc + '" alt="' + esc(v.name||'인물') + '" class="base-img">' +
+    '<div class="hair-overlay hair-' + hairCls + '"></div>' +
+    '<div class="eye-glow eye-left eye-' + eyeCls + '"></div>' +
+    '<div class="eye-glow eye-right eye-' + eyeCls + '"></div>' +
+    marks +
+  '</div>';
+}
 // IMAGE ASSET SET: 지역 인장 견본 / 용도: 검문 수첩에서 보여주는 공식 인장 레퍼런스. 각 지역별 실제 인장 이미지로 교체 예정.
 // 인장 이미지 교체 시에도 city 키는 유지하면 게임 로직을 건드리지 않아도 됨.
 const SEALS={
@@ -562,8 +676,6 @@ const SEALS={
   "브레시아":{domain:"남동 변경백령",title:"변경백 관인",sigil:"✠",edge:"십자형 테두리",core:"사자와 칼날",mark:"상단 두 점"}
 };
 const SEAL_CITIES=Object.keys(SEALS);
-// IMAGE SLOT: 지역별 공식 인장 이미지 렌더러 / 용도: 통행증 인장, 인장 수첩 견본, 대조 화면에 공통 사용.
-// 추후 SVG 생성 함수를 실제 이미지 파일(<img src="assets/seals/...">)로 교체할 수 있도록 분리해 둠.
 function sealSvg(city){
   const q=SEALS[city]||SEALS["카를스반"];
   const safe=q.sigil.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -586,25 +698,40 @@ const TYPE_META={
 };
 
 let wanted={
-  active:false,name:"",face:"?",height:178,eye:"회색",feature:"왼쪽 볼 점"
+  active:false,name:"",gender:"남성",bodyKey:"tall",bodyDesc:"장신 건장",bodyCss:"body-tall",height:188,
+  face:"?",spriteImage:CHAR_SPRITES["male_tall"],faceImage:CHAR_SPRITES["male_tall"],eye:"회색",hair:"갈색 머리",feature:"왼쪽 볼 점"
 };
 
 const $=id=>document.getElementById(id);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const chance=p=>Math.random()<p;function heightWord(h){if(h>=181)return "키가 큰 편";if(h<=168)return "키가 작은 편";return "보통 키"}function heightDetail(h){return h>=181?"키가 큰 편으로 보입니다.":h<=168?"키가 작은 편으로 보입니다.":"키는 보통 정도로 보입니다."}
+const chance=p=>Math.random()<p;
+function heightWord(h){if(h>=181)return "키가 큰 편";if(h<=165)return "키가 작은 편";return "보통 키"}
+function heightDetail(h){return h>=181?"키가 큰 편으로 보입니다.":h<=165?"키가 작은 편으로 보입니다.":"키는 보통 정도로 보입니다."}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
 
 let s={day:1,money:30,mistakes:0,caseNo:0,time:360,tools:[],case:null,cases:[],correct:0,denied:0,arrested:0,pending:[],corruption:0,heat:0,rumors:[],delayed:[],familyRisk:0};
 
 function makeBasic(){
-  const name=pick(NAMES),from=pick(ORIGINS),job=pick(JOBS),purpose=pick(PURPOSES);
-  const height=165+Math.floor(Math.random()*24);
-  return {name,from,job,purpose,stay:(1+Math.floor(Math.random()*4))+"일",face:pick(FACES),eyes:pick(EYES),hair:pick(HAIR),feature:pick(FEATURES),height,
+  const gender=chance(0.5)?"남성":"여성";
+  const name=(gender==="남성")?pick(MALE_NAMES):pick(FEMALE_NAMES);
+  const from=pick(ORIGINS),job=pick(JOBS),purpose=pick(PURPOSES);
+  const bodyKey=pick(BODY_KEYS);
+  const bodyInfo=BODY_TYPES[bodyKey];
+  const height=bodyInfo.genHeight();
+  const spriteImage=getSpriteForCharacter(gender,bodyKey);
+
+  return {
+    name,gender,from,job,purpose,stay:(1+Math.floor(Math.random()*4))+"일",
+    bodyKey,bodyDesc:bodyInfo.desc,bodyCss:bodyInfo.css,height,
+    spriteImage,faceImage:spriteImage,face:pick(FACES),
+    eyes:pick(EYES),hair:pick(HAIR),feature:pick(FEATURES),
     documentSeal:from,sealCondition:"정상",
+    docGender:gender,docBodyDesc:bodyInfo.desc,docHeight:height,
     speech:"통행증을 제출하겠습니다.",
     second:"성 안에서 "+purpose+"를 처리한 뒤 돌아갈 예정입니다.",
     cargo:pick(["밀자루","염료 상자","철제 공구","말린 약초","천 두루마리"]),
-    cargoDeclared:true, health:"정상", symbol:"없음", type:"normal", clues:[], verdict:"pass"};
+    cargoDeclared:true,health:"정상",symbol:"없음",type:"normal",clues:[],verdict:"pass"
+  };
 }
 
 function makeCase(){
@@ -628,10 +755,29 @@ function makeCase(){
     b.speech="관청에서 발급받았습니다. 인장은 원래 이런 모양입니다.";
   }
   if(type==="mismatch"){
-    b.job="대장장이";b.purpose="약초 판매";b.cargo="약초 꾸러미";
-    b.docJob="상인";b.clues=["직업 표기","손의 흔적","신고 목적"];
-    b.feature="손바닥에 굳은살";b.speech="저는 상인입니다. 약초를 팔러 왔습니다.";
-    b.second="대장간 일은 오래 전에 그만뒀습니다.";
+    const mismatchKind=pick(["body","gender","job"]);
+    if(mismatchKind==="body"){
+      if(b.bodyKey==="short"){
+        b.docBodyDesc="장신 건장";
+        b.docHeight=188;
+      }else{
+        b.docBodyDesc="단신 왜소";
+        b.docHeight=155;
+      }
+      b.clues=["체격 및 키 불일치","서류 체형 기재","실제 외형"];
+      b.speech="서류에 적힌 체격이 접니다. 오차가 좀 있을 뿐입니다.";
+      b.second="관청에서 급하게 적어서 키가 다르게 적혔나 봅니다.";
+    }else if(mismatchKind==="gender"){
+      b.docGender=(b.gender==="남성")?"여성":"남성";
+      b.clues=["성별 표기 불일치","용모와 서류 대조","외모"];
+      b.speech="가족의 서류가 아니라 제 통행증이 맞습니다.";
+      b.second="관청 직원이 성별을 잘못 적었을 뿐입니다.";
+    }else{
+      b.job="대장장이";b.purpose="약초 판매";b.cargo="약초 꾸러미";
+      b.docJob="상인";b.clues=["직업 표기","손의 흔적","신고 목적"];
+      b.feature="손바닥에 굳은살";b.speech="저는 상인입니다. 약초를 팔러 왔습니다.";
+      b.second="대장간 일은 오래 전에 그만뒀습니다.";
+    }
   }
   if(type==="lie"){
     b.purpose="친척 방문";b.cargo="장부 꾸러미";b.docPurpose="성당 방문";
@@ -639,16 +785,25 @@ function makeCase(){
     b.speech="성당에 기도하러 왔습니다. 하룻밤이면 됩니다.";
     b.second="친척 집에 잠시 들러야 해서요.";
   }
-  // CASE IMAGE: 수배자 사건 / 용도: 당일 수배전단의 초상화와 동일 인물을 생성.
-  // IMAGE CASE ASSET: 수배자 NPC / 용도: 수배전단 초상과 동일 인물로 보이는 방문객 캐릭터 이미지로 교체
+  // CASE IMAGE: 수배자 사건
   if(type==="wanted"){
     b.name=wanted.name;
-    b.face=wanted.face;
+    b.gender=wanted.gender;
+    b.bodyKey=wanted.bodyKey;
+    b.bodyDesc=wanted.bodyDesc;
+    b.bodyCss=wanted.bodyCss;
     b.height=wanted.height;
+    b.docGender=wanted.gender;
+    b.docBodyDesc=wanted.bodyDesc;
+    b.docHeight=wanted.height;
+    b.face=wanted.face;
+    b.spriteImage=wanted.spriteImage;
+    b.faceImage=wanted.spriteImage;
+    b.hair=wanted.hair;
     b.eyes=wanted.eye;
     b.feature=wanted.feature;
     b.speech="마차가 늦어서 발이 묶였습니다. 빨리 지나가게 해주십시오.";
-    b.clues=["수배전단","얼굴","키","특징"];
+    b.clues=["수배전단","체형 및 키","얼굴","특징"];
   }
   if(type==="smuggle"){
     b.cargo=pick(["봉인된 검은 상자","이중 바닥 나무상자","납으로 감싼 작은 통"]);
@@ -662,7 +817,7 @@ function makeCase(){
     b.healthCert=false;b.speech="조금 피곤할 뿐입니다. 그냥 지나가게 해주십시오.";
     b.clues=["체온","기침/반점","건강증명서"];
   }
-  // IMAGE CASE ASSET: 마물 위장 NPC / 용도: 인간처럼 보이지만 눈·그림자·표정에 비정상성이 있는 몬스터 캐릭터 이미지로 교체
+  // IMAGE CASE ASSET: 마물 위장 NPC
   if(type==="monster"){
     b.face=pick(["🧟","🧙","🧑‍🦱"]);b.eyes=pick(["황금색","세로 동공","회백색"]);b.feature="그림자가 한 박자 늦음";
     b.magicReaction="성수에서 금속성 거품 반응";b.speech="나는... 사람입니다. 왜 그렇게 쳐다보십니까?";
@@ -690,16 +845,27 @@ function makeCase(){
   }
   if(type==="normal"){
     if(chance(.35)){b.feature=pick(["짧은 오른쪽 턱 흉터","손에 잉크 얼룩","한쪽 귀 은고리"]);b.speech="마차가 밀려서 조금 늦었습니다."}
-    b.clues=["직업과 손 상태","방문 목적","화물 신고"];
+    b.clues=["직업과 손 상태","체격 및 성별","방문 목적","화물 신고"];
   }
   return b;
 }
 
 function resetWanted(){
-  if(s.day<2){wanted={active:false,name:"",face:"?",height:178,eye:"회색",feature:"왼쪽 볼 점"};return}
+  if(s.day<2){
+    wanted={active:false,name:"",gender:"남성",bodyKey:"tall",bodyDesc:"장신 건장",bodyCss:"body-tall",height:188,
+      face:"?",spriteImage:CHAR_SPRITES["male_tall"],faceImage:CHAR_SPRITES["male_tall"],eye:"회색",hair:"갈색 머리",feature:"왼쪽 볼 점"};
+    return;
+  }
   if(!wanted.active||chance(.55)){
-    const n=pick(NAMES),face=pick(FACES),height=170+Math.floor(Math.random()*13),eye=pick(EYES),feature=pick(FEATURES.filter(x=>x!=="특징 없음"));
-    wanted={active:true,name:n,face,height,eye,feature};
+    const gender=chance(0.5)?"남성":"여성";
+    const n=(gender==="남성")?pick(MALE_NAMES):pick(FEMALE_NAMES);
+    const bodyKey=pick(BODY_KEYS);
+    const bodyInfo=BODY_TYPES[bodyKey];
+    const height=bodyInfo.genHeight();
+    const spriteImage=getSpriteForCharacter(gender,bodyKey);
+    const eye=pick(EYES),hair=pick(HAIR),feature=pick(FEATURES.filter(x=>x!=="특징 없음"));
+    wanted={active:true,name:n,gender,bodyKey,bodyDesc:bodyInfo.desc,bodyCss:bodyInfo.css,height,
+      face:pick(FACES),spriteImage,faceImage:spriteImage,eye,hair,feature};
   }
 }
 
@@ -723,8 +889,9 @@ function rules(){
   }).join("")).join("");
   if(s.day<2){$("wantedStatus").textContent="없음";$("wantedFace").textContent="—";$("wantedDetails").textContent="오늘은 수배전단이 없습니다."}
   else{
-    $("wantedStatus").textContent=wanted.active?"추적 중":"기록 없음";$("wantedFace").textContent=wanted.face;
-    $("wantedDetails").innerHTML="<small><b>이름:</b> "+esc(wanted.name)+"</small><small><b>체격:</b> "+heightWord(wanted.height)+" · <b>눈:</b> "+esc(wanted.eye)+"</small><small><b>특징:</b> "+esc(wanted.feature)+"</small>";
+    $("wantedStatus").textContent=wanted.active?"추적 중":"기록 없음";
+    $("wantedFace").innerHTML=wanted.active?renderVisualPortrait(wanted):"<span style='color:#7d6a54'>기록 없음</span>";
+    $("wantedDetails").innerHTML="<small><b>이름:</b> "+esc(wanted.name)+" ("+esc(wanted.gender)+")</small><small><b>체형:</b> "+esc(wanted.bodyDesc)+" · <b>키:</b> "+wanted.height+"cm ("+heightWord(wanted.height)+")</small><small><b>눈/머리:</b> "+esc(wanted.eye)+" · "+esc(wanted.hair)+"</small><small><b>특징:</b> "+esc(wanted.feature)+"</small>";
   }
 }
 
@@ -742,7 +909,6 @@ function availableTools(){
 }
 
 // IMAGE PIPELINE: render()는 캐릭터/수배자/인장 이미지를 사건 데이터에 연결하는 지점.
-// 실제 이미지 파일로 교체할 때는 아래 v.face / wanted.face / v.documentSeal 연결부를 유지할 것.
 function render(){
   const v=s.case;
   if(!v)return;
@@ -750,21 +916,34 @@ function render(){
   $("money").textContent=s.money;
   $("mistakes").textContent=s.mistakes;
   $("clock").textContent=fmt(s.time);
-  $("portrait").textContent=v.face;$("bigface").textContent=v.face;$("speech").textContent=v.speech;
-  $("vname").textContent=v.name;$("vfrom").textContent=v.from;$("vjob").textContent=v.job;$("vpurpose").textContent=v.docPurpose||v.purpose;$("vstay").textContent=v.stay;$("vheight").textContent=heightWord(v.height);$("veyes").textContent=v.eyes;$("vfeature").textContent=v.feature;
+  $("portrait").className="portrait "+(v.bodyCss||"");
+  $("portrait").innerHTML=renderVisualPortrait(v);
+  $("bigface").innerHTML=renderVisualPortrait(v);
+  $("speech").textContent=v.speech;
+  $("vname").textContent=v.name;
+  $("vgender").textContent=v.gender;
+  $("vfrom").textContent=v.from;
+  $("vjob").textContent=v.job;
+  $("vpurpose").textContent=v.docPurpose||v.purpose;
+  $("vstay").textContent=v.stay;
+  $("vheight").textContent=v.height+"cm ("+heightWord(v.height)+")";
+  $("vbody").textContent=v.bodyDesc;
+  $("veyes").textContent=v.eyes;
+  $("vfeature").textContent=v.feature;
   $("vstatus").textContent="판정 전에 증거를 확보하십시오.";
-  $("sceneTraits").innerHTML=[heightWord(v.height),"눈 "+v.eyes,v.hair,v.feature].map(x=>"<span class='trait'>"+esc(x)+"</span>").join("");
+  $("sceneTraits").innerHTML=[v.gender,v.bodyDesc,v.height+"cm",heightWord(v.height),"눈 "+v.eyes,v.hair,v.feature].map(x=>"<span class='trait'>"+esc(x)+"</span>").join("");
   const healthLine=s.day>=3?"<p><b>건강:</b> "+esc(v.health)+(v.healthCert?" · 증명서 있음":" · 증명서 미확인")+"</p>":"";
   const special=s.day>=5&&v.job==="마법사"?("<p><b>마법사 등록:</b> "+esc(v.docSpecial||"문서에 기재 없음")+"</p>"):"";
   const weapon=s.day>=5&&v.job==="용병"?("<p><b>무기:</b> "+esc(v.cargo)+"</p>"):"";
   const symbol=s.day>=4&&v.symbol!=="없음"?("<p><b>복장 기록:</b> 특이한 문양이 있다는 진술</p>"):"";
   $("documents").innerHTML=
     "<div class='doc'><div class='sealstamp'>"+sealSvg(v.documentSeal)+"</div><h3>통행 허가증</h3>"+
-    "<p><b>성명:</b> "+esc(v.name)+"</p><p><b>발급 도시:</b> "+esc(v.from)+"</p><p><b>직업:</b> "+esc(v.docJob||v.job)+"</p><p><b>방문 목적:</b> "+esc(v.docPurpose||v.purpose)+"</p><p><b>체류:</b> "+esc(v.stay)+"</p><div class='line'></div><p><b>유효일:</b> "+esc(v.expiry||"금일 포함")+"</p><p class='hint'>이 인장이 어느 영지의 관인인지 수첩에서 찾아 대조하십시오.</p></div>"+
-    "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품을 대조하십시오.</p></div>";
+    "<p><b>성명:</b> "+esc(v.name)+" ("+esc(v.docGender||v.gender)+")</p>"+
+    "<p><b>체격:</b> "+esc(v.docBodyDesc||v.bodyDesc)+" (키 "+(v.docHeight||v.height)+"cm)</p>"+
+    "<p><b>발급 도시:</b> "+esc(v.from)+"</p><p><b>직업:</b> "+esc(v.docJob||v.job)+"</p><p><b>방문 목적:</b> "+esc(v.docPurpose||v.purpose)+"</p><p><b>체류:</b> "+esc(v.stay)+"</p><div class='line'></div><p><b>유효일:</b> "+esc(v.expiry||"금일 포함")+"</p><p class='hint'>서류의 키·체형·성별과 눈앞의 인물이 일치하는지 대조하십시오.</p></div>"+
+    "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 성별/체형:</b> "+esc(v.docGender||v.gender)+" · "+esc(v.docBodyDesc||v.bodyDesc)+"</p><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품을 대조하십시오.</p></div>";
   $("toolbar").innerHTML=availableTools().map(t=>"<button class='tool' data-tool='"+t[0]+"'>"+t[1]+"</button>").join("");
   document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>inspect(b.dataset.tool));
-  // DECISION BUTTONS: 통과/거부/경비대 호출은 render 이후에도 항상 현재 사건의 judge()를 호출해야 함
   document.querySelectorAll(".decision").forEach(b=>{
     b.onclick=()=>judge(b.dataset.action);
     b.disabled=false;
@@ -863,13 +1042,17 @@ function resolveDelayed(){
   });
   return notices;
 }
+const SCENE_IMAGES={
+  calm:"assets/images/scene_quarters.jpg",
+  tavern:"assets/images/scene_tavern.jpg",
+  brawl:"assets/images/scene_brawl.jpg",
+  hero:"assets/images/checkpoint_bg.jpg",
+  danger:"assets/images/scene_brawl.jpg"
+};
+
 function storyArt(kind){
- const shapes={calm:"<rect x='50' y='125' width='500' height='95' fill='#705b49'/><path d='M135 220V95h330v125' fill='#514239'/><path d='M265 220v-75q0-42 35-42t35 42v75' fill='#211b18'/><circle cx='465' cy='70' r='27' fill='#a87532'/>",
- tavern:"<rect x='45' y='75' width='510' height='145' rx='8' fill='#5c4030'/><rect x='95' y='140' width='410' height='70' fill='#9b7046'/><circle cx='170' cy='120' r='27' fill='#c8946e'/><circle cx='300' cy='112' r='30' fill='#c8946e'/><circle cx='435' cy='125' r='24' fill='#c8946e'/><path d='M140 120q30-25 60 0M270 112q30-28 60 0M410 120q25-20 50 0' fill='none' stroke='#30231f' stroke-width='10'/>",
- brawl:"<rect x='45' y='125' width='510' height='95' fill='#6b5544'/><circle cx='170' cy='105' r='28' fill='#c8946e'/><circle cx='430' cy='105' r='28' fill='#c8946e'/><path d='M150 220l25-80 35 80M410 220l-25-80-35 80' fill='#40332b'/><path d='M195 135l105 30-65 22M405 135l-105 30 65 22' fill='#7b302d'/>",
- hero:"<rect x='45' y='125' width='510' height='95' fill='#71604d'/><path d='M205 220V115q0-55 95-55t95 55v105' fill='#29211d'/><circle cx='300' cy='85' r='34' fill='#c8946e'/><path d='M255 72q45-42 90 0' fill='#a87532'/><path d='M235 205l65-55 65 55' fill='#496b4c'/>",
- danger:"<rect x='35' y='125' width='530' height='95' fill='#523d37'/><path d='M180 220V120q0-50 120-50t120 50v100' fill='#231c19'/><circle cx='300' cy='82' r='34' fill='#c8946e'/><path d='M260 72h80' stroke='#7b302d' stroke-width='14'/><path d='M95 165l90-35M505 165l-90-35' stroke='#7b302d' stroke-width='16'/>"};
- return "<div class='story-art'><svg viewBox='0 0 600 240'><rect width='600' height='240' fill='#d8c39b'/>"+(shapes[kind]||shapes.calm)+"<path d='M0 220h600' stroke='#392a22' stroke-width='5'/></svg></div>";
+  const src=SCENE_IMAGES[kind]||SCENE_IMAGES.calm;
+  return "<div class='story-art-frame'><img src='"+src+"' alt='"+kind+"' class='story-scene-img'></div>";
 }
 function showStory(title,text,kind,summary,next,fn){$("modalTitle").textContent=title;$("modalText").innerHTML=storyArt(kind)+"<div class='story-caption'>"+esc(text)+"</div>";$("summary").innerHTML=summary||"";$("modalNext").style.display="block";$("modalNext").textContent=next;$("modalNext").onclick=fn;$("modal").classList.add("show")}
 function night(){
@@ -980,7 +1163,103 @@ function toast(t){
   document.body.appendChild(d);setTimeout(()=>d.remove(),1500);
 }
 
-let faceLabHair="black",faceLabFeatures=new Set();function featureForVisitor(v){const f=String(v.feature||"");const a=[];if(/왼쪽.*점/.test(f))a.push("leftDot");if(/오른쪽.*점/.test(f))a.push("rightDot");if(/볼.*흉터/.test(f))a.push("cheekScar");if(/턱.*흉터/.test(f))a.push("chinScar");if(/칼|베인|자국/.test(f))a.push("knifeScar");if(/빵/.test(f))a.push("bread");return a}function renderFaceLayers(){$("faceHair").className="face-hair hair-"+faceLabHair;let h="";if(faceLabFeatures.has("leftDot"))h+='<span class="face-dot left"></span>';if(faceLabFeatures.has("rightDot"))h+='<span class="face-dot right"></span>';if(faceLabFeatures.has("cheekScar"))h+='<span class="face-scar cheek"></span>';if(faceLabFeatures.has("chinScar"))h+='<span class="face-scar chin"></span>';if(faceLabFeatures.has("knifeScar"))h+='<span class="face-cut"></span>';if(faceLabFeatures.has("bread"))h+='<span class="face-bread"></span>';$("faceLayers").innerHTML=h;document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceLabHair));document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.classList.toggle("active",faceLabFeatures.has(b.dataset.feature)))}function openFaceLab(){const v=s.case;if(!v)return;faceLabHair=/금발/.test(v.hair)?"blond":/붉은/.test(v.hair)?"red":/회색/.test(v.hair)?"gray":/갈색/.test(v.hair)?"brown":"black";faceLabFeatures=new Set(featureForVisitor(v));renderFaceLayers();$("faceLabModal").classList.add("show")}$("faceLabBtn").onclick=openFaceLab;document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.onclick=()=>{faceLabHair=b.dataset.hair;renderFaceLayers()});document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.onclick=()=>{const k=b.dataset.feature;faceLabFeatures.has(k)?faceLabFeatures.delete(k):faceLabFeatures.add(k);renderFaceLayers()});$("faceCloseBtn").onclick=()=>$("faceLabModal").classList.remove("show");$("faceApplyBtn").onclick=()=>{const n={leftDot:"왼쪽 점",rightDot:"오른쪽 점",cheekScar:"볼 흉터",chinScar:"턱 흉터",knifeScar:"칼자국",bread:"빵 모양 자국"};addEvidence("얼굴 관찰 기록: "+([...faceLabFeatures].map(x=>n[x]).join(" · ")||"추가 특징 없음")+" / 머리색 "+({black:"검은색",brown:"갈색",blond:"금발",red:"붉은색",gray:"회색"}[faceLabHair]),3);$("faceLabModal").classList.remove("show")}
+let faceLabHair="black",faceLabFeatures=new Set();
+const FEATURE_NAMES={leftDot:"왼쪽 볼 점",rightDot:"오른쪽 점",cheekScar:"볼 흉터",chinScar:"턱 흉터",knifeScar:"칼자국",earRing:"귀걸이"};
+const HAIR_NAMES={black:"검은색",brown:"갈색",blond:"금발",red:"붉은색",gray:"회색"};
+
+function renderFaceLayers(){
+  $("faceHair").className="face-hair hair-"+faceLabHair;
+  let h="";
+  if(faceLabFeatures.has("leftDot"))h+='<span class="face-dot left"></span>';
+  if(faceLabFeatures.has("rightDot"))h+='<span class="face-dot right"></span>';
+  if(faceLabFeatures.has("cheekScar"))h+='<span class="face-scar cheek"></span>';
+  if(faceLabFeatures.has("chinScar"))h+='<span class="face-scar chin"></span>';
+  if(faceLabFeatures.has("knifeScar"))h+='<span class="face-cut"></span>';
+  $("faceLayers").innerHTML=h;
+  document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceLabHair));
+  document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.classList.toggle("active",faceLabFeatures.has(b.dataset.feature)));
+}
+
+function openFaceLab(){
+  const v=s.case;
+  if(!v)return;
+  $("faceLabVisitorView").innerHTML=renderVisualPortrait(v);
+  if(wanted.active){
+    $("faceLabWantedView").innerHTML=renderVisualPortrait(wanted);
+    $("faceLabWantedInfo").innerHTML="<b>"+esc(wanted.name)+"</b><br>"+esc(wanted.hair)+" · "+esc(wanted.eye)+"빛 눈 · "+esc(wanted.feature);
+  }else{
+    $("faceLabWantedView").innerHTML="<div style='color:#7d6a54;display:grid;place-items:center;height:100%;font-size:11px'>오늘의 수배전단 없음</div>";
+    $("faceLabWantedInfo").innerHTML="현재 추적 중인 수배자가 없습니다.";
+  }
+  $("faceMatchFeedback").style.display="none";
+  renderFaceLayers();
+  $("faceLabModal").classList.add("show");
+}
+
+$("faceLabBtn").onclick=openFaceLab;
+document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.onclick=()=>{faceLabHair=b.dataset.hair;renderFaceLayers()});
+document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.feature;
+  if(faceLabFeatures.has(k))faceLabFeatures.delete(k);
+  else faceLabFeatures.add(k);
+  renderFaceLayers();
+});
+
+$("faceCheckVisitorBtn").onclick=()=>{
+  const v=s.case;
+  if(!v)return;
+  const actualHair=getHairClass(v.hair);
+  const hairMatch=(actualHair===faceLabHair);
+  const vFeature=String(v.feature||"");
+  const expectedMarks=[];
+  if(/왼쪽.*점/.test(vFeature))expectedMarks.push("leftDot");
+  if(/오른쪽.*점/.test(vFeature))expectedMarks.push("rightDot");
+  if(/볼.*흉터/.test(vFeature))expectedMarks.push("cheekScar");
+  if(/턱.*흉터/.test(vFeature))expectedMarks.push("chinScar");
+  if(/칼|베인|자국/.test(vFeature))expectedMarks.push("knifeScar");
+  if(/은고리|귀걸이/.test(vFeature))expectedMarks.push("earRing");
+
+  const chosenFeatures=Array.from(faceLabFeatures);
+  const featureMatch=(expectedMarks.length===0&&chosenFeatures.length===0)||(chosenFeatures.length>0&&chosenFeatures.every(f=>expectedMarks.includes(f)));
+  const chosenFeatureStr=chosenFeatures.map(f=>FEATURE_NAMES[f]).join(", ")||"특징 없음";
+  const chosenHairStr=HAIR_NAMES[faceLabHair];
+
+  let msg="";
+  if(hairMatch&&featureMatch){
+    msg="✅ 실물 대조 일치: 관찰한 머리색("+chosenHairStr+") 및 특징("+chosenFeatureStr+")이 실제 인물 일러스트와 정확히 일치합니다.";
+    showInspectFeedback("얼굴 실물 대조",msg,false);
+    addEvidence("얼굴 특징 대조: "+msg,3);
+  }else{
+    msg="⚠️ 실물 대조 불일치: 관찰한 조합("+chosenHairStr+", "+chosenFeatureStr+")이 실제 일러스트와 일치하지 않습니다. 실물 확대경을 다시 확인하십시오.";
+    showInspectFeedback("얼굴 실물 대조",msg,true);
+  }
+  $("faceMatchFeedback").innerHTML="<b>"+esc(msg)+"</b>";
+  $("faceMatchFeedback").style.display="block";
+};
+
+$("faceCheckWantedBtn").onclick=()=>{
+  const v=s.case;
+  if(!v)return;
+  if(!wanted.active){
+    toast("오늘은 추적 중인 수배전단이 없습니다.");
+    return;
+  }
+  const isWanted=(v.type==="wanted");
+  let msg="";
+  if(isWanted){
+    msg="🚨 [수배자 일치 경보!] 현재 방문객의 얼굴 일러스트(머리: "+wanted.hair+", 눈: "+wanted.eye+", 특징: "+wanted.feature+")가 수배전단과 100% 일치합니다! 즉시 경비대를 호출하십시오!";
+    showInspectFeedback("수배전단 대조",msg,true);
+    addEvidence("수배전단 대조: 수배자 용모 일치 확인!",5);
+  }else{
+    msg="🛡️ 수배전단 대조: 현재 방문객의 용모는 수배전단과 일치하지 않습니다. (일반 방문객 판별)";
+    showInspectFeedback("수배전단 대조",msg,false);
+    addEvidence("수배전단 대조: 수배자와 용모 불일치",5);
+  }
+  $("faceMatchFeedback").innerHTML="<b>"+esc(msg)+"</b>";
+  $("faceMatchFeedback").style.display="block";
+};
+
+$("faceCloseBtn").onclick=()=>$("faceLabModal").classList.remove("show");
 setupMobilePanels();resetWanted();makeCases();rules();nextCase();
 </script>
 </body>
