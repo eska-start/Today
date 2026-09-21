@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>오늘도 근무 중 이상 무!</title>
+<title>중세의 경비병은 오늘도 어떻게든 살아갑니다</title>
 <style>
 :root{--bg:#171313;--panel:#281e19;--paper:#ead9b8;--gold:#c99b45;--red:#7e2525;--green:#496b4c;--ink:#2b241d;--muted:#bfae91}
 *{box-sizing:border-box}
@@ -391,7 +391,26 @@ function judge(action){const v=s.case;if(!v)return;const used=s.tools.length;con
 function resolveDelayed(){const notices=[];s.delayed.forEach(x=>x.after--);const due=s.delayed.filter(x=>x.after<=0);s.delayed=s.delayed.filter(x=>x.after>0);due.forEach(x=>{if(x.type==="noble"){notices.push("며칠 전 성문에서 처리한 사람이 귀족 가문의 사람으로 밝혀졌습니다. 당시 ""+x.wrongAction+"" 처분에 대한 조사가 시작되었습니다.");
       if(x.wrongAction==="경비대 호출"||x.wrongAction==="입경 거부") notices.push("상관이 차갑게 말합니다. "검문관의 목은 한 번뿐이다."");if(s.corruption>0){s.familyRisk++;notices.push("장부와 목격자의 진술이 맞지 않습니다. 성문 근무자의 이름이 조용히 조사 대상에 올랐습니다.");}}});return notices;}
 function night(){const notices=resolveDelayed();$("modalTitle").textContent="해가 졌습니다";$("modalText").innerHTML=(notices.length?notices.map(x=>"<p>"+esc(x)+"</p>").join(""):"오늘은 별다른 소식이 없습니다.")+"<p>오늘 번 돈을 어디에 쓸까요?</p>";$("summary").innerHTML="<div class='summary-item night-choice' data-night='tavern'><b>🍺 선술집</b><br>8동전 · 술과 소문</div><div class='summary-item night-choice' data-night='home'><b>🏠 숙소</b><br>무료 · 조용한 밤</div><div class='summary-item night-choice' data-night='gamble'><b>🎲 주사위판</b><br>5동전 · 운에 맡긴다</div><div class='summary-item'><b>현재 주머니</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="밤을 마친다";document.querySelectorAll(".night-choice").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));$("modal").classList.add("show");}
-function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];resetWanted();makeCases();rules();nextCase();};}
+function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");if(s.day>=5){finishGame();return;}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];resetWanted();makeCases();rules();nextCase();};}
+function finishGame(){
+  const nobleTrouble=s.delayed.length>0||s.familyRisk>0;
+  const corrupt=s.corruption>=4;
+  const rich=s.money>=45;
+  const poor=s.money<=0;
+  const clean=s.corruption===0&&s.familyRisk===0;
+  let title,text;
+  if(nobleTrouble&&corrupt){title="처형대의 새벽";text="귀족 사건과 뒷거래가 한꺼번에 드러났습니다. 성문 기록은 당신을 범인으로 지목했고, 마지막 밤은 오지 않았습니다.";}
+  else if(nobleTrouble){title="목숨값을 치르다";text="귀족의 심기를 건드린 대가가 돌아왔습니다. 경비병 하나의 목숨으로 사건은 조용히 마무리되었습니다.";}
+  else if(rich&&clean){title="성문의 모범 경비병";text="큰돈은 벌지 못했지만 장부와 양심을 지켰습니다. 5일을 버틴 당신은 정식 경비병으로 인정받았습니다.";}
+  else if(corrupt&&rich){title="돈 냄새를 아는 경비병";text="당신은 성문보다 뒷골목에서 더 많은 것을 배웠습니다. 살아남았고 돈도 벌었지만, 이제 당신을 찾는 사람이 생겼습니다.";}
+  else if(poor){title="빈 주머니의 마지막 근무";text="5일을 버텼지만 생활비와 실수의 대가는 컸습니다. 성문을 떠나 다른 일자리를 찾아야 합니다.";}
+  else {title="오늘도 살아남았다";text="완벽하지도, 영웅적이지도 않았습니다. 그래도 5일 동안 성문을 지켜냈습니다. 내일도 출근해야 합니다.";}
+  $("modalTitle").textContent=title;
+  $("modalText").innerHTML="<p>카를스반 성문에서의 5일이 끝났습니다.</p><p>"+esc(text)+"</p>";
+  $("summary").innerHTML="<div class='summary-item'><b>최종 소지금</b><br>"+s.money+" 동전</div><div class='summary-item'><b>받은 뒷돈</b><br>"+s.corruption+"회</div><div class='summary-item'><b>가족에게 남긴 위험</b><br>"+s.familyRisk+"</div><div class='summary-item'><b>당신의 기록</b><br>5일간 성문 근무 완료</div>";
+  $("modalNext").style.display="none";
+  $("modal").classList.add("show");
+}
 function endDay(){let earned=0,loss=0,correct=0;s.pending.forEach(r=>{if(r.correct===true){earned+=5;correct++;}else if(r.correct===false&&r.amount<0)loss+=10;});s.money+=earned-loss-15;s.correct=correct;s.mistakes=s.pending.filter(r=>r.correct===false).length;$("modalTitle").textContent="근무 종료 · 판정 감사";$("modalText").innerHTML="<p>오늘 장부를 대조했습니다. 이제야 각 판정의 결과가 공개됩니다.</p>";$("summary").innerHTML=s.pending.map((r,i)=>{const result=r.correct===null?"비공식 처리":"당시 판단 "+(r.correct?"적중":"오판");const reward=r.correct===true?"+5":r.correct===false?(r.amount<0?"-10":"0"):"비공개";return "<div class='summary-item'><b>사건 "+(i+1)+" · "+esc(r.name)+"</b><br>"+esc(r.action)+"<br>"+result+" · "+reward+" 동전</div>";}).join("")+"<div class='summary-item'><b>생활비</b><br>-15 동전</div><div class='summary-item'><b>현재 잔액</b><br>"+s.money+" 동전</div><div class='summary-item'><b>수상한 거래</b><br>"+s.corruption+"회</div>";$("modalNext").textContent="밤으로";$("modalNext").onclick=()=>{$("modal").classList.remove("show");night();};$("modal").classList.add("show");}
 function openSealBook(city){
   $("sealModal").classList.add("show");
