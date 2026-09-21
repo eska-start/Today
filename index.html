@@ -847,6 +847,26 @@ document.querySelectorAll(".mobile-toggle").forEach(btn=>{
 });
 
 resetWanted();makeCases();rules();nextCase();};}
+function setupMobilePanels(){
+  document.querySelectorAll(".mobile-toggle").forEach(btn=>{
+    const target=$(btn.dataset.target);
+    if(!target)return;
+    target.classList.add("mobile-collapsed");
+    btn.setAttribute("aria-expanded","false");
+    btn.onclick=()=>{
+      const open=!target.classList.contains("mobile-collapsed");
+      target.classList.toggle("mobile-collapsed",open);
+      btn.setAttribute("aria-expanded",String(!open));
+      if(btn.dataset.target==="leftPanel"){
+        btn.textContent=open?"📖 검문 수첩 · 규정 / 수배전단 펼치기":"📕 검문 수첩 · 규정 / 수배전단 접기";
+      }else if(btn.dataset.target==="rightPanel"){
+        btn.textContent=open?"👤 방문객 기록 펼치기":"👤 방문객 기록 접기";
+      }else if(btn.dataset.target==="mobileDocPanel"){
+        btn.textContent=open?"📜 서류 / 검사도구 펼치기":"📜 서류 / 검사도구 접기";
+      }
+    };
+  });
+}
 function finishGame(){
   const nobleTrouble=s.delayed.length>0||s.familyRisk>0;
   const corrupt=s.corruption>=4;
@@ -913,7 +933,7 @@ function toast(t){
 }
 
 let faceLabHair="black",faceLabFeatures=new Set();function featureForVisitor(v){const f=String(v.feature||"");const a=[];if(/왼쪽.*점/.test(f))a.push("leftDot");if(/오른쪽.*점/.test(f))a.push("rightDot");if(/볼.*흉터/.test(f))a.push("cheekScar");if(/턱.*흉터/.test(f))a.push("chinScar");if(/칼|베인|자국/.test(f))a.push("knifeScar");if(/빵/.test(f))a.push("bread");return a}function renderFaceLayers(){$("faceHair").className="face-hair hair-"+faceLabHair;let h="";if(faceLabFeatures.has("leftDot"))h+='<span class="face-dot left"></span>';if(faceLabFeatures.has("rightDot"))h+='<span class="face-dot right"></span>';if(faceLabFeatures.has("cheekScar"))h+='<span class="face-scar cheek"></span>';if(faceLabFeatures.has("chinScar"))h+='<span class="face-scar chin"></span>';if(faceLabFeatures.has("knifeScar"))h+='<span class="face-cut"></span>';if(faceLabFeatures.has("bread"))h+='<span class="face-bread"></span>';$("faceLayers").innerHTML=h;document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceLabHair));document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.classList.toggle("active",faceLabFeatures.has(b.dataset.feature)))}function openFaceLab(){const v=s.case;if(!v)return;faceLabHair=/금발/.test(v.hair)?"blond":/붉은/.test(v.hair)?"red":/회색/.test(v.hair)?"gray":/갈색/.test(v.hair)?"brown":"black";faceLabFeatures=new Set(featureForVisitor(v));renderFaceLayers();$("faceLabModal").classList.add("show")}$("faceLabBtn").onclick=openFaceLab;document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.onclick=()=>{faceLabHair=b.dataset.hair;renderFaceLayers()});document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.onclick=()=>{const k=b.dataset.feature;faceLabFeatures.has(k)?faceLabFeatures.delete(k):faceLabFeatures.add(k);renderFaceLayers()});$("faceCloseBtn").onclick=()=>$("faceLabModal").classList.remove("show");$("faceApplyBtn").onclick=()=>{const n={leftDot:"왼쪽 점",rightDot:"오른쪽 점",cheekScar:"볼 흉터",chinScar:"턱 흉터",knifeScar:"칼자국",bread:"빵 모양 자국"};addEvidence("얼굴 관찰 기록: "+([...faceLabFeatures].map(x=>n[x]).join(" · ")||"추가 특징 없음")+" / 머리색 "+({black:"검은색",brown:"갈색",blond:"금발",red:"붉은색",gray:"회색"}[faceLabHair]),3);$("faceLabModal").classList.remove("show")}
-resetWanted();makeCases();rules();nextCase();
+setupMobilePanels();resetWanted();makeCases();rules();nextCase();
 </script>
 </body>
 </html>
