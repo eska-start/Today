@@ -185,7 +185,11 @@ function makeCase(){
     b.second="친척 집에 잠시 들러야 해서요.";
   }
   if(type==="wanted"){
-    wanted={active:true,name:b.name,face:b.face,height:b.height,eye:b.eyes,feature:b.feature};
+    b.name=wanted.name;
+    b.face=wanted.face;
+    b.height=wanted.height;
+    b.eyes=wanted.eye;
+    b.feature=wanted.feature;
     b.speech="마차가 늦어서 발이 묶였습니다. 빨리 지나가게 해주십시오.";
     b.clues=["수배전단","얼굴","키","특징"];
   }
