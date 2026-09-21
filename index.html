@@ -50,32 +50,7 @@ button{font:inherit;cursor:pointer}
 @media(max-width:1100px){.layout{grid-template-columns:1fr 320px}.left{display:none}}
 @media(max-width:800px){.layout{grid-template-columns:1fr}.right{display:none}.scene{height:410px}}
 @media(max-width:600px){.app{padding:4px}.stats{font-size:11px;gap:5px}.scene{height:380px}.documents{grid-template-columns:1fr}.doc{min-height:150px}.decision{min-width:30%;padding:8px 4px;font-size:11px}.visitor{bottom:34%}.portrait{font-size:84px}.traits{max-width:70%}}
-
-.face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}
-.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}
-.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:330px;display:grid;place-items:center;position:relative;overflow:hidden}
-.face-canvas{width:220px;height:270px;position:relative}
-.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48% 48% 45% 45%;background:#c8956e;border:3px solid #513b2c;box-shadow:inset 0 -12px 0 #0001}
-.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}
-.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}
-.face-eye.left{left:68px}.face-eye.right{left:137px}
-.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;transform:rotate(7deg);z-index:3}
-.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;border-radius:50%;z-index:3}
-.face-layer{position:absolute;inset:0;z-index:5;pointer-events:none}
-.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}
-.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}
-.face-scar{position:absolute;height:7px;border-top:3px solid #713e36;border-bottom:1px solid #9b5d50;transform:rotate(-18deg);border-radius:50%}
-.face-scar.cheek{width:48px;left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}
-.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg);border-radius:5px;box-shadow:4px 7px 0 #9a5a4d}
-.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}
-.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}
-.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}
-.face-option.active{outline:2px solid #d3a95d;background:#4b3829}
-.hair-black{background:#211c1a}.hair-brown{background:#573a29}.hair-blond{background:#c9a75d}.hair-red{background:#823a2e}.hair-gray{background:#77736b}
-.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}
-@media(max-width:600px){.face-lab{grid-template-columns:1fr}.face-preview{min-height:290px}.face-canvas{transform:scale(.9)}}
-</style>
+.face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:300px;display:grid;place-items:center}.face-canvas{width:220px;height:270px;position:relative}.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48%;background:#c8956e;border:3px solid #513b2c}.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}.face-eye.left{left:68px}.face-eye.right{left:137px}.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;z-index:3}.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;z-index:3}.face-layer{position:absolute;inset:0;z-index:5}.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}.face-scar{position:absolute;width:48px;height:7px;border-top:3px solid #713e36;border-radius:50%;transform:rotate(-18deg)}.face-scar.cheek{left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg)}.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}.face-option.active{outline:2px solid #d3a95d;background:#4b3829}.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}@media(max-width:600px){.face-lab{grid-template-columns:1fr}}</style>
 </head>
 <body>
 <div class="app">
@@ -118,7 +93,7 @@ button{font:inherit;cursor:pointer}
 </section>
 <aside class="panel right">
   <h2>방문객 기록</h2>
-  <button id="faceLabBtn" class="face-lab-btn">👤 얼굴 특징 조합판 열기</button><div class="visitor-card">
+  <button id="faceLabBtn" class="face-lab-btn">👤 얼굴 특징 조합판</button><div class="visitor-card">
     <!-- IMAGE SLOT: 검문 기록 초상화 / 용도: 현재 방문객의 얼굴 확대 이미지. 수배전단과 직접 대조하는 핵심 이미지 -->
     <div id="bigface" class="bigface">🧑‍🌾</div>
     <div class="field"><span>이름</span><span id="vname">-</span></div>
@@ -137,44 +112,7 @@ button{font:inherit;cursor:pointer}
 </main></div>
 
 <div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div>
-
-<div class="modal" id="faceLabModal"><div class="modalbox">
-  <h2>얼굴 특징 조합판</h2>
-  <p>얼굴 위에 특징 레이어를 겹쳐 보면서 수배전단과 현재 방문객의 얼굴을 대조하십시오.</p>
-  <div class="face-lab">
-    <div class="face-preview">
-      <div class="face-canvas" id="faceCanvas">
-        <div class="face-skin"></div><div class="face-hair" id="faceHair"></div>
-        <div class="face-eye left"></div><div class="face-eye right"></div>
-        <div class="face-nose"></div><div class="face-mouth"></div>
-        <div class="face-layer" id="faceLayers"></div>
-      </div>
-    </div>
-    <div class="face-options">
-      <h3>머리색</h3>
-      <div class="face-option-grid" id="hairOptions">
-        <button class="face-option" data-hair="black">검은색</button>
-        <button class="face-option" data-hair="brown">갈색</button>
-        <button class="face-option" data-hair="blond">금발</button>
-        <button class="face-option" data-hair="red">붉은색</button>
-        <button class="face-option" data-hair="gray">회색</button>
-      </div>
-      <h3 style="margin-top:12px">얼굴 특징 · 복수 선택 가능</h3>
-      <div class="face-option-grid" id="featureOptions">
-        <button class="face-option" data-feature="leftDot">왼쪽 점</button>
-        <button class="face-option" data-feature="rightDot">오른쪽 점</button>
-        <button class="face-option" data-feature="cheekScar">볼 흉터</button>
-        <button class="face-option" data-feature="chinScar">턱 흉터</button>
-        <button class="face-option" data-feature="knifeScar">칼자국</button>
-        <button class="face-option" data-feature="bread">빵 모양 자국</button>
-      </div>
-      <div class="face-note">※ 실제 게임에서는 정답을 표시하지 않습니다. 선택한 레이어는 얼굴 관찰 기록을 만드는 용도로 사용됩니다.</div>
-      <button id="faceApplyBtn" class="face-lab-btn">현재 관찰 내용으로 기록</button>
-      <button id="faceCloseBtn" class="face-lab-btn">닫기</button>
-    </div>
-  </div>
-</div></div>
-<div class="modal" id="sealModal"><div class="modalbox">
+<div class="modal" id="faceLabModal"><div class="modalbox"><h2>얼굴 특징 조합판</h2><p>기존 검문 도구와 별개로 얼굴 특징을 겹쳐 기록합니다.</p><div class="face-lab"><div class="face-preview"><div class="face-canvas"><div class="face-skin"></div><div class="face-hair" id="faceHair"></div><div class="face-eye left"></div><div class="face-eye right"></div><div class="face-nose"></div><div class="face-mouth"></div><div class="face-layer" id="faceLayers"></div></div></div><div class="face-options"><h3>머리색</h3><div class="face-option-grid" id="hairOptions"><button class="face-option" data-hair="black">검은색</button><button class="face-option" data-hair="brown">갈색</button><button class="face-option" data-hair="blond">금발</button><button class="face-option" data-hair="red">붉은색</button><button class="face-option" data-hair="gray">회색</button></div><h3 style="margin-top:12px">특징 · 복수 선택</h3><div class="face-option-grid" id="featureOptions"><button class="face-option" data-feature="leftDot">왼쪽 점</button><button class="face-option" data-feature="rightDot">오른쪽 점</button><button class="face-option" data-feature="cheekScar">볼 흉터</button><button class="face-option" data-feature="chinScar">턱 흉터</button><button class="face-option" data-feature="knifeScar">칼자국</button><button class="face-option" data-feature="bread">빵 모양 자국</button></div><div class="face-note">인장 확대·인장 수첩·외모 대조·소지품 수색·재질문 등 기존 FM 검문은 그대로 유지됩니다.</div><button id="faceApplyBtn" class="face-lab-btn">관찰 기록에 추가</button><button id="faceCloseBtn" class="face-lab-btn">닫기</button></div></div></div></div><div class="modal" id="sealModal"><div class="modalbox">
   <h2>영주의 검문 수첩 · 각지의 인장</h2>
   <p id="sealBookIntro">통행증의 <b>발급 도시</b>를 먼저 확인한 뒤 해당 도시의 공식 인장 견본과 현재 문서를 눈으로 대조하십시오.</p>
   <div id="sealGrid" class="book-grid"></div>
@@ -453,60 +391,7 @@ function judge(action){const v=s.case;if(!v)return;const used=s.tools.length;con
 function resolveDelayed(){const notices=[];s.delayed.forEach(x=>x.after--);const due=s.delayed.filter(x=>x.after<=0);s.delayed=s.delayed.filter(x=>x.after>0);due.forEach(x=>{if(x.type==="noble"){notices.push("며칠 전 성문에서 처리한 사람이 귀족 가문의 사람으로 밝혀졌습니다. 당시 ""+x.wrongAction+"" 처분에 대한 조사가 시작되었습니다.");
       if(x.wrongAction==="경비대 호출"||x.wrongAction==="입경 거부") notices.push("상관이 차갑게 말합니다. "검문관의 목은 한 번뿐이다."");if(s.corruption>0){s.familyRisk++;notices.push("장부와 목격자의 진술이 맞지 않습니다. 성문 근무자의 이름이 조용히 조사 대상에 올랐습니다.");}}});return notices;}
 function night(){const notices=resolveDelayed();$("modalTitle").textContent="해가 졌습니다";$("modalText").innerHTML=(notices.length?notices.map(x=>"<p>"+esc(x)+"</p>").join(""):"오늘은 별다른 소식이 없습니다.")+"<p>오늘 번 돈을 어디에 쓸까요?</p>";$("summary").innerHTML="<div class='summary-item night-choice' data-night='tavern'><b>🍺 선술집</b><br>8동전 · 술과 소문</div><div class='summary-item night-choice' data-night='home'><b>🏠 숙소</b><br>무료 · 조용한 밤</div><div class='summary-item night-choice' data-night='gamble'><b>🎲 주사위판</b><br>5동전 · 운에 맡긴다</div><div class='summary-item'><b>현재 주머니</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="밤을 마친다";document.querySelectorAll(".night-choice").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));$("modal").classList.add("show");}
-function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");if(s.day>=5){finishGame();return;}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];
-let faceLabHair="black";
-let faceLabFeatures=new Set();
-
-function featureForVisitor(v){
-  const out=[];
-  const f=String(v.feature||"");
-  if(/왼쪽/.test(f)&&/점/.test(f))out.push("leftDot");
-  if(/오른쪽/.test(f)&&/점/.test(f))out.push("rightDot");
-  if(/흉터/.test(f)&&/턱/.test(f))out.push("chinScar");
-  if(/흉터/.test(f)&&/볼/.test(f))out.push("cheekScar");
-  if(/칼|베인|자국/.test(f))out.push("knifeScar");
-  if(/빵/.test(f))out.push("bread");
-  return out;
-}
-function hairClass(h){
-  if(/금발/.test(h))return "hair-blond";
-  if(/붉은/.test(h))return "hair-red";
-  if(/회색/.test(h))return "hair-gray";
-  if(/갈색/.test(h))return "hair-brown";
-  return "hair-black";
-}
-function renderFaceLayers(){
-  const hair=$("faceHair");
-  hair.className="face-hair hair-"+faceLabHair;
-  const html=[];
-  if(faceLabFeatures.has("leftDot"))html.push('<span class="face-dot left"></span>');
-  if(faceLabFeatures.has("rightDot"))html.push('<span class="face-dot right"></span>');
-  if(faceLabFeatures.has("cheekScar"))html.push('<span class="face-scar cheek"></span>');
-  if(faceLabFeatures.has("chinScar"))html.push('<span class="face-scar chin"></span>');
-  if(faceLabFeatures.has("knifeScar"))html.push('<span class="face-cut"></span>');
-  if(faceLabFeatures.has("bread"))html.push('<span class="face-bread"></span>');
-  $("faceLayers").innerHTML=html.join("");
-  document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceLabHair));
-  document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.classList.toggle("active",faceLabFeatures.has(b.dataset.feature)));
-}
-function openFaceLab(){
-  const v=s.case;if(!v)return;
-  faceLabHair=(/금발/.test(v.hair)?"blond":/붉은/.test(v.hair)?"red":/회색/.test(v.hair)?"gray":/갈색/.test(v.hair)?"brown":"black");
-  faceLabFeatures=new Set(featureForVisitor(v));
-  renderFaceLayers();
-  $("faceLabModal").classList.add("show");
-}
-$("faceLabBtn").onclick=openFaceLab;
-document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.onclick=()=>{faceLabHair=b.dataset.hair;renderFaceLayers()});
-document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.onclick=()=>{const k=b.dataset.feature;faceLabFeatures.has(k)?faceLabFeatures.delete(k):faceLabFeatures.add(k);renderFaceLayers()});
-$("faceCloseBtn").onclick=()=>$("faceLabModal").classList.remove("show");
-$("faceApplyBtn").onclick=()=>{
-  const names={leftDot:"왼쪽 점",rightDot:"오른쪽 점",cheekScar:"볼 흉터",chinScar:"턱 흉터",knifeScar:"칼자국",bread:"빵 모양 자국"};
-  const selected=[...faceLabFeatures].map(x=>names[x]);
-  addEvidence("얼굴 조합 기록: "+(selected.length?selected.join(" · "):"추가 특징 없음")+" / 머리색 "+({black:"검은색",brown:"갈색",blond:"금발",red:"붉은색",gray:"회색"}[faceLabHair])+"로 관찰 기록을 남겼습니다.",3);
-  $("faceLabModal").classList.remove("show");
-};
-\nresetWanted();makeCases();rules();nextCase();};}
+function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");if(s.day>=5){finishGame();return;}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];resetWanted();makeCases();rules();nextCase();};}
 function finishGame(){
   const nobleTrouble=s.delayed.length>0||s.familyRisk>0;
   const corrupt=s.corruption>=4;
@@ -587,6 +472,7 @@ function toast(t){
   document.body.appendChild(d);setTimeout(()=>d.remove(),1500);
 }
 
+let faceLabHair="black",faceLabFeatures=new Set();function featureForVisitor(v){const f=String(v.feature||"");const a=[];if(/왼쪽.*점/.test(f))a.push("leftDot");if(/오른쪽.*점/.test(f))a.push("rightDot");if(/볼.*흉터/.test(f))a.push("cheekScar");if(/턱.*흉터/.test(f))a.push("chinScar");if(/칼|베인|자국/.test(f))a.push("knifeScar");if(/빵/.test(f))a.push("bread");return a}function renderFaceLayers(){$("faceHair").className="face-hair hair-"+faceLabHair;let h="";if(faceLabFeatures.has("leftDot"))h+='<span class="face-dot left"></span>';if(faceLabFeatures.has("rightDot"))h+='<span class="face-dot right"></span>';if(faceLabFeatures.has("cheekScar"))h+='<span class="face-scar cheek"></span>';if(faceLabFeatures.has("chinScar"))h+='<span class="face-scar chin"></span>';if(faceLabFeatures.has("knifeScar"))h+='<span class="face-cut"></span>';if(faceLabFeatures.has("bread"))h+='<span class="face-bread"></span>';$("faceLayers").innerHTML=h;document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceLabHair));document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.classList.toggle("active",faceLabFeatures.has(b.dataset.feature)))}function openFaceLab(){const v=s.case;if(!v)return;faceLabHair=/금발/.test(v.hair)?"blond":/붉은/.test(v.hair)?"red":/회색/.test(v.hair)?"gray":/갈색/.test(v.hair)?"brown":"black";faceLabFeatures=new Set(featureForVisitor(v));renderFaceLayers();$("faceLabModal").classList.add("show")}$("faceLabBtn").onclick=openFaceLab;document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.onclick=()=>{faceLabHair=b.dataset.hair;renderFaceLayers()});document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.onclick=()=>{const k=b.dataset.feature;faceLabFeatures.has(k)?faceLabFeatures.delete(k):faceLabFeatures.add(k);renderFaceLayers()});$("faceCloseBtn").onclick=()=>$("faceLabModal").classList.remove("show");$("faceApplyBtn").onclick=()=>{const n={leftDot:"왼쪽 점",rightDot:"오른쪽 점",cheekScar:"볼 흉터",chinScar:"턱 흉터",knifeScar:"칼자국",bread:"빵 모양 자국"};addEvidence("얼굴 관찰 기록: "+([...faceLabFeatures].map(x=>n[x]).join(" · ")||"추가 특징 없음")+" / 머리색 "+({black:"검은색",brown:"갈색",blond:"금발",red:"붉은색",gray:"회색"}[faceLabHair]),3);$("faceLabModal").classList.remove("show")}
 resetWanted();makeCases();rules();nextCase();
 </script>
 </body>
