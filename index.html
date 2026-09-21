@@ -3,1018 +3,2218 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>중세의 경비병은 오늘도 어떻게든 살아갑니다</title>
+<title>국경 미궁 관문소 — 제3심사대</title>
+<meta name="description" content="중세 판타지 관문소 검문 시뮬레이션. 매수, 블랙코미디, 다양한 군상들과 함께 5일을 버텨라.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#171313;--panel:#281e19;--paper:#ead9b8;--gold:#c99b45;--red:#7e2525;--green:#496b4c;--ink:#2b241d;--muted:#bfae91}
-*{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle,#493a30,#171313 70%);color:#eadcbf;font-family:Georgia,"Noto Serif KR",serif}
+/* ===== DESIGN TOKENS ===== */
+:root{
+  --bg:#13100e;
+  --panel:#231a14;
+  --panel2:#1e1510;
+  --paper:#ead9b8;
+  --paper2:#f5e8cc;
+  --gold:#c99b45;
+  --gold2:#e9c45c;
+  --red:#7e2525;
+  --red2:#a33232;
+  --green:#3d6145;
+  --green2:#4f7a5b;
+  --ink:#2b241d;
+  --muted:#bfae91;
+  --border:#6d5537;
+  --border2:#80663f;
+  --accent:#c4813a;
+  --shadow:0 8px 32px rgba(0,0,0,0.7);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:radial-gradient(ellipse at 50% 0%,#3a2a1e 0%,#13100e 60%);
+  color:#eadcbf;
+  font-family:'Noto Serif KR',Georgia,serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
 button{font:inherit;cursor:pointer}
-.app{padding:10px;min-height:100vh}
-.top{max-width:1500px;margin:auto;background:#241c18;border:2px solid #80663f;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 30px #0008}
-.title{font-size:clamp(18px,2.5vw,30px);font-weight:bold}.sub{font-size:11px;color:#c8b897}
-.stats{display:flex;gap:12px;white-space:nowrap;font-weight:bold}.coin{color:#e9c45c}.danger{color:#df7d6d}
-.layout{max-width:1500px;margin:10px auto;display:grid;grid-template-columns:245px minmax(500px,1fr) 320px;gap:10px}
-.panel,.desk{border:2px solid #6d5537;box-shadow:0 10px 28px #0008}
-.panel{background:linear-gradient(#382a23,#241b17);padding:13px}.panel h2{font-size:16px;color:#e5c98d;border-bottom:1px solid #806b4c;padding-bottom:7px;margin:0 0 8px}
-.rule{font-size:12px;padding:7px 0;border-bottom:1px solid #514138;line-height:1.45}.rule.lock{opacity:.45}
-.wanted{margin-top:12px;background:#e9d7ae;color:#332820;padding:9px;border:3px solid #5c4530}
-.wanted .wanted-head{display:flex;justify-content:space-between;align-items:center}.wanted .wanted-face{height:105px;background:#2b211a;display:grid;place-items:center;font-size:14px;margin:5px 0;border:2px solid #5c4530;overflow:hidden}
-.wanted-portrait-img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(0.2) contrast(1.05)}
-.wanted small{display:block;line-height:1.45}.tag{display:inline-block;padding:2px 6px;margin:2px;border:1px solid #8f774e;background:#f0dfbd;font-size:10px}
-.scene{height:500px;position:relative;overflow:hidden;background:linear-gradient(#0003,#0006),url('assets/images/checkpoint_bg.jpg') center bottom / cover no-repeat;border:2px solid #5c4934;box-shadow:inset 0 0 60px #000c}
-.sky,.wall,.gate,.flag{display:none}
-.visitor{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:2;text-align:center;min-width:270px;display:flex;flex-direction:column;align-items:center}
-.portrait{width:190px;height:255px;background:transparent;border:none;border-radius:0;box-shadow:none;margin:0 auto 4px;position:relative;display:flex;align-items:flex-end;justify-content:center;filter:drop-shadow(0 14px 10px rgba(0,0,0,0.85));transition:all 0.3s ease}
-.portrait.body-tall{height:285px;transform:scale(1.06);transform-origin:bottom center}
-.portrait.body-short{height:205px;transform:scale(0.92);transform-origin:bottom center}
-.portrait.body-stout{width:235px;transform:scaleX(1.15);transform-origin:bottom center}
-.portrait.body-thin{width:165px;transform:scaleX(0.90);transform-origin:bottom center}
-.char-portrait-img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block}
-.portrait-wrap{position:relative;width:100%;height:100%;background:transparent;display:flex;align-items:flex-end;justify-content:center}
-.portrait-wrap .base-img{width:100%;height:100%;object-fit:contain;object-position:bottom center;display:block;user-select:none}
-.portrait-overlay{position:absolute;inset:0;pointer-events:none}
-.hair-overlay{position:absolute;inset:0 0 35% 0;pointer-events:none}
-.hair-blond{background:radial-gradient(ellipse at 50% 20%, rgba(245, 215, 95, 0.6) 0%, rgba(210, 165, 45, 0.4) 50%, transparent 75%);mix-blend-mode:color-dodge;opacity:0.88}
-.hair-red{background:radial-gradient(ellipse at 50% 20%, rgba(205, 65, 30, 0.65) 0%, rgba(145, 38, 20, 0.45) 50%, transparent 75%);mix-blend-mode:color;opacity:0.92}
-.hair-gray{background:radial-gradient(ellipse at 50% 20%, rgba(225, 225, 230, 0.8) 0%, rgba(160, 160, 170, 0.5) 50%, transparent 75%);filter:grayscale(0.85);mix-blend-mode:saturation;opacity:0.95}
-.hair-brown{background:radial-gradient(ellipse at 50% 20%, rgba(95, 55, 30, 0.6) 0%, rgba(65, 35, 18, 0.4) 50%, transparent 75%);mix-blend-mode:multiply;opacity:0.8}
-.hair-black{background:radial-gradient(ellipse at 50% 20%, rgba(15, 12, 10, 0.75) 0%, rgba(25, 20, 15, 0.45) 55%, transparent 75%);mix-blend-mode:multiply;opacity:0.85}
-.monster-aura{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 35%, rgba(255,170,0,0.22) 0%, rgba(180,50,0,0.30) 50%, transparent 80%);animation:monsterPulse 2s infinite alternate}
-@keyframes monsterPulse{0%{opacity:0.5;transform:scale(0.98)}100%{opacity:1;transform:scale(1.02)}}
-.feature-mark{position:absolute;pointer-events:none;z-index:4}
-.mark-leftDot{left:39%;top:55%;width:6px;height:6px;border-radius:50%;background:#261713;box-shadow:0 0 2px #0a0504;border:1px solid #150d0a}
-.mark-rightDot{left:60%;top:58%;width:6px;height:6px;border-radius:50%;background:#261713;box-shadow:0 0 2px #0a0504;border:1px solid #150d0a}
-.mark-cheekScar{left:30%;top:51%;width:32px;height:12px;border-top:3px solid #732a24;border-radius:50%;transform:rotate(-22deg);filter:drop-shadow(0 1px 1px #200)}
-.mark-chinScar{left:52%;top:68%;width:26px;height:9px;border-top:3px solid #732a24;border-radius:50%;transform:rotate(24deg);filter:drop-shadow(0 1px 1px #200)}
-.mark-knifeScar{left:37%;top:30%;width:3px;height:44px;background:#7a2420;transform:rotate(17deg);box-shadow:0 0 2px #330d0a,inset 1px 0 1px #e58888;border-radius:1px}
-.mark-earRing{left:23%;top:51%;width:10px;height:10px;border:2px solid #d4d4d8;border-radius:50%;box-shadow:0 0 4px #ffffff99}
-.mark-bread{left:44%;top:65%;width:22px;height:14px;background:radial-gradient(circle,#683b28 25%,transparent 75%);border-radius:40%;opacity:0.8}
-.mark-plague{left:35%;top:48%;width:35px;height:30px;background:radial-gradient(circle,#9c2e28 15%,transparent 35%),radial-gradient(circle,#85221c 20%,transparent 45%);background-size:12px 12px;opacity:0.85}
-.compare-tri-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
-.compare-col{background:#ead7af;border:2px solid #745638;padding:8px;text-align:center}
-.compare-col h3{font-size:12px;margin:0 0 6px;color:#30251c}
-.compare-viewer-frame{width:100%;height:180px;background:#1d1612;border:2px solid #5a422d;overflow:hidden;position:relative}
-.compare-hint{font-size:10px;color:#5a432f;margin-top:6px;line-height:1.35;min-height:28px}
-.face-compare-modalbox{max-width:760px!important}
-@media(max-width:700px){.compare-tri-grid{grid-template-columns:1fr}}
-.speech{background:#efe0bd;color:#2b241d;border:3px solid #44352a;padding:7px 10px;min-width:240px;font-size:13px;box-shadow:0 4px 10px #0009;position:relative}
-.traits{position:absolute;left:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:4px;max-width:44%}.trait{background:#201814dd;border:1px solid #8a6a40;color:#ead9b5;padding:4px 6px;font-size:10px}
-.casebar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:7px 0 0;font-size:11px}.caseid{color:#dcc08a}.used{color:#b8aa92}
-.desk{background:linear-gradient(135deg,#775239,#493225);padding:12px}
-.documents{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.doc{background:var(--paper);color:#2b241d;min-height:205px;padding:10px;border:2px solid #745638;box-shadow:3px 5px 8px #0006;position:relative}
-.doc h3{margin:0 0 7px;font-size:13px}.doc p{margin:4px 0;font-size:11px}.sealstamp{position:absolute;right:8px;top:8px;width:76px;height:76px;transform:rotate(-7deg)}.sealstamp svg{width:100%;height:100%;display:block}.bookbtn{width:100%;margin-top:9px;padding:9px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;box-shadow:2px 3px #0005;font-weight:bold}.book-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.seal-card{background:#ead9b8;border:2px solid #765a39;padding:7px;color:#30261f;text-align:center;cursor:pointer}.seal-card.active{outline:3px solid #b0823c}.seal-card strong{display:block;font-size:11px;margin-top:4px}.seal-card small{display:block;font-size:9px;line-height:1.35;margin-top:3px}.seal-ref{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;background:#e7d3a9;border:2px solid #765a39;padding:10px;margin:8px 0}.seal-ref .bigseal{width:105px;height:105px}.seal-ref h3{margin:0 0 5px;font-size:15px}.seal-ref p{margin:3px 0;font-size:11px}.comparebar{display:flex;gap:8px;margin-top:10px}.comparebar button{flex:1;padding:10px;border:2px solid #5b422c;background:#33251d;color:#fff}.compare-result{padding:8px;margin-top:8px;background:#efe0bd;border:2px solid #765a39;color:#30261f;font-size:11px;line-height:1.45}
-.doc .line{border-top:1px solid #ad946e;margin:7px 0}.doc .hint{font-size:10px;color:#665039}.blur{filter:blur(1.2px)}
-.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
-.tool,.decision{border:2px solid #392820;background:#261c18;color:#ead9b5;padding:9px 11px;box-shadow:2px 3px #0006}.tool.active{outline:2px solid var(--gold)}.tool.locked{opacity:.45;cursor:not-allowed}
-.decision{flex:1;min-width:120px;font-weight:bold}.pass{background:#3f6348}.deny{background:#6f3b36}.arrest{background:#632b2b}.secret{background:#29221e}.bribe{background:#725523}
-.visitor-card{background:#f5e8cc;color:#2b241d;padding:10px;border:3px solid #5d4933}
-.bigface{height:140px;background:#241c18;display:flex;align-items:center;justify-content:center;border:2px solid #6d563d;margin-bottom:7px;overflow:hidden;position:relative}
-.field{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #9a815d;padding:4px 0;font-size:11px}.field span:last-child{font-weight:bold;text-align:right}
-.status{margin-top:8px;padding:7px;background:#2d2520;color:#eeddbb;font-size:11px;line-height:1.45}
-.evidence{margin-top:9px;background:#efe0bd;color:#312820;border:2px solid #765a39;padding:8px}.evidence h3{font-size:12px;margin:0 0 6px}.evidence-row{font-size:10px;padding:4px 0;border-bottom:1px solid #c4ab81}.evidence-row:last-child{border-bottom:0}
-.log{margin-top:10px;font-size:10px;max-height:125px;overflow:auto}.log div{padding:4px 0;border-bottom:1px solid #59463b}
-.note{text-align:center;font-size:10px;color:#c8b897;margin-top:6px}
-.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:20px;z-index:20}.modal.show{display:grid}
-.modalbox{max-width:620px;width:100%;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.summary-item{border:1px solid #9a815d;padding:7px;background:#ead7af;font-size:11px}.night-choice{cursor:pointer}.night-choice:hover{outline:2px solid #a57b40}
+img{display:block}
 
-/* MOBILE COLLAPSIBLE UI */
-.mobile-toggle{display:none}
-.mobile-collapsible{display:block}
+/* ===== TOP HEADER ===== */
+.header{
+  background:linear-gradient(90deg,#1a1208,#231a14,#1a1208);
+  border-bottom:2px solid var(--border2);
+  padding:8px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.6);
+  position:sticky;top:0;z-index:10;
+}
+.header-left{display:flex;flex-direction:column;gap:2px}
+.game-title{font-size:clamp(13px,1.8vw,20px);font-weight:700;color:#e5c98d;letter-spacing:0.05em}
+.game-subtitle{font-size:10px;color:#9a8468}
+.header-stats{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stat-chip{
+  background:#1a1208;
+  border:1px solid var(--border);
+  padding:4px 10px;
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+  display:flex;align-items:center;gap:4px;
+}
+.stat-chip .icon{font-size:14px}
+.stat-gold{color:var(--gold2)}
+.stat-warn{color:#e07a6a}
+.stat-day{color:#c8b897}
+.stat-time{color:#a8c4a8}
 
+/* ===== MAIN LAYOUT ===== */
+.layout{
+  display:grid;
+  grid-template-columns:240px 1fr 300px;
+  grid-template-rows:auto;
+  gap:8px;
+  padding:8px;
+  max-width:1520px;
+  margin:0 auto;
+}
+
+/* ===== PANEL BASE ===== */
+.panel{
+  background:linear-gradient(160deg,#2a1f18,#1e1510);
+  border:2px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.panel-title{
+  font-size:13px;font-weight:700;
+  color:var(--gold);
+  border-bottom:1px solid var(--border2);
+  padding:8px 10px;
+  display:flex;align-items:center;gap:6px;
+}
+
+/* ===== LEFT PANEL — 규정 수첩 & 수배전단 ===== */
+.left-panel{
+  display:flex;flex-direction:column;gap:8px;
+}
+/* IMAGE SLOT: 규정 수첩 표지 — rulebook_cover.png 교체 예정 */
+.rulebook{
+  background:linear-gradient(135deg,#2f2218,#1e1610);
+  border:2px solid var(--border);
+  padding:0;
+  overflow:hidden;
+}
+.rulebook-tab{
+  background:linear-gradient(90deg,#5a3e24,#3d2a18);
+  padding:6px 10px;
+  font-size:11px;font-weight:700;color:var(--gold);
+  border-bottom:1px solid var(--border2);
+  cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.rulebook-tab:hover{background:linear-gradient(90deg,#6a4e34,#4d3a28)}
+.rulebook-content{padding:8px}
+.rule-item{
+  padding:5px 0;
+  border-bottom:1px solid #3d2f24;
+  font-size:10px;line-height:1.5;
+  display:flex;gap:6px;
+}
+.rule-item.locked{opacity:0.4}
+.rule-num{color:var(--gold);font-weight:700;min-width:24px;font-size:10px}
+.rule-text{color:#d4c49a}
+.rule-note{font-size:9px;color:#9a8468;display:block;margin-top:2px}
+
+/* 수배전단 */
+/* IMAGE SLOT: wanted_frame.png — 수배전단 용지 프레임 */
+.wanted-box{
+  background:#e8d5a8;
+  color:var(--ink);
+  border:3px solid #5c4530;
+  padding:8px;
+  position:relative;
+}
+.wanted-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:6px;
+}
+.wanted-label{
+  font-size:11px;font-weight:700;color:#5c2020;
+  background:#f5e8cc;
+  border:2px solid #7a3520;
+  padding:2px 8px;
+  transform:rotate(-1deg);
+  display:inline-block;
+}
+.wanted-status{font-size:10px;color:#5c4530}
+/* IMAGE SLOT: char_wanted_portrait.jpg — 수배자 초상화 이미지 */
+.wanted-portrait{
+  width:100%;height:110px;
+  background:#2b211a;
+  border:2px solid #5c4530;
+  overflow:hidden;
+  margin:6px 0;
+  display:flex;align-items:center;justify-content:center;
+}
+.wanted-portrait img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.wanted-info{font-size:10px;line-height:1.6}
+.wanted-info b{color:#5c2020}
+
+/* ===== CENTER — MAIN GAME AREA ===== */
+.center-panel{display:flex;flex-direction:column;gap:8px}
+
+/* 장면 */
+/* IMAGE SLOT: checkpoint_bg.jpg — 관문소 배경 */
+.scene{
+  position:relative;
+  height:460px;
+  overflow:hidden;
+  background:url('assets/images/checkpoint_bg.jpg') center bottom / cover no-repeat;
+  border:2px solid var(--border);
+  box-shadow:inset 0 0 80px rgba(0,0,0,0.5);
+}
+.scene-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.3) 100%);
+  pointer-events:none;
+}
+/* 대기줄 카운터 */
+.queue-info{
+  position:absolute;top:8px;left:8px;
+  background:rgba(20,14,8,0.85);
+  border:1px solid var(--border2);
+  padding:4px 10px;
+  font-size:10px;color:#c8b897;
+}
+/* 방문객 영역 */
+.visitor-area{
+  position:absolute;
+  bottom:0;left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;
+  min-width:260px;
+}
+/* IMAGE SLOT: 방문객 캐릭터 스프라이트 — char_*.jpg (던전밥풍) */
+.char-sprite{
+  width:230px;height:300px;
+  display:flex;align-items:flex-end;justify-content:center;
+  filter:drop-shadow(0 16px 16px rgba(0,0,0,0.95));
+  transition:transform 0.3s ease;
+  position:relative;
+  border-radius:8px 8px 0 0;
+  overflow:hidden;
+  border:2px solid #5a4228;
+  border-bottom:none;
+  background:rgba(20,15,10,0.6);
+}
+.char-sprite img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:top center;
+}
+.char-sprite.body-tall{transform:scale(1.04);transform-origin:bottom center}
+.char-sprite.body-short{transform:scale(0.92);transform-origin:bottom center}
+.char-sprite.body-stout{width:250px}
+.char-sprite.body-thin{width:190px}
+
+/* 성별 뚜렷한 배지 */
+.badge-male{
+  background:#1a2b40 !important;
+  color:#9ecef8 !important;
+  border:1px solid #3d638c !important;
+  font-weight:700 !important;
+}
+.badge-female{
+  background:#3b1a29 !important;
+  color:#f8adc3 !important;
+  border:1px solid #8c3d60 !important;
+  font-weight:700 !important;
+}
+
+/* 말풍선 */
+.speech-bubble{
+  background:var(--paper2);
+  color:var(--ink);
+  border:2px solid #44352a;
+  padding:8px 12px;
+  font-size:12px;line-height:1.6;
+  box-shadow:0 4px 12px rgba(0,0,0,0.6);
+  position:relative;
+  max-width:280px;
+  margin-bottom:4px;
+}
+.speech-bubble::after{
+  content:'';
+  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:#44352a;
+}
+.speech-speaker{
+  font-size:10px;font-weight:700;color:#6d4a2e;margin-bottom:3px;
+}
+
+/* 특징 배지 */
+.trait-badges{
+  position:absolute;left:8px;bottom:8px;
+  display:flex;flex-wrap:wrap;gap:3px;max-width:45%;
+}
+.trait-badge{
+  background:rgba(20,14,8,0.88);
+  border:1px solid var(--border2);
+  color:#d4c49a;
+  padding:3px 6px;font-size:9px;
+}
+
+/* 케이스 바 */
+.case-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  background:#1a1208;border:1px solid var(--border);
+  padding:5px 10px;font-size:10px;
+}
+.case-id{color:var(--gold2);font-weight:700}
+.case-used{color:#9a8468}
+
+/* ===== 책상 영역 ===== */
+/* IMAGE SLOT: desk_bg.jpg — 책상 배경 이미지 */
+.desk-area{
+  position:relative;
+  background:url('assets/images/desk_bg.jpg') center top / cover no-repeat;
+  border:2px solid var(--border);
+  border-radius:0;
+  padding:0;
+  overflow:hidden;
+  min-height:220px;
+}
+.desk-overlay{
+  background:rgba(10,7,4,0.55);
+  backdrop-filter:blur(0px);
+  padding:10px;
+  display:flex;flex-direction:column;gap:8px;
+}
+/* 서류들 */
+.docs-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+/* IMAGE SLOT: pass_document.png — 통행 허가증 양식 */
+.doc-card{
+  background:rgba(234,217,184,0.95);
+  color:var(--ink);
+  border:2px solid #745638;
+  padding:8px;
+  box-shadow:3px 4px 10px rgba(0,0,0,0.6);
+  position:relative;
+  font-size:10px;
+  min-height:120px;
+}
+.doc-card h3{font-size:11px;margin-bottom:5px;border-bottom:1px solid #ad946e;padding-bottom:3px}
+.doc-card p{margin:3px 0;line-height:1.4}
+.doc-card .doc-hint{font-size:9px;color:#705040;margin-top:4px;font-style:italic}
+.doc-seal{position:absolute;right:6px;top:6px;width:64px;height:64px}
+.doc-seal svg{width:100%;height:100%}
+
+/* 검사 도구 버튼들 */
+.tool-bar{
+  display:flex;flex-wrap:wrap;gap:6px;
+}
+.tool-btn{
+  background:linear-gradient(135deg,#352820,#231a14);
+  border:2px solid var(--border);
+  color:#d4c49a;
+  padding:6px 10px;font-size:10px;
+  box-shadow:2px 2px 6px rgba(0,0,0,0.5);
+  transition:all 0.15s;
+  display:flex;align-items:center;gap:4px;
+}
+.tool-btn:hover{background:linear-gradient(135deg,#453830,#332a1e);border-color:var(--gold)}
+.tool-btn:active{transform:translateY(1px);box-shadow:1px 1px 3px rgba(0,0,0,0.5)}
+.tool-btn.locked{opacity:0.35;cursor:not-allowed}
+
+/* ===== RIGHT PANEL — 판정 & 기록 ===== */
+.right-panel{display:flex;flex-direction:column;gap:8px}
+
+/* 판정 버튼들 — 인장 스탬프 스타일 */
+/* IMAGE SLOT: stamp_green.png / stamp_red.png — 인장 스탬프 이미지 */
+.verdict-section{
+  background:linear-gradient(160deg,#2a1f18,#1e1510);
+  border:2px solid var(--border);
+  padding:10px;
+}
+.verdict-title{
+  font-size:11px;font-weight:700;color:var(--gold);
+  text-align:center;border-bottom:1px solid var(--border2);
+  padding-bottom:6px;margin-bottom:8px;
+}
+.verdict-btn{
+  width:100%;margin-bottom:6px;
+  padding:10px;font-size:12px;font-weight:700;
+  border:3px solid;
+  box-shadow:3px 3px 0 rgba(0,0,0,0.5);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:all 0.1s;
+  position:relative;overflow:hidden;
+}
+.verdict-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(0,0,0,0.5)}
+.verdict-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+.btn-pass{background:#2d5038;border-color:#4a8055;color:#a8d4b0}
+.btn-pass:hover{background:#3a6348}
+.btn-deny{background:#5c2e2e;border-color:#8a4040;color:#dfa0a0}
+.btn-deny:hover{background:#6e3838}
+.btn-arrest{background:#4a1e1e;border-color:#7a3030;color:#f09090}
+.btn-arrest:hover{background:#5a2828}
+.btn-bribe{background:#5a3e18;border-color:#8a6030;color:#e8c478;display:none}
+.btn-bribe:hover{background:#6a4e28}
+.btn-secret{background:#1e1a16;border-color:#4a3c2c;color:#8a7a64}
+.btn-secret:hover{background:#2e2a26}
+.verdict-icon{font-size:20px;line-height:1}
+.verdict-stamp{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%) rotate(-15deg);
+  font-size:10px;font-weight:700;opacity:0.6;letter-spacing:0.05em;
+}
+
+/* 이전 판결 로그 */
+.prev-log{
+  background:var(--paper);
+  color:var(--ink);
+  border:2px solid var(--border);
+  padding:8px;
+  font-size:10px;
+}
+.prev-log-title{font-size:10px;font-weight:700;margin-bottom:6px;color:#5c4530}
+.log-entry{padding:3px 0;border-bottom:1px dashed #c4a870;line-height:1.4}
+.log-entry:last-child{border-bottom:none}
+.log-pass{color:#3d6145}
+.log-deny{color:#7e3030}
+.log-arr{color:#6e2020;font-weight:700}
+
+/* 증거 기록 */
+.evidence-box{
+  background:rgba(234,217,184,0.9);
+  color:var(--ink);
+  border:2px solid var(--border);
+  padding:8px;
+}
+.evidence-title{font-size:10px;font-weight:700;margin-bottom:4px;color:#5c4530}
+.evidence-item{font-size:9px;padding:3px 0;border-bottom:1px solid #c4a870;line-height:1.4;display:flex;gap:4px}
+.evidence-item:last-child{border-bottom:none}
+.ev-icon{color:#7a5030;flex-shrink:0}
+
+/* 방문객 카드 */
+.visitor-card{
+  background:var(--paper2);
+  color:var(--ink);
+  border:2px solid var(--border);
+  padding:8px;
+}
+/* IMAGE SLOT: 방문객 얼굴 확대 — 현재 방문객 상반신 이미지 */
+.visitor-portrait-frame{
+  width:100%;height:120px;
+  background:#241c18;
+  border:2px solid var(--border);
+  overflow:hidden;margin-bottom:6px;
+  display:flex;align-items:center;justify-content:center;
+}
+.visitor-portrait-frame img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.vfield{
+  display:flex;justify-content:space-between;
+  border-bottom:1px dashed #b4986c;
+  padding:3px 0;font-size:10px;
+  gap:6px;
+}
+.vfield span:last-child{font-weight:700;text-align:right;color:#3a2a1a}
+.vstatus{
+  margin-top:6px;padding:6px;
+  background:#2d2520;color:#eeddbb;
+  font-size:10px;line-height:1.5;
+}
+
+/* ===== 모달 시스템 ===== */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.82);
+  display:none;place-items:center;
+  padding:16px;z-index:100;
+  backdrop-filter:blur(2px);
+}
+.modal.show{display:grid}
+.modalbox{
+  max-width:640px;width:100%;
+  background:var(--paper2);color:var(--ink);
+  border:4px solid var(--border);
+  padding:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+  max-height:90vh;overflow:auto;
+}
+.modalbox h2{font-size:16px;margin-bottom:8px;color:#3a2010;border-bottom:2px solid var(--border);padding-bottom:6px}
+.modal-btn{
+  width:100%;padding:10px;margin-top:8px;
+  background:#33251d;color:white;
+  border:2px solid #513a29;font-size:12px;
+}
+.modal-btn:hover{background:#453525}
+
+/* 스토리 아트 */
+.story-art{
+  width:100%;height:200px;
+  border:3px solid var(--border);
+  overflow:hidden;margin-bottom:10px;
+  background:#181210;
+}
+.story-art img{width:100%;height:100%;object-fit:cover}
+.story-caption{
+  font-size:12px;line-height:1.7;margin:8px 0;
+  background:#e8d5a8;padding:8px;
+  border:1px solid #b4986c;
+}
+
+/* 야간 선택지 */
+.night-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
+.night-option{
+  background:#f0ddb8;border:2px solid var(--border);
+  padding:10px;cursor:pointer;text-align:center;
+  transition:all 0.15s;
+}
+.night-option:hover{background:#e8cfb0;border-color:var(--gold);transform:translateY(-2px)}
+.night-option h3{font-size:12px;color:#3a2010;margin-bottom:4px}
+.night-option .cost{font-size:10px;color:#7a5030}
+.night-option .desc{font-size:10px;color:#5a4030;margin-top:3px}
+
+/* 판정 결과 요약 */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
+.summary-item{
+  background:#f0ddb8;border:1px solid var(--border);
+  padding:7px;font-size:10px;
+}
+.summary-item b{display:block;margin-bottom:2px;color:#3a2010}
+.correct{color:#3d6145}
+.wrong{color:#7e3030;font-weight:700}
+
+/* 소지품 수색 모달 */
+.cargo-item{
+  background:#f0ddb8;border:1px solid var(--border);
+  padding:6px 8px;margin:4px 0;font-size:11px;
+  display:flex;align-items:center;gap:8px;
+}
+.search-result{
+  margin-top:8px;padding:8px;
+  background:#e8d5a8;border:2px solid var(--border);
+  font-size:11px;line-height:1.5;
+}
+.search-result.alert{border-color:#8a4040;background:#f0d0d0}
+
+/* 심문 모달 */
+.ask-btn{
+  width:100%;padding:8px;margin:4px 0;
+  background:#f0ddb8;border:2px solid var(--border);
+  color:var(--ink);text-align:left;font-size:11px;
+}
+.ask-btn:hover{background:#e0cda8;border-color:var(--gold)}
+.ask-answer{
+  margin-top:8px;padding:10px;
+  background:#e8d5a8;border:2px solid var(--border);
+  font-size:11px;line-height:1.6;
+}
+.ask-answer.suspicious{border-color:#8a4040;background:#f0d0d0}
+
+/* 인장 수첩 모달 */
+.seal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.seal-card{
+  background:var(--paper);border:2px solid var(--border);
+  padding:6px;text-align:center;cursor:pointer;
+  transition:all 0.15s;
+}
+.seal-card:hover{border-color:var(--gold)}
+.seal-card.active{border-color:var(--gold2);background:#f5e0b0}
+.seal-card strong{display:block;font-size:10px;margin-top:3px;color:var(--ink)}
+.seal-card small{display:block;font-size:8px;color:#705040}
+.seal-ref{
+  display:grid;grid-template-columns:100px 1fr;gap:10px;
+  background:#e8d5a8;border:2px solid var(--border);
+  padding:10px;margin:8px 0;align-items:start;
+}
+.seal-ref .big-seal{width:100px;height:100px}
+.seal-ref h3{font-size:13px;margin-bottom:4px;color:var(--ink)}
+.seal-ref p{font-size:10px;margin:2px 0;line-height:1.4}
+.compare-result{
+  padding:8px;background:#e8d5a8;border:2px solid var(--border);
+  font-size:10px;line-height:1.5;margin-top:6px;
+}
+.compare-result.match{border-color:#3d6145;background:#d8ecd8}
+.compare-result.mismatch{border-color:#7e3030;background:#f0d0d0}
+.comparebar{display:flex;gap:6px;margin-top:8px}
+.comparebar button{flex:1;padding:8px;border:2px solid var(--border);font-size:11px}
+
+/* 이단/마물 점검 */
+.inspect-feedback{
+  margin-top:6px;padding:7px;font-size:10px;line-height:1.5;
+  border:2px solid var(--border);
+}
+.inspect-feedback.ok{background:#d8ecd8;border-color:#3d6145}
+.inspect-feedback.warn{background:#f0d0d0;border-color:#7e3030}
+
+/* 토스트 */
+.toast{
+  position:fixed;left:50%;bottom:30px;
+  transform:translateX(-50%);
+  background:#1a1208;color:var(--paper);
+  border:2px solid var(--gold);
+  padding:10px 20px;z-index:200;
+  max-width:90%;text-align:center;
+  font-size:12px;box-shadow:0 6px 24px rgba(0,0,0,0.8);
+  animation:toastIn 0.2s ease;
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
+/* 블랙코미디 특수 대사 강조 */
+.speech-comedy{color:#8a3020;font-style:italic}
+.speech-action{color:#5a7050;font-style:italic;font-size:10px}
+
+/* ===== 반응형 ===== */
+@media(max-width:1100px){
+  .layout{grid-template-columns:210px 1fr 270px}
+  .scene{height:400px}
+}
 @media(max-width:800px){
-  .layout>section{order:1}
-  .left{order:2}
-  .right{order:3}
-
-  /* 성문 장면이 모바일 진입 시 첫 화면의 중심 */
-  .scene{
-    height:390px;
-    margin-bottom:2px
-  }
-  .casebar{
-    background:#1d1613;
-    border:1px solid #604b35;
-    padding:6px 7px
-  }
-
-  .mobile-toggle{
-    display:block;
-    width:100%;
-    padding:10px 9px;
-    background:#2d211a;
-    color:#ead9b5;
-    border:2px solid #80613b;
-    font-weight:bold;
-    font-size:11px;
-    text-align:left
-  }
-  .mobile-toggle[aria-expanded="true"]{
-    outline:2px solid #c99b45;
-  }
-  .mobile-collapsible{
-    display:block;
-  }
-  .mobile-collapsible.mobile-collapsed{
-    display:none;
-  }
-
-  /* 서류와 검사도구는 기본 접힘. 판정 버튼은 항상 바로 보이게 */
-  .mobile-doc-toggle{
-    margin-bottom:0
-  }
-  .mobile-doc-toggle + .mobile-collapsible{
-    margin-top:7px
-  }
-
-  .desk{
-    display:flex;
-    flex-direction:column;
-    gap:7px;
-    padding:7px
-  }
-  .desk>.mobile-doc-toggle{order:1}
-  .desk>.mobile-collapsible{order:2}
-  .desk>.toolbar{order:3}
-  .desk>.note{order:4}
-
-  /* 메인 판정 버튼을 성문 바로 아래에서 항상 노출 */
-  .desk>.toolbar:not(.mobile-collapsible .toolbar){
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:5px;
-    margin-top:0
-  }
-  .desk>.toolbar:not(.mobile-collapsible .toolbar) .decision{
-    min-height:44px
-  }
-
-  /* 좌우 패널은 버튼만 보이는 상태로 시작 */
-  .left,.right{
-    padding:7px
-  }
-  .left>.mobile-collapsible,
-  .right>.mobile-collapsible{
-    margin-top:7px
-  }
-
-  /* 수첩 내부도 모바일에서는 2열로 짧게 */
-  #rules{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:0 6px
-  }
-  #rules .rule{
-    font-size:9px;
-    padding:4px 0;
-    min-height:32px
-  }
-
-  .wanted{
-    margin-top:6px
-  }
-
-  .visitor-card{
-    padding:7px
-  }
-  .bigface{
-    height:100px;
-    font-size:68px
-  }
-
-  /* 증거/로그는 기록 버튼을 눌렀을 때 확인 가능하도록 비교적 짧게 */
-  .evidence{
-    max-height:190px;
-    overflow:auto
-  }
-  .log{
-    max-height:90px
-  }
+  .layout{display:flex;flex-direction:column}
+  .scene{height:360px}
+  .char-sprite{width:160px;height:220px}
+  .docs-row{grid-template-columns:1fr}
+  .night-grid{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
+  .seal-grid{grid-template-columns:repeat(3,1fr)}
+  .header{flex-wrap:wrap}
 }
-
-/* PC LAYOUT: 3열 고정 구조. 800px 초과에서는 기존 화면을 그대로 사용. */
-@media(min-width:801px){
-  .layout{grid-template-columns:245px minmax(500px,1fr) 320px}
-  .left,.right{display:block}
-}
-
-/* TABLET / SMALL LAPTOP: PC 구조를 유지하되 좌측 정보를 접지 않음. */
-@media(max-width:1100px) and (min-width:801px){
-  .layout{grid-template-columns:220px minmax(0,1fr) 285px;gap:8px}
-  .panel{padding:10px}
-  .scene{height:450px}
-}
-
-/* MOBILE LAYOUT: PC 화면을 축소하지 않고 모바일 전용 세로 구조로 전환.
-   좌측 규정/수배전단 → 중앙 검문 → 우측 방문객 기록 순으로 모두 표시. */
-@media(max-width:800px){
-  body{background:linear-gradient(#251c18,#130f0d)}
-  .app{padding:5px}
-  .top{
-    padding:9px 10px;
-    display:grid;
-    grid-template-columns:1fr;
-    gap:6px;
-    align-items:start
-  }
-  .title{font-size:20px;line-height:1.2}
-  .sub{font-size:10px}
-  .stats{
-    width:100%;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:4px;
-    font-size:11px
-  }
-  .stats span{
-    background:#1b1512;
-    border:1px solid #5c4934;
-    padding:5px 4px;
-    text-align:center;
-    min-width:0
-  }
-
-  .layout{
-    max-width:none;
-    width:100%;
-    margin:7px auto 0;
-    display:flex;
-    flex-direction:column;
-    gap:8px
-  }
-
-  /* 모바일에서는 좌/우 패널을 숨기지 않는다. */
-  .left,.right{
-    display:block;
-    width:100%;
-    order:unset
-  }
-  .left{order:1}
-  .layout>section{order:2}
-  .right{order:3}
-
-  .panel{
-    padding:9px;
-    border-width:2px
-  }
-  .panel h2{
-    font-size:14px;
-    margin-bottom:6px
-  }
-
-  /* 규정판은 모바일 2열로 압축 */
-  #rules{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:0 7px
-  }
-  #rules .rule{
-    font-size:10px;
-    padding:5px 0;
-    min-height:36px
-  }
-  .wanted{
-    margin-top:7px;
-    padding:7px
-  }
-  .wanted .wanted-face{
-    height:56px;
-    font-size:32px
-  }
-  .wanted small{font-size:9px}
-
-  .bookbtn{
-    margin-top:7px;
-    padding:8px;
-    font-size:11px
-  }
-
-  /* 중앙 검문 화면 */
-  .scene{
-    height:330px;
-    border-width:2px
-  }
-  .wall{height:110px}
-  .gate{height:180px;border-width:17px}
-  .visitor{
-    min-width:0;
-    width:90%;
-    bottom:14px
-  }
-  .portrait{width:140px;height:190px}
-  .speech{
-    min-width:0;
-    width:100%;
-    font-size:11px;
-    padding:6px 8px
-  }
-  .traits{
-    left:7px;
-    bottom:7px;
-    max-width:88%
-  }
-  .trait{
-    font-size:9px;
-    padding:3px 5px
-  }
-  .casebar{
-    margin-top:5px;
-    font-size:10px
-  }
-
-  .desk{padding:8px}
-  .documents{
-    grid-template-columns:1fr;
-    gap:7px
-  }
-  .doc{
-    min-height:0;
-    padding:8px
-  }
-  .doc p{font-size:10px}
-  .doc h3{font-size:12px}
-  .sealstamp{
-    width:62px;
-    height:62px
-  }
-
-  /* 검사 도구: 모바일 2열 */
-  .toolbar{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:5px;
-    margin-top:7px
-  }
-  .tool,.decision{
-    width:100%;
-    min-width:0;
-    padding:9px 5px;
-    font-size:10px;
-    line-height:1.2
-  }
-  .decision{
-    min-height:42px
-  }
-
-  /* 방문객 기록: 모바일에서도 우측 패널 전체를 유지 */
-  .visitor-card{
-    padding:8px
-  }
-  .bigface{
-    height:120px
-  }
-  .field{
-    font-size:10px;
-    padding:5px 0
-  }
-  .status{
-    font-size:10px;
-    padding:6px
-  }
-  .evidence{
-    margin-top:7px;
-    padding:7px
-  }
-  .evidence-row{font-size:9px}
-  .log{
-    max-height:110px;
-    font-size:9px
-  }
-
-  /* 모달도 휴대폰 화면 안에서 잘리지 않도록 스크롤 허용 */
-  .modal{
-    padding:8px
-  }
-  .modalbox{
-    width:100%;
-    max-width:none;
-    max-height:calc(100vh - 16px);
-    overflow:auto;
-    padding:12px
-  }
-  .summary-grid{
-    grid-template-columns:1fr;
-    gap:5px
-  }
-
-  /* 인장 수첩 */
-  .book-grid{
-    grid-template-columns:1fr 1fr;
-    gap:5px
-  }
-  .seal-card{
-    padding:5px
-  }
-  .seal-card strong{font-size:10px}
-  .seal-card small{font-size:8px}
-  .seal-ref{
-    grid-template-columns:82px 1fr;
-    gap:8px;
-    padding:7px
-  }
-  .seal-ref .bigseal{
-    width:78px;
-    height:78px
-  }
-  .seal-ref h3{font-size:12px}
-  .seal-ref p{font-size:9px}
-  .comparebar{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:5px
-  }
-  .comparebar button{
-    padding:9px 5px;
-    font-size:10px
-  }
-
-  /* 얼굴 특징 조합판 */
-  .face-lab{grid-template-columns:1fr}
-  .face-preview{min-height:250px}
-  .face-option{
-    font-size:10px;
-    padding:7px 5px
-  }
-}
-
-/* 아주 좁은 휴대폰만 한 단계 더 압축 */
-@media(max-width:420px){
-  .title{font-size:18px}
-  .stats{font-size:10px}
+@media(max-width:480px){
   .scene{height:300px}
-  .portrait{width:120px;height:165px}
-  #rules .rule{font-size:9px}
-  .tool,.decision{font-size:9px;padding:8px 4px}
-  .visitor-card{padding:7px}
+  .header-stats{gap:4px}
+  .stat-chip{font-size:10px;padding:3px 7px}
 }
-.story-art-frame{width:100%;height:220px;border:3px solid #594230;overflow:hidden;margin-bottom:12px;background:#181210;box-shadow:0 6px 20px #000a}
-.story-scene-img{width:100%;height:100%;object-fit:cover;display:block}
-.story-caption{font-size:12px;line-height:1.6;margin:10px 0;background:#ead7af;padding:9px;border:1px solid #9c7b51}
-.face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:300px;display:grid;place-items:center}.face-canvas{width:220px;height:270px;position:relative}.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48%;background:#c8956e;border:3px solid #513b2c}.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}.face-eye.left{left:68px}.face-eye.right{left:137px}.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;z-index:3}.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;z-index:3}.face-layer{position:absolute;inset:0;z-index:5}.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}.face-scar{position:absolute;width:48px;height:7px;border-top:3px solid #713e36;border-radius:50%;transform:rotate(-18deg)}.face-scar.cheek{left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg)}.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}.face-option.active{outline:2px solid #d3a95d;background:#4b3829}.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}@media(max-width:600px){.face-lab{grid-template-columns:1fr}}
-<style>
-/* FINAL MOBILE OVERRIDES: mobile-first main scene + collapsible secondary panels */
+
+/* ===== 모바일 토글 ===== */
+.mobile-toggle{
+  display:none;width:100%;padding:9px;
+  background:#2a1f18;color:var(--paper);
+  border:2px solid var(--border);
+  font-weight:700;font-size:11px;text-align:left;
+}
 @media(max-width:800px){
-  .layout{display:flex!important;flex-direction:column!important}
-  .layout>section{order:1!important}
-  .layout>.left{order:2!important}
-  .layout>.right{order:3!important}
-
-  .mobile-collapsible.mobile-collapsed{display:none!important}
-
-  /* 서류/검사도구 접기 상태에서도 판정 버튼은 유지 */
-  #mobileDocPanel{display:block}
-  #mobileDocPanel.mobile-collapsed{display:none!important}
-
-  .desk>.mobile-doc-toggle{display:block!important;order:1}
-  .desk>.mobile-collapsible{order:2}
-  .desk>.toolbar:not(#toolbar){order:3!important}
-  .desk>.note{order:4}
-
-  .desk{
-    display:flex!important;
-    flex-direction:column!important;
-  }
-
-  .scene{height:390px!important}
-  .left,.right{display:block!important}
+  .mobile-toggle{display:block}
+  .mobile-collapsible.collapsed{display:none}
 }
-@media(max-width:420px){
-  .scene{height:340px!important}
-}
-</style>
 
+/* 얼굴 대조판 모달 */
+.face-compare-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:8px 0}
+.face-col h3{font-size:11px;color:var(--ink);margin-bottom:5px}
+.face-viewer{
+  width:100%;height:160px;
+  background:#241c18;border:2px solid var(--border);
+  overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.face-viewer img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.face-hint{font-size:9px;color:#705040;margin-top:4px;line-height:1.4}
+.face-canvas-wrap{
+  background:#e0ccaa;border:2px solid var(--border);
+  height:160px;display:flex;align-items:center;justify-content:center;
+}
+.face-canvas{width:100px;height:130px;position:relative}
+.face-skin{position:absolute;left:14px;top:20px;width:72px;height:90px;border-radius:48%;background:#c8956e;border:2px solid #513b2c}
+.face-hair{position:absolute;left:8px;top:8px;width:84px;height:40px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}
+.face-eye{position:absolute;top:54px;width:8px;height:5px;border-radius:50%;background:#3b281f;z-index:3}
+.face-eye.l{left:26px}.face-eye.r{left:66px}
+.face-nose{position:absolute;left:50px;top:60px;width:5px;height:22px;border-right:1.5px solid #815a45;z-index:3}
+.face-mouth{position:absolute;left:38px;top:88px;width:24px;height:8px;border-bottom:2px solid #663e38;z-index:3}
+.face-mark{position:absolute;pointer-events:none;z-index:4}
+.face-mark.ld{left:32px;top:70px;width:4px;height:4px;border-radius:50%;background:#261713}
+.face-mark.rd{left:60px;top:72px;width:4px;height:4px;border-radius:50%;background:#261713}
+.face-mark.cs{left:18px;top:76px;width:18px;height:6px;border-top:2px solid #732a24;border-radius:50%;transform:rotate(-22deg)}
+.face-mark.ks{left:42px;top:48px;width:2px;height:24px;background:#7a2420;transform:rotate(17deg);border-radius:1px}
+.face-opts{margin-top:8px}
+.face-opts h4{font-size:10px;margin:6px 0 3px;color:var(--ink)}
+.face-opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.face-opt{
+  padding:4px 6px;background:#f0ddb8;border:1px solid var(--border);
+  color:var(--ink);font-size:10px;text-align:left;
+}
+.face-opt.active{background:#e0c888;border-color:var(--gold)}
+
+/* ===== 특수 상태 이펙트 ===== */
+.monster-glow{box-shadow:0 0 20px rgba(255,140,0,0.4),inset 0 0 20px rgba(180,50,0,0.3);animation:mGlow 2s infinite alternate}
+@keyframes mGlow{0%{box-shadow:0 0 10px rgba(255,140,0,0.3)}100%{box-shadow:0 0 30px rgba(255,140,0,0.6)}}
+.ghost-float{animation:gFloat 3s ease-in-out infinite}
+@keyframes gFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.plague-tint{filter:sepia(0.4) hue-rotate(-30deg)}
+
+/* ===== 메인 타이틀 화면 (START SCREEN) ===== */
+.title-screen{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:url('assets/images/title_main_bg.jpg') center center / cover no-repeat;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  transition:opacity 0.4s ease, visibility 0.4s ease;
+}
+.title-backdrop{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at center, rgba(16,12,9,0.5) 0%, rgba(10,7,5,0.88) 100%);
+  backdrop-filter:blur(2px);
+}
+.title-container{
+  position:relative;
+  z-index:2;
+  background:rgba(26,19,14,0.94);
+  border:3px solid var(--gold);
+  box-shadow:0 20px 60px rgba(0,0,0,0.95), inset 0 0 40px rgba(0,0,0,0.7);
+  padding:32px 40px;
+  max-width:660px;
+  width:100%;
+  text-align:center;
+  border-radius:8px;
+}
+.title-emblem{
+  font-size:22px;
+  color:var(--gold2);
+  margin-bottom:6px;
+  letter-spacing:0.3em;
+}
+.title-main-text{
+  font-size:clamp(26px, 3.8vw, 38px);
+  font-weight:700;
+  color:#fbe8c3;
+  text-shadow:0 4px 12px rgba(0,0,0,0.8), 0 0 20px rgba(201,155,69,0.3);
+  letter-spacing:0.08em;
+  margin-bottom:6px;
+}
+.title-sub-text{
+  font-size:13px;
+  color:var(--gold);
+  letter-spacing:0.18em;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.title-art-tag{
+  display:inline-block;
+  background:#17110c;
+  border:1px solid #634a2c;
+  color:#d4b886;
+  font-size:11px;
+  letter-spacing:0.12em;
+  padding:4px 12px;
+  border-radius:20px;
+  margin-bottom:16px;
+}
+.title-description{
+  font-size:12.5px;
+  line-height:1.75;
+  color:#ded0b6;
+  margin-bottom:20px;
+  border-top:1px solid #4a3824;
+  border-bottom:1px solid #4a3824;
+  padding:12px 10px;
+}
+.title-warning-quote{
+  margin-top:6px;
+  font-style:italic;
+  color:var(--gold2);
+}
+.title-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  max-width:340px;
+  margin:0 auto 18px auto;
+}
+.title-btn{
+  background:linear-gradient(180deg,#38291c,#221810);
+  border:2px solid #7d5f38;
+  color:#f4e3c3;
+  padding:11px 18px;
+  font-size:14px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border-radius:4px;
+  transition:all 0.2s ease;
+  box-shadow:0 4px 12px rgba(0,0,0,0.5);
+}
+.title-btn:hover{
+  background:linear-gradient(180deg,#4d3826,#302217);
+  border-color:var(--gold2);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(201,155,69,0.4);
+}
+.title-btn-primary{
+  background:linear-gradient(180deg,#6b4e26,#422e15);
+  border-color:var(--gold);
+  color:#fff4d4;
+  font-size:15px;
+  padding:13px 22px;
+}
+.title-btn-primary:hover{
+  background:linear-gradient(180deg,#8a6532,#543b1b);
+}
+.title-footer-stats{
+  font-size:11px;
+  color:#8e7a63;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.title-nav-btn{
+  background:#261a10;
+  border:1px solid var(--gold);
+  color:var(--gold2);
+  font-size:11px;
+  font-weight:700;
+  padding:4px 10px;
+  border-radius:3px;
+  transition:all 0.2s;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.title-nav-btn:hover{
+  background:var(--gold);
+  color:#1a1208;
+}
 </style>
 </head>
 <body>
-<div class="app">
-<header class="top">
-  <div><div class="title">중세의 경비병은 오늘도 어떻게든 살아갑니다</div><div class="sub">ALL CLEAR TODAY! · 카를스반 영지 성문 검문소</div></div>
-  <div class="stats"><span>제 <b id="day">1</b>일차</span><span id="clock">06:00</span><span class="coin">◉ <b id="money">30</b></span><span class="danger">실수 <b id="mistakes">0</b></span></div>
-</header>
-<main class="layout">
-<aside class="panel left">
-  <button class="mobile-toggle" data-target="leftPanel" aria-expanded="false">📖 검문 수첩 · 규정 / 수배전단 펼치기</button>
-  <div id="leftPanel" class="mobile-collapsible">
-  <h2>영주의 하사문</h2>
-  <div id="rules"></div>
-  <!-- IMAGE SLOT: 수배전단 초상화 / 용도: 당일 수배자의 얼굴 사진·목탄 초상화. 실제 중세 수배전단 느낌의 이미지로 교체 -->
-<div class="wanted"><div class="wanted-head"><b>수배전단</b><span id="wantedStatus"></span></div><div id="wantedFace" class="wanted-face">?</div><div id="wantedDetails"></div></div><button id="sealBookBtn" class="bookbtn">📖 각지의 인장 수첩 열기</button>
-  </div>
-</aside>
-<section>
-  <div class="scene">
-    <!-- IMAGE SLOT: 성문 검문소 배경 / 용도: 게임 메인 검문 장면 전체 배경. 나중에 AI 생성 중세 성문 일러스트로 교체 -->
-    <div class="sky"></div>
-    <!-- IMAGE SLOT: 성벽 / 용도: 배경의 중세 석조 성벽. 추후 고해상도 배경 일러스트의 해당 영역으로 교체 -->
-    <div class="wall"></div>
-    <!-- IMAGE SLOT: 영주 깃발 / 용도: 카를스반 영지의 문장 깃발. 추후 실제 문장 이미지로 교체 -->
-    <div class="flag">⚑</div>
-    <!-- IMAGE SLOT: 성문 / 용도: 방문객 뒤의 거대한 목재/철제 성문. 추후 배경 일러스트 또는 투명 PNG로 교체 -->
-    <div class="gate"></div>
-    <div class="visitor">
-      <!-- IMAGE SLOT: 방문객 전신/상반신 캐릭터 / 용도: 매 사건 랜덤 NPC의 외형. 추후 직업/복장별 캐릭터 이미지로 교체 -->
-      <div id="portrait" class="portrait">🧑‍🌾</div>
-      <div id="speech" class="speech">통행증을 제출하겠습니다.</div>
-    </div>
-    <!-- IMAGE SLOT: 방문객 외형 단서 배지 영역 / 용도: 키·눈·흉터·복장 등의 시각 단서를 보조. 최종적으로는 캐릭터 이미지에 직접 반영 -->
-    <div id="sceneTraits" class="traits"></div>
-  </div>
-  <div class="casebar"><span id="caseNumber" class="caseid">사건 1/8</span><span id="used" class="used">검사 0회 · 예상 근무시간 06:45</span></div>
-  <div class="desk">
-    <button class="mobile-toggle mobile-doc-toggle" data-target="mobileDocPanel" aria-expanded="false">📜 서류 / 검사도구 펼치기</button>
-    <div id="mobileDocPanel" class="mobile-collapsible">
-    <div id="documents" class="documents"></div>
-    <div id="toolbar" class="toolbar"></div>
-    </div>
-    <div class="toolbar"><button class="decision pass" data-action="pass">🟢 성문 통과</button><button class="decision deny" data-action="deny">🟠 입경 거부</button><button class="decision arrest" data-action="arrest">🔴 경비대 호출</button><button class="decision secret" data-action="secret">⚫ 뒷골목 처리</button><button id="bribeDecision" class="decision bribe" data-action="bribe" style="display:none">🪙 뒷돈 수락</button></div>
-    <div class="note">중요: 검사 도구는 단서를 보여줄 뿐, 판정은 검문관이 내립니다.</div>
-  </div>
-</section>
-<aside class="panel right">
-  <button class="mobile-toggle" data-target="rightPanel" aria-expanded="false">👤 방문객 기록 펼치기</button>
-  <div id="rightPanel" class="mobile-collapsible">
-  <h2>방문객 기록</h2>
-  <button id="faceLabBtn" class="face-lab-btn">👤 얼굴 특징 조합판</button><div class="visitor-card">
-    <!-- IMAGE SLOT: 검문 기록 초상화 / 용도: 현재 방문객의 얼굴 확대 이미지. 수배전단과 직접 대조하는 핵심 이미지 -->
-    <div id="bigface" class="bigface">🧑‍🌾</div>
-    <div class="field"><span>이름</span><span id="vname">-</span></div>
-    <div class="field"><span>성별</span><span id="vgender">-</span></div>
-    <div class="field"><span>출신지</span><span id="vfrom">-</span></div>
-    <div class="field"><span>직업</span><span id="vjob">-</span></div>
-    <div class="field"><span>방문 목적</span><span id="vpurpose">-</span></div>
-    <div class="field"><span>체류</span><span id="vstay">-</span></div>
-    <div class="field"><span>키</span><span id="vheight">-</span></div>
-    <div class="field"><span>체형</span><span id="vbody">-</span></div>
-    <div class="field"><span>눈</span><span id="veyes">-</span></div>
-    <div class="field"><span>특징</span><span id="vfeature">-</span></div>
-    <div class="status" id="vstatus">서류와 실제 인물을 대조하십시오.</div>
-  </div>
-  <div class="evidence"><h3>검문 기록</h3><div id="evidenceList"><div class="evidence-row">아직 확보한 단서가 없습니다.</div></div></div>
-  <div class="log" id="log"></div>
-  </div>
-</aside>
-</main></div>
 
-<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div><div class="modal" id="sealInspectModal"><div class="modalbox seal-inspect-box"><h2>인장 확대 검사</h2><div id="sealInspectVisual"></div><div id="sealInspectText" class="compare-result"></div><button id="sealInspectCompare">이 인장을 공식 견본과 대조</button><button id="sealInspectClose">닫기</button></div></div><div class="modal" id="cargoModal"><div class="modalbox"><h2>소지품 수색</h2><p id="cargoIntro"></p><div id="cargoSearchList" class="summary-grid"></div><div id="cargoResult" class="ask-answer"></div><button id="cargoClose">수색 결과 확인</button></div></div><div class="modal" id="askModal"><div class="modalbox"><h2>재질문 · 방문객 진술 확인</h2><p id="askIntro"></p><div id="askQuestions"></div><div id="askAnswer"></div><button id="askClose">질문 끝내기</button></div></div>
-<div class="modal" id="faceLabModal"><div class="modalbox face-compare-modalbox"><h2>얼굴 특징 조합 및 실물 대조판</h2><p>실제 방문객 일러스트의 얼굴 특징(머리색, 눈동자, 흉터, 점)을 육안으로 대조하고 조합하여 일치 여부를 판별합니다.</p><div class="compare-tri-grid"><div class="compare-col"><h3>🔍 방문객 실물 확대경</h3><div id="faceLabVisitorView" class="compare-viewer-frame"></div><div class="compare-hint">실제 인물의 머리색과 흉터·점을 육안으로 관찰하십시오.</div></div><div class="compare-col"><h3>🎨 특징 조합 몽타주</h3><div class="face-preview" style="min-height:180px"><div class="face-canvas" style="transform:scale(0.85);transform-origin:center center"><div class="face-skin"></div><div class="face-hair" id="faceHair"></div><div class="face-eye left"></div><div class="face-eye right"></div><div class="face-nose"></div><div class="face-mouth"></div><div class="face-layer" id="faceLayers"></div></div></div><div class="compare-hint">관찰한 머리색과 특징을 아래에서 선택하십시오.</div></div><div class="compare-col"><h3>📜 당일 수배전단 몽타주</h3><div id="faceLabWantedView" class="compare-viewer-frame"></div><div id="faceLabWantedInfo" class="compare-hint">수배전단 정보</div></div></div><div class="face-options"><h3>머리색 선택</h3><div class="face-option-grid" id="hairOptions"><button class="face-option" data-hair="black">검은색</button><button class="face-option" data-hair="brown">갈색</button><button class="face-option" data-hair="blond">금발</button><button class="face-option" data-hair="red">붉은색</button><button class="face-option" data-hair="gray">회색</button></div><h3 style="margin-top:10px">특징 선택 (복수 선택)</h3><div class="face-option-grid" id="featureOptions"><button class="face-option" data-feature="leftDot">왼쪽 볼 점</button><button class="face-option" data-feature="rightDot">오른쪽 점</button><button class="face-option" data-feature="cheekScar">볼 흉터</button><button class="face-option" data-feature="chinScar">턱 흉터</button><button class="face-option" data-feature="knifeScar">칼자국</button><button class="face-option" data-feature="earRing">귀걸이</button></div></div><div id="faceMatchFeedback" class="compare-result" style="display:none;margin-top:10px"></div><div class="comparebar" style="margin-top:12px"><button id="faceCheckVisitorBtn" style="background:#426147">🔍 방문객 실물과 대조</button><button id="faceCheckWantedBtn" style="background:#703c37">📜 수배전단과 대조</button><button id="faceCloseBtn" style="background:#33251d">닫기</button></div></div></div><div class="modal" id="sealModal"><div class="modalbox">
-  <h2>영주의 검문 수첩 · 각지의 인장</h2>
-  <p id="sealBookIntro">통행증의 <b>발급 도시</b>를 먼저 확인한 뒤 해당 도시의 공식 인장 견본과 현재 문서를 눈으로 대조하십시오.</p>
-  <div id="sealGrid" class="book-grid"></div>
-  <div id="sealReference"></div>
-  <div class="comparebar"><button id="compareSealBtn">현재 통행증과 대조 기록</button><button id="closeSealBtn">수첩 닫기</button></div>
-  <div id="compareResult" class="compare-result" style="display:none"></div>
-</div></div>
+<!-- ===== 메인 타이틀 화면 (START SCREEN) ===== -->
+<div id="titleScreen" class="title-screen">
+  <div class="title-backdrop"></div>
+  <div class="title-container">
+    <div class="title-emblem">⚔️ ⚜️ ⚔️</div>
+    <h1 class="title-main-text">국경 미궁 관문소</h1>
+    <div class="title-sub-text">제3심사대 · ALL CLEAR TODAY!</div>
+    <div class="title-art-tag">✦ DUNGEON MESHI STYLE INSPECTION SIMULATOR ✦</div>
+    
+    <div class="title-description">
+      <p>카를스반 북부 요새로 통하는 유일한 지하 미궁 관문소.</p>
+      <p>당신은 오늘부터 제3심사대 검문관으로 부임했습니다.</p>
+      <p class="title-warning-quote">"인장을 대조하고, 거짓 진술을 밝혀내라.<br>허나 묵직한 금화 주머니의 유혹을 조심하라..."</p>
+    </div>
+
+    <div class="title-buttons">
+      <button class="title-btn title-btn-primary" onclick="startGameFromTitle()">
+        <span>🛡️</span>
+        <span>근무 시작 (Game Start)</span>
+      </button>
+      <button class="title-btn" onclick="openModal('howToPlayModal')">
+        <span>📜</span>
+        <span>검문 규정 & 매뉴얼</span>
+      </button>
+      <button class="title-btn" onclick="openModal('characterGuideModal')">
+        <span>🎭</span>
+        <span>등장인물 & 군상 도감</span>
+      </button>
+    </div>
+
+    <div class="title-footer-stats">
+      <span>남·여 모험가 및 상인 군상 완비</span> · 
+      <span>뇌물 & 야간 활동 시스템</span> · 
+      <span>6가지 멀티 엔딩</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 헤더 ===== -->
+<header class="header">
+  <div class="header-left">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="title-nav-btn" onclick="returnToTitle()" title="메인 타이틀 화면 열기">🏠 타이틀</button>
+      <div class="game-title">⚔️ 국경 미궁 관문소 — 제3심사대</div>
+    </div>
+    <div class="game-subtitle">카를스반 영지 · ALL CLEAR TODAY!</div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-chip stat-day">📅 제 <b id="day">1</b>일차</div>
+    <div class="stat-chip stat-time">🕐 <b id="clock">06:00</b></div>
+    <div class="stat-chip stat-gold">◉ <b id="money">30</b> G</div>
+    <div class="stat-chip stat-warn">⚠️ 실수 <b id="mistakes">0</b></div>
+    <div class="stat-chip stat-warn" style="color:#d4c49a">🔥 위험도 <b id="heat">0</b></div>
+  </div>
+</header>
+
+<!-- ===== 메인 레이아웃 ===== -->
+<main class="layout">
+
+  <!-- ===== 왼쪽: 규정 수첩 + 수배전단 ===== -->
+  <aside class="left-panel">
+    <!-- 검문 수첩 -->
+    <div class="rulebook panel">
+      <div class="rulebook-tab" onclick="toggleRulebook()">
+        📖 검문 수첩 <span id="rulebookToggle">▼</span>
+      </div>
+      <div id="rulebookContent" class="rulebook-content">
+        <div id="rules"></div>
+      </div>
+    </div>
+
+    <!-- 수배전단 -->
+    <!-- IMAGE SLOT: wanted_frame.png — 수배전단 양피지 프레임 배경 -->
+    <div class="wanted-box">
+      <div class="wanted-header">
+        <span class="wanted-label">🚨 수배전단</span>
+        <span class="wanted-status" id="wantedStatus">없음</span>
+      </div>
+      <!-- IMAGE SLOT: char_wanted_portrait — 현재 수배자 초상화 (전신/상반신) -->
+      <div class="wanted-portrait" id="wantedPortrait">
+        <span style="color:#9a8468;font-size:12px">오늘은 없음</span>
+      </div>
+      <div class="wanted-info" id="wantedInfo"></div>
+    </div>
+
+    <!-- 인장 수첩 버튼 -->
+    <button class="tool-btn" style="width:100%;justify-content:center" onclick="openSealBook(s.case?s.case.from:'카를스반')">
+      📖 인장 가이드 수첩 열기
+    </button>
+  </aside>
+
+  <!-- ===== 중앙: 메인 게임 ===== -->
+  <section class="center-panel">
+
+    <!-- 장면 -->
+    <!-- IMAGE SLOT: checkpoint_bg.jpg — 관문소 배경 전경 -->
+    <div class="scene" id="scene">
+      <div class="scene-overlay"></div>
+      <div class="queue-info">대기 <span id="queueCount">7</span>명 · <span id="caseNumber">사건 1/8</span></div>
+
+      <!-- 방문객 -->
+      <div class="visitor-area">
+        <!-- IMAGE SLOT: char_*.jpg — 방문객 캐릭터 스프라이트 -->
+        <div class="speech-bubble" id="speechBubble">
+          <div class="speech-speaker" id="speechSpeaker">방문객</div>
+          <div id="speechText">통행증을 제출하겠습니다.</div>
+        </div>
+        <div id="charSprite" class="char-sprite">
+          <img src="assets/images/characters/char_male_tall.jpg" id="charImg" alt="방문객">
+        </div>
+      </div>
+
+      <!-- 특징 배지 -->
+      <div class="trait-badges" id="traitBadges"></div>
+    </div>
+
+    <!-- 케이스 바 -->
+    <div class="case-bar">
+      <span class="case-id" id="caseLabel">사건 1 / 8</span>
+      <span class="case-used" id="caseUsed">검사 0회 · 06:00</span>
+    </div>
+
+    <!-- 책상 영역 -->
+    <!-- IMAGE SLOT: desk_bg.jpg — 나무 책상 배경 이미지 -->
+    <div class="desk-area">
+      <div class="desk-overlay">
+        <!-- 서류 두 장 -->
+        <div class="docs-row" id="docsRow"></div>
+
+        <!-- 검사 도구 -->
+        <div class="tool-bar" id="toolBar"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== 오른쪽: 판정 + 기록 ===== -->
+  <aside class="right-panel">
+
+    <!-- 판정 섹션 -->
+    <div class="verdict-section">
+      <div class="verdict-title">⚖️ 검문 판정</div>
+
+      <!-- 뇌물 제안 표시 -->
+      <div class="bribe-indicator" id="briberInd">
+        💰 뇌물 제안 감지 — 금액 확인 필요
+      </div>
+
+      <!-- IMAGE SLOT: stamp_green.png — 통과 인장 이미지 -->
+      <button class="verdict-btn btn-pass" data-action="pass" id="btnPass">
+        <span class="verdict-icon">🟢</span>
+        <span>통 과<br><small style="font-size:9px;opacity:0.8">(녹색 인장)</small></span>
+        <span class="verdict-stamp">通過</span>
+      </button>
+
+      <!-- IMAGE SLOT: stamp_red.png — 거부 인장 이미지 -->
+      <button class="verdict-btn btn-deny" data-action="deny" id="btnDeny">
+        <span class="verdict-icon">🔴</span>
+        <span>거 부<br><small style="font-size:9px;opacity:0.8">(적색 인장)</small></span>
+        <span class="verdict-stamp">拒否</span>
+      </button>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <button class="verdict-btn btn-arrest" data-action="arrest" style="margin:0">
+          <span class="verdict-icon">⛓️</span><span style="font-size:10px">구금<br>호출</span>
+        </button>
+        <button class="verdict-btn btn-secret" data-action="secret" style="margin:0">
+          <span class="verdict-icon">🌑</span><span style="font-size:10px">뒷골목<br>처리</span>
+        </button>
+      </div>
+
+      <button class="verdict-btn btn-bribe" data-action="bribe" id="btnBribe" style="margin-top:6px">
+        <span class="verdict-icon">🪙</span>
+        <span id="briberLabel">뒷돈 수락<br><small style="font-size:9px">0G</small></span>
+        <span class="verdict-stamp">賄賂</span>
+      </button>
+    </div>
+
+    <!-- 이전 심사 -->
+    <div class="prev-log panel" style="padding:8px">
+      <div class="panel-title">📋 이전 심사 기록</div>
+      <div id="prevLogList" style="font-size:10px;padding:4px 0">
+        <div style="color:#9a8468">아직 처리 건 없음</div>
+      </div>
+      <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);font-size:10px">
+        <span style="color:#9a8468">경고: </span><b id="warnCount" style="color:#e07a6a">0</b>/3
+      </div>
+    </div>
+
+    <!-- 방문객 기록 카드 -->
+    <div class="visitor-card">
+      <!-- IMAGE SLOT: 방문객 상반신 확대 — 현재 케이스 캐릭터 -->
+      <div class="visitor-portrait-frame" id="visitorPortraitFrame">
+        <img id="visitorPortraitImg" src="assets/images/characters/char_male_tall.jpg" alt="방문객">
+      </div>
+      <div class="vfield"><span>이름</span><span id="vname">-</span></div>
+      <div class="vfield"><span>성별</span><span id="vgender">-</span></div>
+      <div class="vfield"><span>출신지</span><span id="vfrom">-</span></div>
+      <div class="vfield"><span>직업</span><span id="vjob">-</span></div>
+      <div class="vfield"><span>목적</span><span id="vpurpose">-</span></div>
+      <div class="vfield"><span>체류</span><span id="vstay">-</span></div>
+      <div class="vfield"><span>키</span><span id="vheight">-</span></div>
+      <div class="vfield"><span>눈</span><span id="veyes">-</span></div>
+      <div class="vfield"><span>특징</span><span id="vfeature">-</span></div>
+      <div class="vstatus" id="vstatus">서류와 실제 인물을 대조하십시오.</div>
+    </div>
+
+    <!-- 증거 기록 -->
+    <div class="evidence-box">
+      <div class="evidence-title">🔍 수집한 단서</div>
+      <div id="evidenceList">
+        <div class="evidence-item"><span class="ev-icon">—</span> 아직 단서 없음</div>
+      </div>
+    </div>
+
+  </aside>
+</main>
+
+<!-- ===== 모달들 ===== -->
+
+<!-- 검문 규정 및 게임 방법 안내 모달 -->
+<div class="modal" id="howToPlayModal">
+  <div class="modalbox" style="max-width:640px;text-align:left">
+    <h2>📜 검문소 복무 수칙 및 매뉴얼</h2>
+    <div style="font-size:12px;line-height:1.75;color:#4a3b2c;margin:12px 0;display:flex;flex-direction:column;gap:8px">
+      <div style="background:#eedfb8;padding:10px;border-left:4px solid var(--gold)">
+        <b>1. 서류와 실제 인물 대조:</b><br>
+        통행증의 성별(남/여), 체형, 키, 목적, 유효기간을 확인하십시오. 실제 인물의 모습과 다르면 <b>입경 거부</b> 대상입니다.
+      </div>
+      <div style="background:#eedfb8;padding:10px;border-left:4px solid #7e2525">
+        <b>2. 인장 위조 감별:</b><br>
+        발급 도시와 인장의 문양(원형, 방패형, 테두리 등)을 <b>[인장 수첩]</b>과 대조하십시오. 일치하지 않는 가짜 인장은 통과시켜선 안 됩니다.
+      </div>
+      <div style="background:#eedfb8;padding:10px;border-left:4px solid #3d6145">
+        <b>3. 물품 수색 및 재질문:</b><br>
+        의심스러운 물품이나 어색한 진술이 있다면 [수색] 및 [질문]을 활용하여 거짓말을 밝혀내십시오.
+      </div>
+      <div style="background:#eedfb8;padding:10px;border-left:4px solid #b87c28">
+        <b>4. 뇌물과 부패:</b><br>
+        일부 부유한 귀족이나 상인은 거액의 뇌물을 제안합니다. 돈을 챙길 수 있지만, <b>위험도(HEAT)</b>가 치솟아 처형대 엔딩을 맞을 수 있습니다!
+      </div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('howToPlayModal')">매뉴얼 숙지 완료</button>
+  </div>
+</div>
+
+<!-- 등장인물 & 군상 도감 모달 -->
+<div class="modal" id="characterGuideModal">
+  <div class="modalbox" style="max-width:720px;text-align:left">
+    <h2>🎭 제3심사대 방문객 군상 도감</h2>
+    <p style="font-size:11px;color:#6b533b;margin-bottom:12px">카를스반 북부 관문소를 찾아오는 다양한 남녀 모험가와 이종족, 그리고 의문의 방문객들입니다.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;max-height:420px;overflow-y:auto;padding-right:6px">
+      <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
+        <img src="assets/images/characters/char_male_tall.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <div style="font-size:11px"><b style="color:#2a4a75">♂ 남성 모험가/전사</b><br>라이오스풍 강직한 검사. 뚜렷한 남성 턱선과 갑옷을 착용합니다.</div>
+      </div>
+      <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
+        <img src="assets/images/characters/char_female_tall.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <div style="font-size:11px"><b style="color:#802b48">♀ 여성 기사/성기사</b><br>파린풍 금발 땋은 머리의 여기사. 우아하고 뚜렷한 여성 체형.</div>
+      </div>
+      <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
+        <img src="assets/images/characters/char_noble_bribe.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <div style="font-size:11px"><b style="color:#b87c28">💰 부유한 귀족</b><br>탐욕스럽고 거만한 귀족. 은밀한 금화 주머니를 건네며 통과를 요구.</div>
+      </div>
+      <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
+        <img src="assets/images/characters/char_orc_tourist.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <div style="font-size:11px"><b style="color:#3e633a">🧭 오크 관광객</b><br>지도와 나침반을 든 순박한 오크. 순수한 여행 목적의 방문객.</div>
+      </div>
+      <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
+        <img src="assets/images/characters/char_mage_unregistered.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <div style="font-size:11px"><b style="color:#38527a">⚡ 미등록 마법사</b><br>스파크가 튀는 지팡이를 쥐고 벌벌 떠는 서기관/학자풍 청년.</div>
+      </div>
+      <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
+        <img src="assets/images/characters/char_plague_visitor.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <div style="font-size:11px"><b style="color:#783b3b">🥀 전염병 의심 여성</b><br>숄을 두르고 기침을 참으며 눈치를 살피는 여성 유랑민.</div>
+      </div>
+    </div>
+    <button class="modal-btn" onclick="closeModal('characterGuideModal')" style="margin-top:10px">도감 닫기</button>
+  </div>
+</div>
+
+<!-- 스토리/엔딩 모달 -->
+<div class="modal" id="storyModal">
+  <div class="modalbox">
+    <h2 id="storyTitle"></h2>
+    <!-- IMAGE SLOT: 스토리 아트 이미지 — 상황별 배경 장면 -->
+    <div class="story-art" id="storyArt"><img id="storyArtImg" src="" alt=""></div>
+    <div class="story-caption" id="storyCaption"></div>
+    <div id="storySummary"></div>
+    <button class="modal-btn" id="storyNext">계속</button>
+  </div>
+</div>
+
+<!-- 소지품 수색 모달 -->
+<div class="modal" id="cargoModal">
+  <div class="modalbox">
+    <h2>🧳 소지품 수색</h2>
+    <p id="cargoIntro" style="font-size:11px;margin-bottom:8px"></p>
+    <div id="cargoList"></div>
+    <div id="cargoResult" class="search-result"></div>
+    <button class="modal-btn" onclick="closeModal('cargoModal')">수색 결과 확인 후 닫기</button>
+  </div>
+</div>
+
+<!-- 심문 모달 -->
+<div class="modal" id="askModal">
+  <div class="modalbox">
+    <h2>💬 재질문 · 심문</h2>
+    <p id="askIntro" style="font-size:11px;margin-bottom:8px"></p>
+    <div id="askQuestions"></div>
+    <div id="askAnswer"></div>
+    <button class="modal-btn" onclick="closeModal('askModal')">질문 끝내기</button>
+  </div>
+</div>
+
+<!-- 인장 수첩 모달 -->
+<div class="modal" id="sealModal">
+  <div class="modalbox" style="max-width:700px">
+    <h2>📖 인장 가이드 수첩</h2>
+    <p id="sealIntro" style="font-size:11px;margin-bottom:8px">통행증의 <b>발급 도시</b>를 확인하고 해당 도시의 공식 인장과 대조하십시오.</p>
+    <div id="sealGrid" class="seal-grid"></div>
+    <div id="sealRef"></div>
+    <div class="comparebar">
+      <button id="compareSealBtn" onclick="compareSeal()">현재 통행증과 대조</button>
+      <button onclick="closeModal('sealModal')">수첩 닫기</button>
+    </div>
+    <div id="compareResult" class="compare-result" style="display:none"></div>
+  </div>
+</div>
+
+<!-- 인장 확대 모달 -->
+<div class="modal" id="sealInspectModal">
+  <div class="modalbox">
+    <h2>🔍 인장 확대 검사</h2>
+    <div id="sealInspectContent"></div>
+    <div id="sealInspectText" style="font-size:10px;margin-top:6px;background:#f0ddb8;padding:6px;border:1px solid var(--border)"></div>
+    <div class="comparebar" style="margin-top:8px">
+      <button id="sealInspectToBook">인장 수첩과 대조</button>
+      <button onclick="closeModal('sealInspectModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 얼굴 대조판 모달 -->
+<div class="modal" id="faceModal">
+  <div class="modalbox" style="max-width:720px">
+    <h2>👁 얼굴 특징 조합 대조판</h2>
+    <div class="face-compare-grid">
+      <div class="face-col">
+        <h3>실물 확대경</h3>
+        <div class="face-viewer" id="faceVisitorView"></div>
+        <div class="face-hint">실제 인물의 머리색·흉터·점을 관찰하십시오.</div>
+      </div>
+      <div class="face-col">
+        <h3>특징 조합 몽타주</h3>
+        <div class="face-canvas-wrap">
+          <div class="face-canvas">
+            <div class="face-skin"></div>
+            <div class="face-hair" id="faceHairEl"></div>
+            <div class="face-eye l"></div>
+            <div class="face-eye r"></div>
+            <div class="face-nose"></div>
+            <div class="face-mouth"></div>
+            <div id="faceMarkLayer"></div>
+          </div>
+        </div>
+        <div class="face-opts">
+          <h4>머리색</h4>
+          <div class="face-opt-grid" id="hairOpts">
+            <button class="face-opt" data-hair="black">검은색</button>
+            <button class="face-opt" data-hair="brown">갈색</button>
+            <button class="face-opt" data-hair="blond">금발</button>
+            <button class="face-opt" data-hair="red">붉은색</button>
+            <button class="face-opt" data-hair="gray">회색</button>
+          </div>
+          <h4>특징 (복수)</h4>
+          <div class="face-opt-grid" id="featOpts">
+            <button class="face-opt" data-feat="ld">왼쪽 볼 점</button>
+            <button class="face-opt" data-feat="rd">오른쪽 점</button>
+            <button class="face-opt" data-feat="cs">볼 흉터</button>
+            <button class="face-opt" data-feat="ks">칼자국</button>
+          </div>
+        </div>
+      </div>
+      <div class="face-col">
+        <h3>수배전단</h3>
+        <div class="face-viewer" id="faceWantedView"></div>
+        <div class="face-hint" id="faceWantedHint"></div>
+      </div>
+    </div>
+    <div id="faceMatchResult" style="display:none" class="inspect-feedback"></div>
+    <div class="comparebar" style="margin-top:8px">
+      <button onclick="faceCheckVisitor()" style="background:#426147">실물 대조</button>
+      <button onclick="faceCheckWanted()" style="background:#703c37">수배전단 대조</button>
+      <button onclick="closeModal('faceModal')" style="background:#33251d">닫기</button>
+    </div>
+  </div>
+</div>
 
 <script>
-const RULES=[
+/* ====================================================
+   DATA — 규정, 캐릭터, 인장, 게임 상태
+==================================================== */
+const RULES = [
   ["통행증 유효기간 확인","영지 인장 형상 대조","발급 도시와 방문객 정보 대조"],
-  ["통행증 기본 규칙","수배전단의 점·흉터·키 대조","수배자는 즉시 경비대 호출"],
-  ["신체 검사서 확인","열·기침·발진 증상 관찰","의심 환자는 입경 거부"],
-  ["교단 징표 확인","성수 반응 검사 가능","마물/이단 의심자는 추가 확인"],
-  ["마법사 등록증 확인","용병 무기 반납 여부","특수 직군 서류 대조"]
+  ["수배전단 이름·체형·특징 대조","수배자는 즉시 경비대 호출","인장 이상 시 인장수첩 대조"],
+  ["신체 검사서 확인","열·기침·발진 증상 관찰","전염 의심자는 입경 거부"],
+  ["교단 징표 및 성수 반응 검사","마물·이단 의심자 추가 확인","황금 눈동자/세로 동공 주의"],
+  ["마법사 등록증 확인","용병 무기 반납 확인","특수 직군 서류 대조"]
 ];
-const CHAR_SPRITES={
-  "male_tall":"assets/images/characters/char_male_tall.png",
-  "male_short":"assets/images/characters/char_male_short.png",
-  "male_stout":"assets/images/characters/char_male_stout.png",
-  "male_thin":"assets/images/characters/char_male_thin.png",
-  "female_tall":"assets/images/characters/char_female_tall.png",
-  "female_short":"assets/images/characters/char_female_short.png",
-  "female_stout":"assets/images/characters/char_female_stout.png",
-  "female_thin":"assets/images/characters/char_female_thin.png"
+
+/* IMAGE ASSET MAP — 캐릭터 스프라이트 (던전밥풍 고화질 일러스트) */
+// 남성/여성 뚜렷한 외형 구분 및 종족/군상별 14종 캐릭터 완비
+const CHAR_SPRITES = {
+  // 남성 군상 (뚜렷한 남성 턱선, 체형, 가죽 및 판금 장비)
+  male_tall:    "assets/images/characters/char_male_tall.jpg",
+  male_short:   "assets/images/characters/char_male_short.jpg",
+  male_stout:   "assets/images/characters/char_male_stout.jpg",
+  male_thin:    "assets/images/characters/char_male_thin.jpg",
+  // 여성 군상 (금발 땋은 머리 기사, 여성 전용 흉갑, 섬세한 이목구비 및 체형)
+  female_tall:  "assets/images/characters/char_female_tall.jpg",
+  female_short: "assets/images/characters/char_female_short.jpg",
+  female_stout: "assets/images/characters/char_female_stout.jpg",
+  female_thin:  "assets/images/characters/char_female_thin.jpg",
+  // 특수 군상
+  noble_bribe:     "assets/images/characters/char_noble_bribe.jpg",
+  orc_tourist:     "assets/images/characters/char_orc_tourist.jpg",
+  monster_disguise:"assets/images/characters/char_monster_disguise.jpg",
+  ghost_visitor:   "assets/images/characters/char_ghost_visitor.jpg",
+  plague_visitor:  "assets/images/characters/char_plague_visitor.jpg",
+  mage_unregistered:"assets/images/characters/char_mage_unregistered.jpg",
 };
 
-const BODY_TYPES={
-  tall:{key:"tall",label:"키가 큰 편",desc:"장신 건장",css:"body-tall",genHeight:()=>183+Math.floor(Math.random()*9)},
-  short:{key:"short",label:"키가 작은 편",desc:"단신 왜소",css:"body-short",genHeight:()=>152+Math.floor(Math.random()*11)},
-  stout:{key:"stout",label:"뚱뚱한 체형",desc:"비만 풍채",css:"body-stout",genHeight:()=>168+Math.floor(Math.random()*10)},
-  thin:{key:"thin",label:"마른 체형",desc:"수척 왜소",css:"body-thin",genHeight:()=>170+Math.floor(Math.random()*12)}
+/* IMAGE ASSET MAP — 씬 이미지 */
+// IMAGE SLOT: scene_*.jpg — 야간 이벤트별 배경 이미지
+const SCENE_IMAGES = {
+  tavern:   "assets/images/scene_tavern.jpg",
+  quarters: "assets/images/scene_quarters.jpg",
+  brawl:    "assets/images/scene_brawl.jpg",
+  checkpoint:"assets/images/checkpoint_bg.jpg",
+  danger:   "assets/images/scene_brawl.jpg",
+  hero:     "assets/images/checkpoint_bg.jpg",
 };
-const BODY_KEYS=["tall","short","stout","thin"];
 
-const MALE_NAMES=["마르코 벨","도란","세르 라인","루드","카인","베른","토마","레오","오르트","가렌"];
-const FEMALE_NAMES=["엘리나 로슈","페르나","아델","시라","미라","니아","브리짓","카밀라"];
-const NAMES=[...MALE_NAMES,...FEMALE_NAMES];
+const BODY_TYPES = {
+  tall:  {label:"키가 큰 편",  css:"body-tall",  genH:()=>183+ri(9)},
+  short: {label:"키가 작은 편",css:"body-short", genH:()=>152+ri(11)},
+  stout: {label:"뚱뚱한 체형", css:"body-stout", genH:()=>168+ri(10)},
+  thin:  {label:"마른 체형",   css:"body-thin",  genH:()=>170+ri(12)},
+};
+const BODY_KEYS = ["tall","short","stout","thin"];
 
-function getSpriteForCharacter(gender, bodyKey){
+const M_NAMES = ["마르코 벨","도란 헤프트","세르 라인","루드","카인","베른","토마","레오","오르트","가렌","루가스","에반"];
+const F_NAMES = ["엘리나 로슈","페르나","아델","시라","미라","니아","브리짓","카밀라","레나","소피아"];
+const ORIGINS = ["하르덴","벨로아","카를스반","노르드","아르델","서부 황야","로엔","브레시아"];
+const JOBS    = ["농부","상인","대장장이","용병","사제","약초꾼","서기관","마부","어부","직공"];
+const PURPOSES= ["곡물 거래","염료 판매","납품","호위 임무","성당 방문","가족 방문","장부 전달","마차 수리","약초 판매","친척 방문"];
+const EYES    = ["갈색","회색","청색","녹색","짙은 갈색"];
+const HAIR    = ["검은 머리","갈색 머리","짧은 금발","붉은 머리","회색 머리"];
+const FEATURES= ["왼쪽 볼 점","오른쪽 턱 흉터","두꺼운 눈썹","손가락에 잉크 얼룩","왼쪽 귀에 은고리","짧게 깎은 수염","특징 없음"];
+
+/* 블랙코미디 대사 데이터 */
+// 각 캐릭터 타입별 멀티레이어 대사
+const DIALOGUES = {
+  normal: {
+    enter: ["통행증을 제출하겠습니다.", "안녕하십니까. 서류 여기 있습니다.", "오래 기다렸습니다. 통행증입니다."],
+    question: ["오늘 안으로 일을 마치고 돌아갈 예정입니다.", "일 처리하러 잠깐 들어가는 겁니다.", "별 거 없습니다, 그냥 일이 있어서요."],
+    caught: ["저 문제 없는데요?", "뭐가 잘못된 건지 모르겠습니다.", "아, 그건 오기입니다."],
+  },
+  expired: {
+    enter: ["어제 발급받았는데 왜 안 되는 거죠?", "딱 하루인데 봐주실 수 없나요?", "관청에서 늦게 발급해줘서 이렇게 됐어요..."],
+    question: ["오늘 꼭 들어가야 합니다. 사정이 있어서요.", "내일 다시 오면 일이 다 틀어집니다.", "이거 갱신하려면 또 사흘이나 기다려야 한다고요."],
+    caught: ["제발요... 딱 하루만요.", "알겠어요, 아는 사람이 있으면 좀 봐줄 수 있지 않나요?"],
+  },
+  forged: {
+    enter: ["관청에서 정식으로 받았습니다.", "인장은 원래 이런 모양입니다.", "이게 제대로 된 겁니다."],
+    question: ["저 진짜 아무 문제 없어요.", "인장이 좀 다르면 지역마다 차이가 있을 수도 있잖아요?", "저 억울합니다."],
+    caught: ["잠깐만요! 이건 오해예요!", "제가 모르고 받은 겁니다, 저도 속은 거예요!", "...도망가면 잡히겠죠?"],
+  },
+  mismatch: {
+    enter: ["제 서류 맞습니다.", "관청에서 좀 다르게 적은 것 같은데 저 맞아요.", "서류에 오타가 있는 것 같습니다."],
+    question: ["키가 좀 다르게 적혀 있지만 저 맞아요.", "성별은... 음... 사무원이 잘못 적은 거예요.", "직업 바뀐 게 반영 안 된 것 같습니다."],
+    caught: ["어디서 많이 보셨다고요? 그냥 흔한 얼굴입니다.", "저 정말 아닙니다!"],
+  },
+  lie: {
+    enter: ["성당에 기도하러 왔습니다.", "순례 중입니다.", "가족을 만나러 왔습니다."],
+    question: ["아, 친척 집도 잠깐 들르긴 하는데 주목적은 성당이에요.", "장부 꾸러미요? 이건... 기도서들입니다.", "둘 다 할 거예요, 순서만 달라졌을 뿐."],
+    caught: ["아, 그게... 설명하면 길어요.", "솔직히 말하면, 사실은..."],
+  },
+  wanted: {
+    enter: ["마차가 늦어서 발이 묶였습니다. 빨리 좀 해주세요.", "별 거 없습니다, 잠깐만 들어갈게요.", "통행증 여기 있습니다. 빠르게 부탁합니다."],
+    question: ["아, 서두르는 게 아니라 약속이 있어서요.", "수배자요? 저 아닙니다. 보세요, 이름도 다르잖아요.", "그 점은... 원래부터 있었습니다."],
+    caught: ["이거 놔요! 저 아니라고요!", "...젠장. 하필 이 관문소에서."],
+  },
+  smuggle: {
+    enter: ["신고할 물건은 없습니다. 상자는 사적인 겁니다.", "그냥 짐입니다. 별 거 없어요.", "안 열어봐도 됩니다. 그냥 물건들이에요."],
+    question: ["상자는 중간에 누가 부탁해서 갖고 가는 거예요. 저도 뭔지 몰라요.", "무겁긴 한데 그게 왜요?", "이중 바닥이요? 원래 이런 상자입니다."],
+    caught: ["그건 제 게 아니에요! 그냥 운반만 한 거라고요!", "...봐주시면 안 될까요? 아, 맞다, 이 봉투..."],
+  },
+  plague: {
+    enter: ["조금 피곤할 뿐입니다. 멀쩡합니다.", "기침? 아뇨, 먼지가 좀 들어가서요.", "열? 길이 더워서 그런 거예요."],
+    question: ["콜록— 아 이건 그냥 목이 건조해서요.", "반점은 원래 있는 겁니다, 태어날 때부터.", "건강증명서요? 그걸 여기서도 검사하나요?"],
+    caught: ["저 정말 괜찮아요... 콜록콜록.", "제발 들어보내 주세요, 안에 의원이 있잖아요."],
+  },
+  monster: {
+    enter: ["나는... 사람입니다. 통행증 여기 있습니다.", "안녕하세요. 저는 인간입니다.", "서류... 여기 있습니다. 문제 없습니다."],
+    question: ["성 안에 들어가면 먹을 게... 많습니까?", "저는 정상입니다. 눈이 왜요? 원래 이렇습니다.", "그림자는... 오늘 빛이 이상한 겁니다."],
+    caught: ["...탄로났군요.", "사람들이 왜 그렇게 보는지 알 것 같습니다.", "도망가면... 잡힐 것 같죠?"],
+  },
+  heretic: {
+    enter: ["저는 단순한 순례자입니다. 아무 문제 없습니다.", "신의 가호가 당신과 함께하기를.", "통행증 드리겠습니다. 성당에 방문 중입니다."],
+    question: ["이 문양은... 지방 풍습에서 나온 장식입니다.", "성수 검사요? 물론이죠, 아무 이상 없을 겁니다.", "저는 신실한 신도입니다."],
+    caught: ["잠깐, 잠깐! 설명할 수 있어요!", "이건 종교의 자유 침해 아닌가요?"],
+  },
+  mage: {
+    enter: ["등록증을 제출하겠습니다.", "그냥 학자일 뿐입니다. 지팡이는 연구도구예요.", "지금 지팡이에서 불꽃이 나오는 건 제 의도가 아닙니다."],
+    question: ["등록번호가 없는 건... 신청 중이라서요.", "마법사는 아니고 그냥 마법을 좀 쓸 줄 아는 학자입니다.", "이것 좀 꺼질 것 같으니 잠깐만요— 펑! 죄송합니다."],
+    caught: ["알겠어요, 신청하러 가겠습니다.", "벌금이면... 얼마나 되나요?"],
+  },
+  merc: {
+    enter: ["무기는 반납했습니다. 반납증 여기 있어요.", "호위 임무라 무기를 소지해야 합니다.", "용병 신분증 드리겠습니다."],
+    question: ["검은... 음, 조각품입니다. 기념품.", "반납증 분실했는데 반납은 했거든요.", "의뢰인이 무기를 갖고 들어오라고 했어요."],
+    caught: ["알겠습니다. 맡기겠습니다.", "나중에 찾을 수 있는 거죠?"],
+  },
+  // 블랙코미디 특수 케이스
+  ghost: {
+    enter: ["...심사... 부탁드립니다.", "*서류가 공중에 떠서 카운터에 놓인다*", "*조용한 바람이 분다*"],
+    question: ["저는... 아직 이곳에 볼일이 남아서요.", "...죽은 건 맞는데 서류는 있습니다.", "오래 기다렸습니다. 300년쯤."],
+    caught: ["그럴 줄 알았습니다... *사라진다*", "...다시 오겠습니다. 300년 후에."],
+  },
+  bribe_noble: {
+    enter: ["조용히 처리해주시면 감사할 것입니다.", "이 봉투가 분기별로 도착할 겁니다.", "길을 오래 끌 생각은 없습니다."],
+    question: ["지금 그게 중요한 게 아니지 않습니까?", "에드릭 경 아시죠? 제 친척입니다.", "...이 봉투는 못 본 걸로 하면 어떻겠습니까?"],
+    caught: ["이 사람 이름 기억해두게. 후회할 거야.", "...상관이 누구요? 알아봐야겠군."],
+  },
+  bribe_poor: {
+    enter: ["저... 이게 전부지만...", "*떨리는 손으로 동전 세 개를 내민다*", "제발요... 아이들이 있어요."],
+    question: ["서류가 좀 잘못됐는데... 사정이 있어서요.", "돈이 더 있으면 드리겠는데 이게 전부예요.", "사실은... 통행증을 잃어버렸어요."],
+    caught: ["...알겠습니다. 죄송합니다.", "*고개를 푹 숙이며 돌아선다*"],
+  },
+  orc: {
+    enter: ["안녕! 나 미궁 보러 왔다!", "서류 있다! 여기!", "*지도를 잔뜩 펼쳐 든다*"],
+    question: ["미궁 굉장히 멋지다고 들었다! 관광!", "오크어 못 읽어요? 여기 이름, 여기 날짜.", "왜 그렇게 봐? 나 처음 여기 온다."],
+    caught: ["인장 잘못된 거야? 관청 아저씨가 해줬는데?", "...이해했다. 다시 관청 가겠다. 먼길이지만."],
+  },
+};
+
+/* 인장 데이터 */
+// IMAGE SLOT: 각 도시 인장 이미지 — 실제 인장 그림으로 교체 가능
+const SEALS = {
+  "카를스반": {domain:"왕도 직할령", title:"왕실 성문 인장", sigil:"♜", edge:"이중 원형 테두리", core:"성문 위 왕관", mark:"하단에 세 점"},
+  "하르덴":   {domain:"북부 곡창지대", title:"곡창 수비대 인장", sigil:"✣", edge:"두꺼운 원형 테두리", core:"세 갈래 밀 이삭", mark:"오른쪽 작은 홈"},
+  "벨로아":   {domain:"서부 상업도시", title:"상인 길드 인장", sigil:"⚖", edge:"얇은 이중 테두리", core:"저울과 열쇠", mark:"상단 짧은 선"},
+  "노르드":   {domain:"북부 군관령", title:"변경군 인장", sigil:"◇", edge:"방패형 안쪽 테두리", core:"창을 세운 방패", mark:"좌우 네 점"},
+  "아르델":   {domain:"동부 성직령", title:"성좌 관리 인장", sigil:"✦", edge:"여덟 갈래 별무늬", core:"팔각 성좌", mark:"중앙 작은 원"},
+  "서부 황야":{domain:"황무지 변경소", title:"황야 통행 인장", sigil:"⌁", edge:"거친 단일 테두리", core:"뿔 달린 늑대머리", mark:"하단 사선 두 줄"},
+  "로엔":     {domain:"남부 항구령", title:"항만 세관 인장", sigil:"⚓", edge:"밧줄무늬 테두리", core:"닻과 파도", mark:"좌측 세 갈퀴"},
+  "브레시아": {domain:"남동 변경백령", title:"변경백 관인", sigil:"✠", edge:"십자형 테두리", core:"사자와 칼날", mark:"상단 두 점"},
+};
+const SEAL_CITIES = Object.keys(SEALS);
+let activeSealCity = "카를스반";
+
+/* ====================================================
+   GAME STATE
+==================================================== */
+let s = {
+  day:1, money:30, mistakes:0, caseNo:0, time:360,
+  tools:[], case:null, cases:[],
+  correct:0, denied:0, arrested:0,
+  pending:[], corruption:0, heat:0,
+  delayed:[], familyRisk:0,
+  prevLog:[], // 오늘 판정 로그 표시용
+};
+
+let wanted = {active:false, name:"", gender:"남성", bodyKey:"tall", height:188,
+  hair:"갈색 머리", eye:"회색", feature:"왼쪽 볼 점",
+  spriteKey:"male_tall"};
+
+let faceHair = "black";
+let faceFeats = new Set();
+
+/* ====================================================
+   UTILITIES
+==================================================== */
+const $ = id => document.getElementById(id);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const chance = p => Math.random() < p;
+const ri = n => Math.floor(Math.random()*n);
+const esc = s => String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function fmt(min){const h=Math.floor(min/60),m=min%60;return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")}
+function heightWord(h){return h>=181?"키가 큰 편":h<=165?"키가 작은 편":"보통 키"}
+function getSprite(gender,bodyKey){
   const g=(gender==="여성")?"female":"male";
   return CHAR_SPRITES[g+"_"+bodyKey]||CHAR_SPRITES["male_tall"];
 }
-
-const ORIGINS=["하르덴","벨로아","카를스반","노르드","아르델","서부 황야","로엔","브레시아"];
-const JOBS=["농부","상인","대장장이","용병","사제","약초꾼","서기관","마부","어부","직공"];
-const PURPOSES=["곡물 거래","염료 판매","납품","호위","성당 방문","가족 방문","장부 전달","마차 수리","약초 판매","친척 방문"];
-const FACES=["🧑‍🌾","👩‍🦰","🧔","🧝","🧕","👨‍🌾","🧑‍💼","👩‍🌾","🧙","🧑‍🔧"];
-const EYES=["갈색","회색","청색","녹색","짙은 갈색"];
-const HAIR=["검은 머리","갈색 머리","짧은 금발","붉은 머리","회색 머리"];
-const FEATURES=["왼쪽 볼 점","오른쪽 턱 흉터","두꺼운 눈썹","손가락에 잉크 얼룩","왼쪽 귀에 은고리","짧게 깎은 머리","특징 없음"];
-
-function getHairClass(hair){
-  if(/금발/.test(hair)) return "blond";
-  if(/붉은/.test(hair)) return "red";
-  if(/회색/.test(hair)) return "gray";
-  if(/갈색/.test(hair)) return "brown";
-  return "black";
-}
-
-function getEyeClass(eyes, type){
-  if(type==="monster") return "gold";
-  if(/청색|파란/.test(eyes)) return "blue";
-  if(/녹색|초록/.test(eyes)) return "green";
-  if(/회색/.test(eyes)) return "gray";
-  if(/황금/.test(eyes)) return "gold";
-  return "brown";
-}
-
-function getFeatureMarks(v){
-  if(!v) return "";
-  const f=String(v.feature||"");
-  let marks="";
-  if(/왼쪽.*점/.test(f)) marks += '<span class="feature-mark mark-leftDot" title="왼쪽 볼 점"></span>';
-  if(/오른쪽.*점/.test(f)) marks += '<span class="feature-mark mark-rightDot" title="오른쪽 점"></span>';
-  if(/볼.*흉터/.test(f)) marks += '<span class="feature-mark mark-cheekScar" title="볼 흉터"></span>';
-  if(/턱.*흉터/.test(f)) marks += '<span class="feature-mark mark-chinScar" title="턱 흉터"></span>';
-  if(/칼|베인|자국/.test(f)) marks += '<span class="feature-mark mark-knifeScar" title="칼자국"></span>';
-  if(/은고리|귀걸이/.test(f)) marks += '<span class="feature-mark mark-earRing" title="은고리 귀걸이"></span>';
-  if(/빵/.test(f)) marks += '<span class="feature-mark mark-bread" title="특이 흉터"></span>';
-  if(v.type==="plague") marks += '<span class="feature-mark mark-plague" title="열병 반점"></span>';
-  return marks;
-}
-
-function renderVisualPortrait(v){
-  if(!v) return "";
-  const imgSrc = v.spriteImage || v.faceImage || CHAR_SPRITES["male_tall"];
-  const hairCls = getHairClass(v.hair);
-  const marks = getFeatureMarks(v);
-  const monsterEffect = (v.type === "monster") ? '<div class="monster-aura"></div>' : '';
-  
-  return '<div class="portrait-wrap">' +
-    '<img src="' + imgSrc + '" alt="' + esc(v.name||'인물') + '" class="base-img">' +
-    '<div class="hair-overlay hair-' + hairCls + '"></div>' +
-    monsterEffect +
-    marks +
-  '</div>';
-}
-// IMAGE ASSET SET: 지역 인장 견본 / 용도: 검문 수첩에서 보여주는 공식 인장 레퍼런스. 각 지역별 실제 인장 이미지로 교체 예정.
-// 인장 이미지 교체 시에도 city 키는 유지하면 게임 로직을 건드리지 않아도 됨.
-const SEALS={
-  "카를스반":{domain:"왕도 직할령",title:"왕실 성문 인장",sigil:"♜",edge:"이중 원형 테두리",core:"성문 위 왕관",mark:"하단에 세 점"},
-  "하르덴":{domain:"북부 곡창지대",title:"곡창 수비대 인장",sigil:"✣",edge:"두꺼운 원형 테두리",core:"세 갈래 밀 이삭",mark:"오른쪽 작은 홈"},
-  "벨로아":{domain:"서부 상업도시",title:"상인 길드 인장",sigil:"⚖",edge:"얇은 이중 테두리",core:"저울과 열쇠",mark:"상단 짧은 선"},
-  "노르드":{domain:"북부 군관령",title:"변경군 인장",sigil:"◇",edge:"방패형 안쪽 테두리",core:"창을 세운 방패",mark:"좌우 네 점"},
-  "아르델":{domain:"동부 성직령",title:"성좌 관리 인장",sigil:"✦",edge:"여덟 갈래 별무늬",core:"팔각 성좌",mark:"중앙 작은 원"},
-  "서부 황야":{domain:"황무지 변경소",title:"황야 통행 인장",sigil:"⌁",edge:"거친 단일 테두리",core:"뿔 달린 늑대머리",mark:"하단 사선 두 줄"},
-  "로엔":{domain:"남부 항구령",title:"항만 세관 인장",sigil:"⚓",edge:"밧줄무늬 테두리",core:"닻과 파도",mark:"좌측 세 갈퀴"},
-  "브레시아":{domain:"남동 변경백령",title:"변경백 관인",sigil:"✠",edge:"십자형 테두리",core:"사자와 칼날",mark:"상단 두 점"}
-};
-const SEAL_CITIES=Object.keys(SEALS);
 function sealSvg(city){
   const q=SEALS[city]||SEALS["카를스반"];
   const safe=q.sigil.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  return '<svg viewBox="0 0 120 120" aria-label="'+city+' 인장"><circle cx="60" cy="60" r="54" fill="#87312f" opacity=".92"/><circle cx="60" cy="60" r="45" fill="none" stroke="#e7c99c" stroke-width="2"/><circle cx="60" cy="60" r="49" fill="none" stroke="#4d211f" stroke-width="3" stroke-dasharray="2 4"/><text x="60" y="73" text-anchor="middle" font-size="42" fill="#ead9b8" font-family="Georgia,serif">'+safe+'</text><path d="M25 88 Q60 103 95 88" fill="none" stroke="#ead9b8" stroke-width="2"/><circle cx="35" cy="30" r="2.5" fill="#ead9b8"/><circle cx="60" cy="24" r="2.5" fill="#ead9b8"/><circle cx="85" cy="30" r="2.5" fill="#ead9b8"/></svg>';
+  return `<svg viewBox="0 0 120 120" aria-label="${city} 인장">
+    <circle cx="60" cy="60" r="54" fill="#87312f" opacity=".92"/>
+    <circle cx="60" cy="60" r="45" fill="none" stroke="#e7c99c" stroke-width="2"/>
+    <circle cx="60" cy="60" r="49" fill="none" stroke="#4d211f" stroke-width="3" stroke-dasharray="2 4"/>
+    <text x="60" y="73" text-anchor="middle" font-size="42" fill="#ead9b8" font-family="Georgia,serif">${safe}</text>
+    <path d="M25 88 Q60 103 95 88" fill="none" stroke="#ead9b8" stroke-width="2"/>
+    <circle cx="35" cy="30" r="2.5" fill="#ead9b8"/>
+    <circle cx="60" cy="24" r="2.5" fill="#ead9b8"/>
+    <circle cx="85" cy="30" r="2.5" fill="#ead9b8"/>
+  </svg>`;
 }
 
-const TYPE_META={
- normal:{label:"일반 방문객",action:"pass"},
- expired:{label:"기간 만료",action:"deny"},
- forged:{label:"인장 이상",action:"deny"},
- mismatch:{label:"신분 불일치",action:"deny"},
- lie:{label:"진술 불일치",action:"deny"},
- wanted:{label:"수배자",action:"arrest"},
- smuggle:{label:"밀수",action:"arrest"},
- monster:{label:"마물 위장",action:"arrest"},
- plague:{label:"전염병 의심",action:"deny"},
- heretic:{label:"이단 의심",action:"arrest"},
- mage:{label:"마법사 규정 위반",action:"deny"},
- merc:{label:"용병 규정 위반",action:"deny"}
-};
-
-let wanted={
-  active:false,name:"",gender:"남성",bodyKey:"tall",bodyDesc:"장신 건장",bodyCss:"body-tall",height:188,
-  face:"?",spriteImage:CHAR_SPRITES["male_tall"],faceImage:CHAR_SPRITES["male_tall"],eye:"회색",hair:"갈색 머리",feature:"왼쪽 볼 점"
-};
-
-const $=id=>document.getElementById(id);
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-const chance=p=>Math.random()<p;
-function heightWord(h){if(h>=181)return "키가 큰 편";if(h<=165)return "키가 작은 편";return "보통 키"}
-function heightDetail(h){return h>=181?"키가 큰 편으로 보입니다.":h<=165?"키가 작은 편으로 보입니다.":"키는 보통 정도로 보입니다."}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
-
-let s={day:1,money:30,mistakes:0,caseNo:0,time:360,tools:[],case:null,cases:[],correct:0,denied:0,arrested:0,pending:[],corruption:0,heat:0,rumors:[],delayed:[],familyRisk:0};
-
+/* ====================================================
+   CASE GENERATION
+==================================================== */
 function makeBasic(){
-  const gender=chance(0.5)?"남성":"여성";
-  const name=(gender==="남성")?pick(MALE_NAMES):pick(FEMALE_NAMES);
-  const from=pick(ORIGINS),job=pick(JOBS),purpose=pick(PURPOSES);
-  const bodyKey=pick(BODY_KEYS);
+  const gender = chance(0.5)?"남성":"여성";
+  const name   = gender==="남성"?pick(M_NAMES):pick(F_NAMES);
+  const from   = pick(ORIGINS), job=pick(JOBS), purpose=pick(PURPOSES);
+  const bodyKey= pick(BODY_KEYS);
   const bodyInfo=BODY_TYPES[bodyKey];
-  const height=bodyInfo.genHeight();
-  const spriteImage=getSpriteForCharacter(gender,bodyKey);
-
+  const height = bodyInfo.genH();
+  const spriteKey = (gender==="여성"?"female_":"male_")+bodyKey;
   return {
-    name,gender,from,job,purpose,stay:(1+Math.floor(Math.random()*4))+"일",
-    bodyKey,bodyDesc:bodyInfo.desc,bodyCss:bodyInfo.css,height,
-    spriteImage,faceImage:spriteImage,face:pick(FACES),
-    eyes:pick(EYES),hair:pick(HAIR),feature:pick(FEATURES),
-    documentSeal:from,sealCondition:"정상",
-    docGender:gender,docBodyDesc:bodyInfo.desc,docHeight:height,
+    name, gender, from, job, purpose,
+    stay:(1+ri(4))+"일",
+    bodyKey, bodyCss:bodyInfo.css, bodyLabel:bodyInfo.label, height,
+    spriteKey, faceImage:CHAR_SPRITES[spriteKey]||CHAR_SPRITES["male_tall"],
+    eyes:pick(EYES), hair:pick(HAIR), feature:pick(FEATURES),
+    documentSeal:from, sealOk:true,
+    docGender:gender, docBodyLabel:bodyInfo.label, docHeight:height,
+    // 대사
     speech:"통행증을 제출하겠습니다.",
     second:"성 안에서 "+purpose+"를 처리한 뒤 돌아갈 예정입니다.",
     cargo:pick(["밀자루","염료 상자","철제 공구","말린 약초","천 두루마리"]),
-    cargoDeclared:true,health:"정상",symbol:"없음",type:"normal",clues:[],verdict:"pass"
+    cargoDeclared:true, health:"정상", symbol:"없음",
+    type:"normal", clues:[], verdict:"pass",
+    // 블랙코미디 플래그
+    bribeOffer:false, bribeAmount:0, bribeLevel:0,
+    noble:false, nobleName:"", specialEffect:null,
+    dialogKey:"normal",
   };
 }
 
-function makeCase(){
-  const b=makeBasic(), day=s.day;
-  const available=["normal","expired","forged","mismatch","lie"];
-  if(day>=2)available.push("wanted","smuggle");
-  if(day>=3)available.push("plague");
-  if(day>=4)available.push("monster","heretic");
-  if(day>=5)available.push("mage","merc");
-  const type=pick(available);
-  b.type=type;b.verdict=TYPE_META[type].action;b.bribeOffer=chance(.22)&&type!=="normal";b.bribeAmount=5+Math.floor(Math.random()*4)*5;b.noble=chance(.10);if(b.noble){b.nobleName=pick(["에드릭 경","마르셀 백작의 조카","브레시아 변경백의 친족","왕실 서기관의 아들"]);b.speech="길을 오래 끌 생각은 없습니다. 조용히 지나가게 해주십시오.";b.clues.push("옷감과 반지에서 상류층의 흔적");}
+function applyType(b){
+  const type = b.type;
+  const d = DIALOGUES[b.dialogKey||type]||DIALOGUES["normal"];
+  b.speech = pick(d.enter);
 
   if(type==="expired"){
     b.stay="1일"; b.expiry="어제"; b.clues=["문서 하단 날짜","방문객 진술"];
-    b.speech="어제 발급받은 통행증입니다. 오늘은 꼭 들어가야 합니다.";
   }
   if(type==="forged"){
     const wrong=pick(SEAL_CITIES.filter(x=>x!==b.from));
-    b.documentSeal=wrong;b.sealCondition="의심";
-    b.clues=["인장 수첩 대조","문양의 중심부","테두리 구조"];
-    b.speech="관청에서 발급받았습니다. 인장은 원래 이런 모양입니다.";
+    b.documentSeal=wrong; b.sealOk=false;
+    b.clues=["인장 수첩 대조","문양 중심부","테두리 구조"];
   }
   if(type==="mismatch"){
-    const mismatchKind=pick(["body","gender","job"]);
-    if(mismatchKind==="body"){
-      if(b.bodyKey==="short"){
-        b.docBodyDesc="장신 건장";
-        b.docHeight=188;
-      }else{
-        b.docBodyDesc="단신 왜소";
-        b.docHeight=155;
-      }
+    const kind=pick(["body","gender","job"]);
+    if(kind==="body"){
+      b.docBodyLabel=b.bodyKey==="short"?"장신 건장":"단신 왜소";
+      b.docHeight=b.bodyKey==="short"?188:155;
       b.clues=["체격 및 키 불일치","서류 체형 기재","실제 외형"];
-      b.speech="서류에 적힌 체격이 접니다. 오차가 좀 있을 뿐입니다.";
-      b.second="관청에서 급하게 적어서 키가 다르게 적혔나 봅니다.";
-    }else if(mismatchKind==="gender"){
-      b.docGender=(b.gender==="남성")?"여성":"남성";
-      b.clues=["성별 표기 불일치","용모와 서류 대조","외모"];
-      b.speech="가족의 서류가 아니라 제 통행증이 맞습니다.";
-      b.second="관청 직원이 성별을 잘못 적었을 뿐입니다.";
-    }else{
-      b.job="대장장이";b.purpose="약초 판매";b.cargo="약초 꾸러미";
-      b.docJob="상인";b.clues=["직업 표기","손의 흔적","신고 목적"];
-      b.feature="손바닥에 굳은살";b.speech="저는 상인입니다. 약초를 팔러 왔습니다.";
-      b.second="대장간 일은 오래 전에 그만뒀습니다.";
+    } else if(kind==="gender"){
+      b.docGender=b.gender==="남성"?"여성":"남성";
+      b.clues=["성별 표기 불일치","용모와 서류 대조"];
+    } else {
+      b.job="대장장이"; b.cargo="약초 꾸러미";
+      b.feature="손바닥에 굳은살";
+      b.clues=["직업 표기","손의 흔적","신고 목적"];
     }
   }
   if(type==="lie"){
-    b.purpose="친척 방문";b.cargo="장부 꾸러미";b.docPurpose="성당 방문";
-    b.clues=["방문 목적","진술의 세부사항","소지품"];
-    b.speech="성당에 기도하러 왔습니다. 하룻밤이면 됩니다.";
-    b.second="친척 집에 잠시 들러야 해서요.";
+    b.purpose="친척 방문"; b.cargo="장부 꾸러미"; b.docPurpose="성당 방문";
+    b.clues=["방문 목적","진술 세부","소지품"];
   }
-  // CASE IMAGE: 수배자 사건
   if(type==="wanted"){
-    b.name=wanted.name;
-    b.gender=wanted.gender;
-    b.bodyKey=wanted.bodyKey;
-    b.bodyDesc=wanted.bodyDesc;
-    b.bodyCss=wanted.bodyCss;
-    b.height=wanted.height;
-    b.docGender=wanted.gender;
-    b.docBodyDesc=wanted.bodyDesc;
-    b.docHeight=wanted.height;
-    b.face=wanted.face;
-    b.spriteImage=wanted.spriteImage;
-    b.faceImage=wanted.spriteImage;
-    b.hair=wanted.hair;
-    b.eyes=wanted.eye;
+    b.name=wanted.name; b.gender=wanted.gender;
+    b.bodyKey=wanted.bodyKey; b.bodyCss=BODY_TYPES[wanted.bodyKey].css;
+    b.height=wanted.height; b.hair=wanted.hair; b.eyes=wanted.eye;
     b.feature=wanted.feature;
-    b.speech="마차가 늦어서 발이 묶였습니다. 빨리 지나가게 해주십시오.";
-    b.clues=["수배전단","체형 및 키","얼굴","특징"];
+    b.spriteKey=wanted.spriteKey;
+    b.faceImage=CHAR_SPRITES[wanted.spriteKey]||CHAR_SPRITES["male_tall"];
+    b.clues=["수배전단 대조","체형 및 키","얼굴","특징"];
+    b.dialogKey="wanted";
+    b.speech=pick(DIALOGUES.wanted.enter);
   }
   if(type==="smuggle"){
     b.cargo=pick(["봉인된 검은 상자","이중 바닥 나무상자","납으로 감싼 작은 통"]);
-    b.cargoDeclared=false;b.hiddenCargo=pick(["금지된 향료","불법 화약","왕실 금화","봉인된 알 하나"]);
-    b.speech="신고할 물건은 없습니다. 상자 안은 사적인 물건뿐입니다.";
-    b.second="상자는 도중에 받은 겁니다. 저는 열어본 적이 없습니다.";
+    b.cargoDeclared=false;
+    b.hiddenCargo=pick(["금지된 향료","불법 화약","왕실 금화","봉인된 알 하나"]);
     b.clues=["화물 무게","이중 바닥","봉인 상태"];
+    b.dialogKey="smuggle";
+    b.speech=pick(DIALOGUES.smuggle.enter);
   }
   if(type==="plague"){
-    b.health="열 39도";b.symptoms=pick(["마른기침","붉은 반점","심한 오한"]);
-    b.healthCert=false;b.speech="조금 피곤할 뿐입니다. 그냥 지나가게 해주십시오.";
+    b.health="열 39도";
+    b.symptoms=pick(["마른기침","붉은 반점","심한 오한"]);
+    b.healthCert=false;
+    b.spriteKey="plague_visitor"; b.faceImage=CHAR_SPRITES["plague_visitor"]||b.faceImage;
+    b.specialEffect="plague-tint";
     b.clues=["체온","기침/반점","건강증명서"];
+    b.dialogKey="plague";
+    b.speech=pick(DIALOGUES.plague.enter);
   }
-  // IMAGE CASE ASSET: 마물 위장 NPC
   if(type==="monster"){
-    b.face=pick(["🧟","🧙","🧑‍🦱"]);b.eyes=pick(["황금색","세로 동공","회백색"]);b.feature="그림자가 한 박자 늦음";
-    b.magicReaction="성수에서 금속성 거품 반응";b.speech="나는... 사람입니다. 왜 그렇게 쳐다보십니까?";
-    b.second="성 안에서는 무엇을 먹을 수 있습니까?";
+    b.eyes=pick(["황금색","세로 동공","회백색"]);
+    b.feature="그림자가 한 박자 늦음";
+    b.magicReaction="성수에서 금속성 거품 반응";
+    b.spriteKey="monster_disguise"; b.faceImage=CHAR_SPRITES["monster_disguise"]||b.faceImage;
+    b.specialEffect="monster-glow";
     b.clues=["성수 반응","눈동자","그림자","말투"];
+    b.dialogKey="monster";
+    b.speech=pick(DIALOGUES.monster.enter);
   }
   if(type==="heretic"){
     b.symbol=pick(["검은 태양 문양","뒤집힌 왕관","세 갈래 뿔 문양"]);
-    b.holyReaction="성수 접촉 부위가 검게 변함";b.feature="목깃 안쪽의 작은 문양";
-    b.speech="저는 단순한 순례자입니다. 아무 문제 없습니다.";
+    b.holyReaction="성수 접촉 부위가 검게 변함";
+    b.feature="목깃 안쪽의 작은 문양";
     b.clues=["교단 징표","성수 반응","복장 안쪽"];
+    b.dialogKey="heretic";
+    b.speech=pick(DIALOGUES.heretic.enter);
   }
   if(type==="mage"){
-    b.job="마법사";b.reg=(chance(.45));b.registered=b.reg;
-    b.docSpecial=b.reg?"마법사 등록번호 기재":"등록번호 공란";
-    b.cargo="지팡이와 수정병";b.speech=b.reg?"등록증을 제출하겠습니다.":"그냥 학자일 뿐입니다. 지팡이는 연구도구입니다.";
+    b.job="마법사"; b.reg=chance(0.45); b.cargo="지팡이와 수정병";
+    if(!b.reg){
+      b.spriteKey="mage_unregistered"; b.faceImage=CHAR_SPRITES["mage_unregistered"]||b.faceImage;
+    }
     b.clues=["특수 등록증","등록번호","마법 도구"];
     b.verdict=b.reg?"pass":"deny";
+    b.dialogKey="mage";
+    b.speech=b.reg?pick(DIALOGUES.mage.enter):"그냥 학자일 뿐입니다. 지팡이는 연구도구예요.";
   }
   if(type==="merc"){
-    b.job="용병";b.weaponReturned=chance(.35);b.cargo=b.weaponReturned?"무기 반납증":"검 1자루";
-    b.speech=b.weaponReturned?"무기는 성문 경비대에 맡겼습니다.":"경호 임무라 무기를 가지고 있어야 합니다.";
+    b.job="용병"; b.weaponReturned=chance(0.4); b.cargo=b.weaponReturned?"무기 반납증":"검 1자루";
     b.clues=["용병 신분증","무기","반납증"];
     b.verdict=b.weaponReturned?"pass":"deny";
+    b.dialogKey="merc";
+    b.speech=pick(DIALOGUES.merc.enter);
   }
-  if(type==="normal"){
-    if(chance(.35)){b.feature=pick(["짧은 오른쪽 턱 흉터","손에 잉크 얼룩","한쪽 귀 은고리"]);b.speech="마차가 밀려서 조금 늦었습니다."}
-    b.clues=["직업과 손 상태","체격 및 성별","방문 목적","화물 신고"];
+  // 블랙코미디 특수
+  if(type==="ghost"){
+    b.spriteKey="ghost_visitor"; b.faceImage=CHAR_SPRITES["ghost_visitor"]||b.faceImage;
+    b.specialEffect="ghost-float";
+    b.verdict="deny"; b.clues=["서류 발급일(300년 전)","반투명 외형","그림자 없음"];
+    b.dialogKey="ghost";
+    b.speech=pick(DIALOGUES.ghost.enter);
   }
+  if(type==="orc_tourist"){
+    b.spriteKey="orc_tourist"; b.faceImage=CHAR_SPRITES["orc_tourist"]||b.faceImage;
+    b.verdict="pass"; b.clues=["오크어 서류","방문 목적 (관광)"];
+    b.dialogKey="orc";
+    b.speech=pick(DIALOGUES.orc.enter);
+  }
+
+  // 뇌물 처리
+  if(b.bribeOffer){
+    applyBribe(b);
+  }
+
   return b;
 }
 
-function resetWanted(){
-  if(s.day<2){
-    wanted={active:false,name:"",gender:"남성",bodyKey:"tall",bodyDesc:"장신 건장",bodyCss:"body-tall",height:188,
-      face:"?",spriteImage:CHAR_SPRITES["male_tall"],faceImage:CHAR_SPRITES["male_tall"],eye:"회색",hair:"갈색 머리",feature:"왼쪽 볼 점"};
-    return;
+/* 뇌물 레벨 결정 */
+function applyBribe(b){
+  // 귀족이면 고액
+  if(b.noble){
+    b.bribeLevel=3; b.bribeAmount=50+ri(4)*10;
+    b.spriteKey="noble_bribe"; b.faceImage=CHAR_SPRITES["noble_bribe"]||b.faceImage;
+    b.dialogKey="bribe_noble";
+    b.speech=pick(DIALOGUES.bribe_noble.enter);
+  } else if(b.money!==undefined && b.money<5){
+    // 가난한 뇌물 (랜덤)
+    b.bribeLevel=1; b.bribeAmount=ri(4)+1;
+    b.dialogKey="bribe_poor";
+    b.speech=pick(DIALOGUES.bribe_poor.enter);
+  } else if(chance(0.5)){
+    // 중간 상인
+    b.bribeLevel=2; b.bribeAmount=15+ri(3)*5;
+  } else {
+    // 소액 평민
+    b.bribeLevel=1; b.bribeAmount=5+ri(2)*5;
+    b.dialogKey="bribe_poor";
+    b.speech=pick(DIALOGUES.bribe_poor.enter);
   }
-  if(!wanted.active||chance(.55)){
-    const gender=chance(0.5)?"남성":"여성";
-    const n=(gender==="남성")?pick(MALE_NAMES):pick(FEMALE_NAMES);
-    const bodyKey=pick(BODY_KEYS);
-    const bodyInfo=BODY_TYPES[bodyKey];
-    const height=bodyInfo.genHeight();
-    const spriteImage=getSpriteForCharacter(gender,bodyKey);
-    const eye=pick(EYES),hair=pick(HAIR),feature=pick(FEATURES.filter(x=>x!=="특징 없음"));
-    wanted={active:true,name:n,gender,bodyKey,bodyDesc:bodyInfo.desc,bodyCss:bodyInfo.css,height,
-      face:pick(FACES),spriteImage,faceImage:spriteImage,eye,hair,feature};
+}
+
+function makeCase(){
+  const b = makeBasic();
+  const day = s.day;
+  const available = ["normal","normal","normal","expired","forged","mismatch","lie"];
+  if(day>=2) available.push("wanted","smuggle","orc_tourist");
+  if(day>=3) available.push("plague","ghost");
+  if(day>=4) available.push("monster","heretic");
+  if(day>=5) available.push("mage","merc");
+  const type = pick(available);
+  b.type = type;
+  b.verdict = {
+    normal:"pass", expired:"deny", forged:"deny", mismatch:"deny", lie:"deny",
+    wanted:"arrest", smuggle:"arrest", plague:"deny", monster:"arrest",
+    heretic:"arrest", mage:"pass", merc:"pass", ghost:"deny",
+    orc_tourist:"pass",
+  }[type]||"pass";
+  b.bribeOffer = chance(0.25) && type!=="normal";
+  b.noble = chance(0.12);
+  if(b.noble){
+    b.nobleName = pick(["에드릭 경","마르셀 백작의 조카","브레시아 변경백의 친족","왕실 서기관의 아들"]);
   }
+  return applyType(b);
 }
 
 function makeCases(){
   const arr=[];
   for(let i=0;i<8;i++){
-    let c,guard=0;
-    do{c=makeCase();guard++}while(arr.some(x=>x.type===c.type)&&chance(.7)&&guard<10);
-    if(c.type==="wanted"&&!wanted.active)continue;
+    let c, guard=0;
+    do{c=makeCase();guard++}while(arr.some(x=>x.type===c.type)&&chance(0.65)&&guard<12);
+    if(c.type==="wanted"&&!wanted.active) continue;
     arr.push(c);
   }
-  while(arr.length<8)arr.push(makeCase());
+  while(arr.length<8) arr.push(makeCase());
   s.cases=arr;
 }
 
-function rules(){
-  $("day").textContent=s.day;
-  $("rules").innerHTML=RULES.map((row,i)=>row.map((x,j)=>{
-    const unlocked=i<s.day?"":" lock";
-    return "<div class='rule"+unlocked+"'><b>"+(i+1)+"-"+(j+1)+".</b> "+esc(x)+(i>=s.day?" <small>(후일 해금)</small>":"")+"</div>";
-  }).join("")).join("");
-  if(s.day<2){$("wantedStatus").textContent="없음";$("wantedFace").textContent="—";$("wantedDetails").textContent="오늘은 수배전단이 없습니다."}
-  else{
-    $("wantedStatus").textContent=wanted.active?"추적 중":"기록 없음";
-    $("wantedFace").innerHTML=wanted.active?renderVisualPortrait(wanted):"<span style='color:#7d6a54'>기록 없음</span>";
-    $("wantedDetails").innerHTML="<small><b>이름:</b> "+esc(wanted.name)+" ("+esc(wanted.gender)+")</small><small><b>체형:</b> "+esc(wanted.bodyDesc)+" · <b>키:</b> "+wanted.height+"cm ("+heightWord(wanted.height)+")</small><small><b>눈/머리:</b> "+esc(wanted.eye)+" · "+esc(wanted.hair)+"</small><small><b>특징:</b> "+esc(wanted.feature)+"</small>";
+function resetWanted(){
+  if(s.day<2){wanted.active=false;return;}
+  if(!wanted.active||chance(0.5)){
+    const gender=chance(0.5)?"남성":"여성";
+    const name=gender==="남성"?pick(M_NAMES):pick(F_NAMES);
+    const bodyKey=pick(BODY_KEYS);
+    const height=BODY_TYPES[bodyKey].genH();
+    const spriteKey=(gender==="여성"?"female_":"male_")+bodyKey;
+    wanted={active:true,name,gender,bodyKey,height,
+      hair:pick(HAIR),eye:pick(EYES),feature:pick(FEATURES.filter(x=>x!=="특징 없음")),
+      spriteKey};
   }
 }
 
-function availableTools(){
-  const tools=[
-    ["seal","🔍 인장 확대","seal"],
-    ["sealbook","📖 인장 수첩","sealbook"],
-    ["appearance","👁 외모 대조","appearance"],
-    ["cargo","🧳 소지품 수색","cargo"],
-    ["ask","💬 재질문","ask"]
-  ];
-  if(s.day>=3)tools.push(["medical","🌡 신체 검사","medical"]);
-  if(s.day>=4)tools.push(["holy","💧 성수 반응","holy"]);
-  return tools;
+/* ====================================================
+   RENDER
+==================================================== */
+function renderRules(){
+  $("day").textContent=s.day;
+  $("rules").innerHTML=RULES.map((row,i)=>row.map((x,j)=>{
+    const locked=i>=s.day?" locked":"";
+    return `<div class="rule-item${locked}">
+      <span class="rule-num">${i+1}-${j+1}</span>
+      <span class="rule-text">${esc(x)}${i>=s.day?'<span class="rule-note">(후일 해금)</span>':""}</span>
+    </div>`;
+  }).join("")).join("");
+
+  // 수배전단
+  if(!wanted.active||s.day<2){
+    $("wantedStatus").textContent="없음";
+    $("wantedPortrait").innerHTML=`<span style="color:#9a8468;font-size:12px">오늘은 없음</span>`;
+    $("wantedInfo").innerHTML="";
+  } else {
+    $("wantedStatus").textContent="추적 중";
+    const wImg=CHAR_SPRITES[wanted.spriteKey]||CHAR_SPRITES["male_tall"];
+    $("wantedPortrait").innerHTML=`<img src="${wImg}" alt="${esc(wanted.name)}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+    $("wantedInfo").innerHTML=`
+      <b>이름:</b> ${esc(wanted.name)} (${esc(wanted.gender)})<br>
+      <b>키:</b> ${wanted.height}cm · ${heightWord(wanted.height)}<br>
+      <b>눈:</b> ${esc(wanted.eye)} · <b>머리:</b> ${esc(wanted.hair)}<br>
+      <b>특징:</b> ${esc(wanted.feature)}
+    `;
+  }
 }
 
-// IMAGE PIPELINE: render()는 캐릭터/수배자/인장 이미지를 사건 데이터에 연결하는 지점.
-function render(){
+function renderCase(){
   const v=s.case;
-  if(!v)return;
-  $("day").textContent=s.day;
+  if(!v) return;
   $("money").textContent=s.money;
   $("mistakes").textContent=s.mistakes;
   $("clock").textContent=fmt(s.time);
-  $("portrait").className="portrait "+(v.bodyCss||"");
-  $("portrait").innerHTML=renderVisualPortrait(v);
-  $("bigface").innerHTML=renderVisualPortrait(v);
-  $("speech").textContent=v.speech;
+  $("heat").textContent=s.heat;
+
+  // 캐릭터 스프라이트
+  const img=v.faceImage||CHAR_SPRITES["male_tall"];
+  $("charSprite").className="char-sprite "+(v.bodyCss||"")+(v.specialEffect?" "+v.specialEffect:"");
+  $("charImg").src=img;
+  $("charImg").alt=v.name;
+
+  // 방문객 초상화
+  $("visitorPortraitImg").src=img;
+
+  // 말풍선 (성별 아이콘 & 색상 강조)
+  const gIcon = v.gender === "여성" ? "♀ " : "♂ ";
+  const gColor = v.gender === "여성" ? "#f29cb2" : "#7eb8f7";
+  $("speechSpeaker").innerHTML = `<span style="color:${gColor};font-weight:700">${gIcon}</span>` +
+    esc(v.name) + (v.noble?` <span style="color:#ffd700">[${esc(v.nobleName||"귀족")}]</span>`:"") +
+    (v.type==="ghost"?" [유령]":v.type==="orc_tourist"?" [오크]":"");
+  $("speechText").textContent=v.speech;
+
+  // 특징 배지 (성별 배지 뚜렷하게 시각화)
+  const gBadge = v.gender === "여성"
+    ? `<span class="trait-badge badge-female">♀ 여성</span>`
+    : `<span class="trait-badge badge-male">♂ 남성</span>`;
+  $("traitBadges").innerHTML=[gBadge,`<span class="trait-badge">${esc(v.bodyLabel)}</span>`,`<span class="trait-badge">${v.height}cm (${heightWord(v.height)})</span>`,`<span class="trait-badge">눈: ${esc(v.eyes)}</span>`,`<span class="trait-badge">${esc(v.hair)}</span>`,`<span class="trait-badge">${esc(v.feature)}</span>`]
+    .join("");
+
+  // 서류
+  const healthLine=s.day>=3?`<p><b>건강:</b> ${esc(v.health)}</p>`:"";
+  const specialLine=s.day>=5&&v.job==="마법사"?`<p><b>마법사 등록:</b> ${esc(v.reg?"등록번호 기재":"등록번호 공란")}</p>`:"";
+  const weaponLine=s.day>=5&&v.job==="용병"?`<p><b>무기:</b> ${esc(v.cargo)}</p>`:"";
+  const symbolLine=s.day>=4&&v.symbol!=="없음"?`<p><b>복장 기록:</b> 특이한 문양</p>`:"";
+
+  $("docsRow").innerHTML=`
+    <div class="doc-card">
+      <div class="doc-seal">${sealSvg(v.documentSeal)}</div>
+      <h3>📜 통행 허가증</h3>
+      <p><b>성명:</b> ${esc(v.name)} (${esc(v.docGender||v.gender)})</p>
+      <p><b>체격:</b> ${esc(v.docBodyLabel||v.bodyLabel)} · ${v.docHeight||v.height}cm</p>
+      <p><b>발급:</b> ${esc(v.from)}</p>
+      <p><b>직업:</b> ${esc(v.job)}</p>
+      <p><b>목적:</b> ${esc(v.docPurpose||v.purpose)}</p>
+      <p><b>체류:</b> ${esc(v.stay)}</p>
+      <p><b>유효:</b> ${esc(v.expiry||"금일 포함")}</p>
+      <div class="doc-hint">키·체형·성별과 실제 인물을 대조하십시오.</div>
+    </div>
+    <div class="doc-card">
+      <h3>📋 신분·물품 신고서</h3>
+      <p><b>신고 성별/체형:</b> ${esc(v.docGender||v.gender)} · ${esc(v.docBodyLabel||v.bodyLabel)}</p>
+      <p><b>신고 화물:</b> ${esc(v.cargo)}</p>
+      <p><b>진술:</b> ${esc(v.speech)}</p>
+      ${healthLine}${specialLine}${weaponLine}${symbolLine}
+      <div class="doc-hint">신고 내용과 실제 물품을 대조하십시오.</div>
+    </div>
+  `;
+
+  // 도구 버튼
+  renderTools();
+
+  // 방문객 기록
   $("vname").textContent=v.name;
-  $("vgender").textContent=v.gender;
+  $("vgender").innerHTML=(v.gender==="여성"
+    ?`<span style="color:#f29cb2;font-weight:700">♀ 여성</span>`
+    :`<span style="color:#7eb8f7;font-weight:700">♂ 남성</span>`) + (v.noble?` <span style="color:#ffd700;font-weight:700">[귀족]</span>`:"");
   $("vfrom").textContent=v.from;
   $("vjob").textContent=v.job;
   $("vpurpose").textContent=v.docPurpose||v.purpose;
   $("vstay").textContent=v.stay;
   $("vheight").textContent=v.height+"cm ("+heightWord(v.height)+")";
-  $("vbody").textContent=v.bodyDesc;
   $("veyes").textContent=v.eyes;
   $("vfeature").textContent=v.feature;
   $("vstatus").textContent="판정 전에 증거를 확보하십시오.";
-  $("sceneTraits").innerHTML=[v.gender,v.bodyDesc,v.height+"cm",heightWord(v.height),"눈 "+v.eyes,v.hair,v.feature].map(x=>"<span class='trait'>"+esc(x)+"</span>").join("");
-  const healthLine=s.day>=3?"<p><b>건강:</b> "+esc(v.health)+(v.healthCert?" · 증명서 있음":" · 증명서 미확인")+"</p>":"";
-  const special=s.day>=5&&v.job==="마법사"?("<p><b>마법사 등록:</b> "+esc(v.docSpecial||"문서에 기재 없음")+"</p>"):"";
-  const weapon=s.day>=5&&v.job==="용병"?("<p><b>무기:</b> "+esc(v.cargo)+"</p>"):"";
-  const symbol=s.day>=4&&v.symbol!=="없음"?("<p><b>복장 기록:</b> 특이한 문양이 있다는 진술</p>"):"";
-  $("documents").innerHTML=
-    "<div class='doc'><div class='sealstamp'>"+sealSvg(v.documentSeal)+"</div><h3>통행 허가증</h3>"+
-    "<p><b>성명:</b> "+esc(v.name)+" ("+esc(v.docGender||v.gender)+")</p>"+
-    "<p><b>체격:</b> "+esc(v.docBodyDesc||v.bodyDesc)+" (키 "+(v.docHeight||v.height)+"cm)</p>"+
-    "<p><b>발급 도시:</b> "+esc(v.from)+"</p><p><b>직업:</b> "+esc(v.docJob||v.job)+"</p><p><b>방문 목적:</b> "+esc(v.docPurpose||v.purpose)+"</p><p><b>체류:</b> "+esc(v.stay)+"</p><div class='line'></div><p><b>유효일:</b> "+esc(v.expiry||"금일 포함")+"</p><p class='hint'>서류의 키·체형·성별과 눈앞의 인물이 일치하는지 대조하십시오.</p></div>"+
-    "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 성별/체형:</b> "+esc(v.docGender||v.gender)+" · "+esc(v.docBodyDesc||v.bodyDesc)+"</p><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품을 대조하십시오.</p></div>";
-  $("toolbar").innerHTML=availableTools().map(t=>"<button class='tool' data-tool='"+t[0]+"'>"+t[1]+"</button>").join("");
-  document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>inspect(b.dataset.tool));
-  document.querySelectorAll(".decision").forEach(b=>{
-    b.onclick=()=>judge(b.dataset.action);
-    b.disabled=false;
-  });
-  $("bribeDecision").style.display=v.bribeOffer?"block":"none";
-  $("caseNumber").textContent="사건 "+s.caseNo+"/8";
-  $("used").textContent="검사 "+s.tools.length+"회 · 현재 시각 "+fmt(s.time);
-  $("evidenceList").innerHTML=s.tools.length?s.tools.map(x=>"<div class='evidence-row'>"+esc(x)+"</div>").join(""):"<div class='evidence-row'>아직 확보한 단서가 없습니다.</div>";
+
+  // 증거
+  $("evidenceList").innerHTML=s.tools.length
+    ? s.tools.map(x=>`<div class="evidence-item"><span class="ev-icon">🔎</span>${esc(x)}</div>`).join("")
+    : `<div class="evidence-item"><span class="ev-icon">—</span>아직 단서 없음</div>`;
+
+  // 뇌물 표시
+  $("briberInd").style.display=v.bribeOffer?"block":"none";
+  $("btnBribe").style.display=v.bribeOffer?"flex":"none";
+  if(v.bribeOffer){
+    const bribeLabels=["","소액 뇌물","중액 뇌물","고액 뇌물","위협형"];
+    $("briberLabel").innerHTML=`뒷돈 수락<br><small style="font-size:9px">${v.bribeAmount}G · ${bribeLabels[v.bribeLevel]||""}</small>`;
+  }
+
+  // 케이스 바
+  $("queueCount").textContent=Math.max(0,8-s.caseNo);
+  $("caseNumber").textContent=`사건 ${s.caseNo}/8`;
+  $("caseLabel").textContent=`사건 ${s.caseNo} / 8`;
+  $("caseUsed").textContent=`검사 ${s.tools.length}회 · ${fmt(s.time)}`;
+  $("warnCount").textContent=s.mistakes;
 }
 
-function fmt(min){const h=Math.floor(min/60),m=min%60;return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")}
-
-function addEvidence(text,minutes=10){
-  s.tools.push(text);s.time=Math.min(1080,s.time+minutes);render();toast("단서를 기록했습니다.");
+function renderTools(){
+  const tools=[
+    {id:"seal",label:"🔍 인장 확대",day:1},
+    {id:"sealbook",label:"📖 인장수첩",day:1},
+    {id:"appearance",label:"👁 외모 대조",day:1},
+    {id:"cargo",label:"🧳 소지품 수색",day:1},
+    {id:"ask",label:"💬 재질문",day:1},
+    {id:"facelab",label:"🎨 얼굴 대조판",day:1},
+    {id:"medical",label:"🌡 신체검사",day:3},
+    {id:"holy",label:"💧 성수반응",day:4},
+  ];
+  $("toolBar").innerHTML=tools.map(t=>`
+    <button class="tool-btn${s.day<t.day?' locked':''}" data-tool="${t.id}" ${s.day<t.day?'disabled':''}>
+      ${esc(t.label)}${s.day<t.day?` <small>(${t.day}일차)</small>`:""}
+    </button>
+  `).join("");
+  document.querySelectorAll(".tool-btn:not(.locked)").forEach(b=>b.onclick=()=>useTool(b.dataset.tool));
 }
 
-function inspect(tool){
- const v=s.case;if(!v)return;
- if(tool==="seal"){openSealInspect(v.documentSeal);return}
- if(tool==="sealbook"){openSealBook(v.from);return}
- if(tool==="appearance"){
-   const p=v.type==="wanted"&&wanted.active?"수배전단 대조: "+heightWord(wanted.height)+" · "+wanted.eye+"빛 눈 · "+wanted.feature+" / 현재 방문객: "+heightWord(v.height)+" · "+v.eyes+"빛 눈 · "+v.feature:"외모 관찰: "+heightDetail(v.height)+" "+v.eyes+"빛 눈 · "+v.feature;
-   addEvidence(p,5);showInspectFeedback("외모 대조",p,v.type==="wanted");return;
- }
- if(tool==="cargo"){openCargoSearch();return}
- if(tool==="ask"){openAskModal();return}
- let clue="";
- if(tool==="medical")clue=v.health==="정상"?"신체 검사: 체온과 호흡에서 특이사항이 보이지 않습니다.":"신체 검사: "+v.health+" · "+v.symptoms+"이 확인됩니다.";
- if(tool==="holy")clue=v.holyReaction||v.magicReaction||"성수 검사: 눈에 띄는 반응이 없습니다.";
- if(clue){addEvidence(clue,10);showInspectFeedback(tool==="medical"?"신체 검사":"성수 반응",clue,/39도|기침|반점|검게|금속성/.test(clue))}
+function renderPrevLog(){
+  if(!s.prevLog.length){
+    $("prevLogList").innerHTML=`<div style="color:#9a8468">아직 처리 건 없음</div>`;
+    return;
+  }
+  $("prevLogList").innerHTML=s.prevLog.map(r=>{
+    const cls=r.action==="통과"?"log-pass":r.action==="거부"?"log-deny":"log-arr";
+    const icon=r.action==="통과"?"🟢":r.action==="거부"?"🔴":"⛓️";
+    return `<div class="log-entry ${cls}">${icon} ${esc(r.name)} — ${esc(r.action)}${r.correct===false?' ⚠️':''}</div>`;
+  }).join("");
 }
-function showInspectFeedback(title,text,bad){
- $("vstatus").textContent=title+" 결과가 기록되었습니다.";
- toast(title+" 완료 · 검문 기록에 추가");
- const box=document.createElement("div");box.className="inspect-feedback "+(bad?"feedback-warn":"feedback-good");
- box.innerHTML="<b>"+esc(title)+"</b><br>"+esc(text);$("evidenceList").prepend(box);
+
+/* ====================================================
+   TOOLS
+==================================================== */
+function addEvidence(text,mins=10){
+  s.tools.push(text);
+  s.time=Math.min(1080,s.time+mins);
+  $("caseUsed").textContent=`검사 ${s.tools.length}회 · ${fmt(s.time)}`;
+  $("evidenceList").innerHTML=s.tools.map(x=>`<div class="evidence-item"><span class="ev-icon">🔎</span>${esc(x)}</div>`).join("");
+  toast("단서를 기록했습니다.");
 }
+
+function useTool(tool){
+  const v=s.case;if(!v)return;
+  if(tool==="seal"){openSealInspect(v.documentSeal);return}
+  if(tool==="sealbook"){openSealBook(v.from);return}
+  if(tool==="facelab"){openFaceLab();return}
+  if(tool==="appearance"){
+    const desc=`외모 관찰: ${v.height}cm ${heightWord(v.height)}, ${v.eyes}빛 눈, ${v.hair}, ${v.feature}`;
+    addEvidence(desc,5);
+    $("vstatus").textContent="외모 단서가 기록되었습니다.";
+    return;
+  }
+  if(tool==="cargo"){openCargoSearch();return}
+  if(tool==="ask"){openAskModal();return}
+  let clue="";
+  if(tool==="medical"){
+    clue=v.health==="정상"
+      ?"신체 검사: 체온과 호흡에서 특이사항이 보이지 않습니다."
+      :`신체 검사: ${v.health} · ${v.symptoms||"이상 징후"} 확인됨`;
+  }
+  if(tool==="holy"){
+    clue=v.holyReaction||v.magicReaction||"성수 검사: 눈에 띄는 반응이 없습니다.";
+  }
+  if(clue){
+    addEvidence(clue,10);
+    const bad=/39도|기침|반점|검게|금속성/.test(clue);
+    $("vstatus").textContent=clue;
+    if(bad) $("vstatus").style.color="#e07a6a";
+  }
+}
+
 function openCargoSearch(){
- const v=s.case;if(!v)return;
- const items=["신고 화물: "+v.cargo,"봉인·끈·포장 상태 확인","내부 형태와 신고 화물 대조","손으로 들어 무게 중심 확인"];
- if(v.cargoDeclared===false){items.push("바닥/벽면 이중 구조 확인");if(v.hiddenCargo)items.push("은닉 내용물 확인: "+v.hiddenCargo)}
- const found=v.cargoDeclared===false?"수색 결과: 신고되지 않은 구조 또는 내용물이 확인됩니다. 실제 소지품과 신고 내용이 일치하지 않습니다.":"수색 결과: 신고 화물과 실제 화물의 형태·무게가 대체로 일치합니다.";
- $("cargoIntro").textContent="검문관이 실제로 어떤 물건을 확인했는지 아래에 기록됩니다.";
- $("cargoSearchList").innerHTML=items.map(x=>"<div class='inspect-item'>🔎 "+esc(x)+"</div>").join("");
- $("cargoResult").innerHTML="<b>"+esc(found)+"</b>";
- $("cargoModal").classList.add("show");
- addEvidence("소지품 수색: "+items.join(" · ")+" / "+found,10);
- showInspectFeedback("소지품 수색",found,v.cargoDeclared===false);
+  const v=s.case;if(!v)return;
+  const items=["신고 화물: "+v.cargo,"봉인·포장 상태 확인","내부 형태와 신고 화물 대조","무게 중심 확인"];
+  if(!v.cargoDeclared){
+    items.push("바닥/벽면 이중 구조 확인");
+    if(v.hiddenCargo) items.push("은닉 내용물: "+v.hiddenCargo);
+  }
+  const found=!v.cargoDeclared
+    ?"⚠️ 수색 결과: 신고되지 않은 구조 또는 내용물이 확인됩니다. 신고 내용과 불일치합니다."
+    :"✅ 수색 결과: 신고 화물과 실제 화물이 대체로 일치합니다.";
+  $("cargoIntro").textContent="검문관이 실제로 확인한 내용이 아래에 기록됩니다.";
+  $("cargoList").innerHTML=items.map(x=>`<div class="cargo-item">🔎 ${esc(x)}</div>`).join("");
+  $("cargoResult").innerHTML=`<b>${esc(found)}</b>`;
+  $("cargoResult").className="search-result"+(!v.cargoDeclared?" alert":"");
+  openModal("cargoModal");
+  addEvidence("소지품 수색: "+items.slice(0,2).join(" / ")+" → "+found,10);
 }
+
 function openAskModal(){
- const v=s.case;if(!v)return;
- const qs=[
-  ["방문 목적을 처음부터 다시 말해보시오.","처음 진술: "+v.speech+" / 다시 한 답변: "+v.second,v.type==="lie"],
-  ["이 물건은 어디서 가져왔고 누가 맡겼소?","화물 답변: "+(v.cargoDeclared===false?"남이 맡겼다고 하지만 출처를 명확히 설명하지 못합니다.":"신고한 "+v.cargo+"는 본인이 준비했다고 설명합니다."),v.type==="smuggle"],
-  ["오늘 왜 꼭 지금 성문을 통과해야 하오?","시간·동선 답변: "+(v.type==="expired"?"통행증이 만료됐지만 오늘 안에 들어가야 한다고 주장합니다.":v.type==="wanted"?"마차가 늦었다며 서둘러 달라고 재촉합니다.":"방문 목적과 크게 어긋나지 않는 사유를 설명합니다."),v.type==="expired"]
- ];
- $("askIntro").textContent="질문을 누르면 방문객의 캐릭터창 대사가 실제 답변으로 바뀝니다.";
- $("askQuestions").innerHTML=qs.map((q,i)=>"<button class='ask-question' data-q='"+i+"'>"+esc(q[0])+"</button>").join("");
- $("askAnswer").innerHTML="<div class='ask-answer'>질문을 골라 답변을 확인하십시오.</div>";
- document.querySelectorAll(".ask-question").forEach(btn=>btn.onclick=()=>{
-   const q=qs[Number(btn.dataset.q)],note=q[2]?"추론 단서: 앞서 제출한 서류·검사 결과와 대조하면 이상 징후가 드러납니다.":"추론 단서: 현재 확보한 정보와 크게 어긋나지 않는 답변입니다.";
-   v.speech=q[1];$("speech").textContent=q[1];$("vstatus").textContent="재질문 답변이 캐릭터 대사에 반영되었습니다.";
-   $("askAnswer").innerHTML="<div class='ask-answer'><b>방문객 대사</b><br>"+esc(q[1])+"<br><br><b>"+esc(note)+"</b></div>";
-   addEvidence("재질문: "+q[0]+" → "+q[1]+" / "+note,8);
- });
- $("askModal").classList.add("show");
+  const v=s.case;if(!v)return;
+  const dKey=v.dialogKey||v.type;
+  const d=DIALOGUES[dKey]||DIALOGUES["normal"];
+  const qs=[
+    {q:"방문 목적을 처음부터 다시 말해보시오.",
+     a:"재진술: "+pick(d.question||d.enter),
+     sus:["lie","smuggle","forged","wanted"].includes(v.type)},
+    {q:"이 물건은 어디서 가져왔소?",
+     a:v.cargoDeclared===false?"출처를 명확히 설명하지 못합니다.":"신고한 "+v.cargo+"는 본인이 직접 준비했다고 설명합니다.",
+     sus:v.type==="smuggle"},
+    {q:"오늘 왜 꼭 지금 통과해야 하오?",
+     a:pick(d.caught||d.question||d.enter),
+     sus:["expired","wanted"].includes(v.type)},
+  ];
+  $("askIntro").textContent="질문을 누르면 방문객이 답변합니다.";
+  $("askQuestions").innerHTML=qs.map((q,i)=>`<button class="ask-btn" data-q="${i}">${esc(q.q)}</button>`).join("");
+  $("askAnswer").innerHTML=`<div class="ask-answer">질문을 선택하십시오.</div>`;
+  document.querySelectorAll(".ask-btn").forEach(btn=>btn.onclick=()=>{
+    const q=qs[Number(btn.dataset.q)];
+    $("askAnswer").innerHTML=`<div class="ask-answer${q.sus?' suspicious':''}">
+      <b>방문객 대사</b><br>${esc(q.a)}<br><br>
+      <b>${q.sus?"⚠️ 이전 진술과 비교해 이상 징후가 드러납니다.":"✅ 현재 확보한 정보와 크게 어긋나지 않는 답변입니다."}</b>
+    </div>`;
+    s.case.speech=q.a;
+    $("speechText").textContent=q.a;
+    addEvidence("재질문: "+q.q+" → "+q.a,8);
+  });
+  openModal("askModal");
 }
+
 function openSealInspect(city){
- const q=SEALS[city]||SEALS["카를스반"];
- $("sealInspectVisual").innerHTML="<div class='seal-ref'><div class='bigseal' style='width:180px;height:180px'>"+sealSvg(city)+"</div><div><h3>"+esc(city)+" · "+esc(q.title)+"</h3><p><b>테두리:</b> "+esc(q.edge)+"</p><p><b>중심 문양:</b> "+esc(q.core)+"</p><p><b>식별점:</b> "+esc(q.mark)+"</p></div></div>";
- $("sealInspectText").textContent="확대 관찰 기록: "+q.edge+" / "+q.core+" / "+q.mark;
- $("sealInspectModal").classList.add("show");
+  const q=SEALS[city]||SEALS["카를스반"];
+  $("sealInspectContent").innerHTML=`
+    <div class="seal-ref">
+      <div class="big-seal">${sealSvg(city)}</div>
+      <div>
+        <h3>${esc(city)} · ${esc(q.title)}</h3>
+        <p><b>테두리:</b> ${esc(q.edge)}</p>
+        <p><b>중심 문양:</b> ${esc(q.core)}</p>
+        <p><b>식별점:</b> ${esc(q.mark)}</p>
+      </div>
+    </div>
+  `;
+  $("sealInspectText").textContent=`확대 관찰: ${q.edge} / ${q.core} / ${q.mark}`;
+  openModal("sealInspectModal");
+  addEvidence(`인장 확대: ${city} · ${q.core}`,5);
 }
-function judge(action){const v=s.case;if(!v)return;const used=s.tools.length;const elapsed=40+used*10+(action==="arrest"?5:0);s.time=Math.min(1080,s.time+elapsed);if(action==="bribe"){if(!v.bribeOffer){toast("건넨 돈이 없습니다.");return;}s.money+=v.bribeAmount;s.corruption++;s.heat+=v.noble?2:1;s.pending.push({day:s.day,name:v.name,action:"귀띔값 수락",correct:null,amount:v.bribeAmount,noble:v.noble});if(v.noble)s.delayed.push({after:2+Math.floor(Math.random()*2),type:"noble",name:v.nobleName||v.name,sourceDay:s.day});log("조용히 주머니가 무거워졌다. · "+v.bribeAmount+" 동전");toast("돈은 받았지만 장부에는 남기지 않았습니다.");setTimeout(nextCase,520);return;}if(action==="secret"){s.money+=3;s.corruption+=2;s.heat++;s.pending.push({day:s.day,name:v.name,action:"비밀 처리",correct:null,amount:3,noble:v.noble});if(v.noble)s.delayed.push({after:1+Math.floor(Math.random()*3),type:"noble",name:v.nobleName||v.name,sourceDay:s.day});log("공식 장부에서 이름을 지웠다. · +3 동전");toast("비밀리에 처리했습니다.");setTimeout(nextCase,520);return;}const correct=action===v.verdict;
-  if(v.noble&&!correct)s.delayed.push({after:1+Math.floor(Math.random()*3),type:"noble",name:v.nobleName||v.name,sourceDay:s.day,wrongAction:labelAction(action)});
-  const priorWrong=s.pending.filter(r=>r.correct===false).length;
+
+$("sealInspectToBook").onclick=()=>{
+  closeModal("sealInspectModal");
+  openSealBook(s.case?s.case.from:"카를스반");
+};
+
+function openSealBook(city){
+  activeSealCity=SEALS[city]?city:SEAL_CITIES[0];
+  $("sealGrid").innerHTML=SEAL_CITIES.map(x=>`
+    <div class="seal-card${x===activeSealCity?' active':''}" data-city="${esc(x)}">
+      ${sealSvg(x)}
+      <strong>${esc(x)}</strong>
+      <small>${esc(SEALS[x].title)}</small>
+    </div>
+  `).join("");
+  document.querySelectorAll(".seal-card").forEach(el=>el.onclick=()=>{
+    activeSealCity=el.dataset.city;
+    document.querySelectorAll(".seal-card").forEach(c=>c.classList.toggle("active",c.dataset.city===activeSealCity));
+    showSealRef(activeSealCity);
+  });
+  showSealRef(activeSealCity);
+  $("compareResult").style.display="none";
+  openModal("sealModal");
+}
+
+function showSealRef(city){
+  const q=SEALS[city];
+  $("sealRef").innerHTML=`
+    <div class="seal-ref">
+      <div class="big-seal">${sealSvg(city)}</div>
+      <div>
+        <h3>${esc(city)} · ${esc(q.title)}</h3>
+        <p><b>관할:</b> ${esc(q.domain)}</p>
+        <p><b>테두리:</b> ${esc(q.edge)}</p>
+        <p><b>중심 문양:</b> ${esc(q.core)}</p>
+        <p><b>식별점:</b> ${esc(q.mark)}</p>
+        <p style="font-size:9px;color:#705040;margin-top:4px">공식 견본은 이 네 요소를 기준으로 대조합니다.</p>
+      </div>
+    </div>
+  `;
+}
+
+function compareSeal(){
+  if(!s.case)return;
+  const same=s.case.documentSeal===activeSealCity;
+  const q=SEALS[activeSealCity];
+  const res=same
+    ?`✅ 대조 기록: 현재 통행증의 인장이 ${q.title} 견본과 일치합니다.`
+    :`⚠️ 대조 기록: 현재 통행증 인장이 ${q.title} 공식 견본과 일치하지 않습니다.`;
+  $("compareResult").textContent=res;
+  $("compareResult").className="compare-result "+(same?"match":"mismatch");
+  $("compareResult").style.display="block";
+  addEvidence(res,5);
+}
+
+/* 얼굴 대조판 */
+function openFaceLab(){
+  const v=s.case;if(!v)return;
+  $("faceVisitorView").innerHTML=`<img src="${v.faceImage}" alt="${esc(v.name)}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+  if(wanted.active&&s.day>=2){
+    const wImg=CHAR_SPRITES[wanted.spriteKey]||CHAR_SPRITES["male_tall"];
+    $("faceWantedView").innerHTML=`<img src="${wImg}" alt="${esc(wanted.name)}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+    $("faceWantedHint").innerHTML=`<b>${esc(wanted.name)}</b> · ${esc(wanted.hair)} · ${esc(wanted.eye)}빛 눈 · ${esc(wanted.feature)}`;
+  } else {
+    $("faceWantedView").innerHTML=`<div style="color:#9a8468;display:grid;place-items:center;height:100%;font-size:11px">오늘 수배전단 없음</div>`;
+    $("faceWantedHint").textContent="현재 추적 중인 수배자가 없습니다.";
+  }
+  $("faceMatchResult").style.display="none";
+  renderFaceLab();
+  openModal("faceModal");
+}
+
+function renderFaceLab(){
+  const hairColors={black:"#30231e",brown:"#5c3a20",blond:"#d4a820",red:"#9a3820",gray:"#a0a0a0"};
+  $("faceHairEl").style.background=hairColors[faceHair]||"#30231e";
+  let marks="";
+  if(faceFeats.has("ld")) marks+=`<div class="face-mark ld"></div>`;
+  if(faceFeats.has("rd")) marks+=`<div class="face-mark rd"></div>`;
+  if(faceFeats.has("cs")) marks+=`<div class="face-mark cs"></div>`;
+  if(faceFeats.has("ks")) marks+=`<div class="face-mark ks"></div>`;
+  $("faceMarkLayer").innerHTML=marks;
+  document.querySelectorAll("#hairOpts .face-opt").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceHair));
+  document.querySelectorAll("#featOpts .face-opt").forEach(b=>b.classList.toggle("active",faceFeats.has(b.dataset.feat)));
+}
+
+document.querySelectorAll("#hairOpts .face-opt").forEach(b=>b.onclick=()=>{faceHair=b.dataset.hair;renderFaceLab()});
+document.querySelectorAll("#featOpts .face-opt").forEach(b=>b.onclick=()=>{
+  const k=b.dataset.feat;
+  if(faceFeats.has(k))faceFeats.delete(k); else faceFeats.add(k);
+  renderFaceLab();
+});
+
+function faceCheckVisitor(){
+  const v=s.case;if(!v)return;
+  const hairMap={검은:"black","갈색":"brown","금발":"blond","붉은":"red","회색":"gray"};
+  let matchHair="black";
+  for(const [k,val] of Object.entries(hairMap)){if(v.hair.includes(k)){matchHair=val;break}}
+  const hairOk=matchHair===faceHair;
+  const featMap={"왼쪽.*점":"ld","오른쪽.*점":"rd","볼.*흉터":"cs","칼|자국":"ks"};
+  const expected=new Set();
+  for(const [re,k] of Object.entries(featMap)){if(new RegExp(re).test(v.feature)) expected.add(k);}
+  const featOk=([...expected].every(k=>faceFeats.has(k)))&&([...faceFeats].every(k=>expected.has(k)));
+  const ok=hairOk&&featOk;
+  const msg=ok?"✅ 실물 대조 일치: 관찰한 특징이 실제 인물 일러스트와 일치합니다.":"⚠️ 실물 대조 불일치: 관찰한 조합이 실제 일러스트와 일치하지 않습니다.";
+  $("faceMatchResult").textContent=msg;
+  $("faceMatchResult").className="inspect-feedback "+(ok?"ok":"warn");
+  $("faceMatchResult").style.display="block";
+  addEvidence("얼굴 특징 대조: "+msg,3);
+}
+
+function faceCheckWanted(){
+  const v=s.case;if(!v)return;
+  if(!wanted.active){toast("오늘은 추적 중인 수배전단이 없습니다.");return;}
+  const isW=v.type==="wanted";
+  const msg=isW
+    ?"🚨 수배자 일치! 현재 방문객의 용모가 수배전단과 일치합니다! 즉시 경비대를 호출하십시오!"
+    :"🛡️ 수배전단 대조: 현재 방문객의 용모는 수배전단과 일치하지 않습니다.";
+  $("faceMatchResult").textContent=msg;
+  $("faceMatchResult").className="inspect-feedback "+(isW?"warn":"ok");
+  $("faceMatchResult").style.display="block";
+  addEvidence(isW?"수배자 용모 일치 확인!":"수배자와 용모 불일치",5);
+}
+
+/* ====================================================
+   JUDGE
+==================================================== */
+document.querySelectorAll(".verdict-btn").forEach(b=>b.onclick=()=>judge(b.dataset.action));
+
+function judge(action){
+  const v=s.case;if(!v)return;
+  const used=s.tools.length;
+  const elapsed=40+used*8+(action==="arrest"?5:0);
+  s.time=Math.min(1080,s.time+elapsed);
+
+  if(action==="bribe"){
+    if(!v.bribeOffer){toast("건넨 돈이 없습니다.");return;}
+    s.money+=v.bribeAmount;
+    s.corruption++;
+    s.heat+=v.noble?2:1;
+    if(v.noble) s.delayed.push({after:2+ri(2),type:"noble",name:v.nobleName||v.name,sourceDay:s.day});
+    s.prevLog.push({name:v.name,action:"뒷돈 수락",correct:null});
+    toast(`💰 ${v.bribeAmount}G을 받았습니다. 장부에는 남기지 않았습니다.`);
+    setTimeout(nextCase,600);return;
+  }
+  if(action==="secret"){
+    s.money+=3;s.corruption+=2;s.heat++;
+    s.prevLog.push({name:v.name,action:"비밀 처리",correct:null});
+    if(v.noble) s.delayed.push({after:1+ri(3),type:"noble",name:v.nobleName||v.name,sourceDay:s.day});
+    toast("비밀리에 처리했습니다. +3G");
+    setTimeout(nextCase,600);return;
+  }
+  const correct=action===v.verdict;
+  if(v.noble&&!correct){
+    s.delayed.push({after:1+ri(3),type:"noble",name:v.nobleName||v.name,sourceDay:s.day,wrongAction:labelAction(action)});
+  }
+  if(!correct){s.mistakes++;$("mistakes").textContent=s.mistakes;}
   s.pending.push({day:s.day,name:v.name,action:labelAction(action),correct,amount:correct?5:0,type:v.type,noble:v.noble});
-  log("판정 접수: "+v.name+" · "+labelAction(action)+" · 단서 "+used+"개");toast("판정이 장부에 기록되었습니다.");$("vstatus").textContent="판정이 접수되었습니다. 결과는 아직 알 수 없습니다.";setTimeout(nextCase,520);}
+  s.prevLog.push({name:v.name,action:labelAction(action),correct});
+  renderPrevLog();
+  $("vstatus").textContent="판정이 접수되었습니다.";
+  $("vstatus").style.color=correct?"#3d6145":"#e07a6a";
+  // 통과 시 스탬프 효과
+  if(action==="pass"||action==="deny"){
+    animateStamp(action);
+  }
+  setTimeout(nextCase,700);
+}
+
+function animateStamp(action){
+  const stamp=document.createElement("div");
+  stamp.style.cssText="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-15deg) scale(0);z-index:500;font-size:72px;font-weight:900;letter-spacing:4px;opacity:0;transition:all 0.25s ease;pointer-events:none;text-shadow:0 4px 12px rgba(0,0,0,0.5)";
+  stamp.textContent=action==="pass"?"통　과":"거　부";
+  stamp.style.color=action==="pass"?"#2d8a45":"#8a2d2d";
+  document.body.appendChild(stamp);
+  setTimeout(()=>{stamp.style.transform="translate(-50%,-50%) rotate(-15deg) scale(1)";stamp.style.opacity="1";},10);
+  setTimeout(()=>{stamp.style.opacity="0";},600);
+  setTimeout(()=>stamp.remove(),900);
+}
+
+function labelAction(a){return a==="pass"?"통과":a==="deny"?"거부":"경비대 호출"}
+
+/* ====================================================
+   NEXT CASE / END DAY
+==================================================== */
+function nextCase(){
+  closeAllModals();
+  if(s.caseNo>=8||s.time>=1080){endDay();return;}
+  s.caseNo++;
+  s.tools=[];
+  s.case=s.cases[s.caseNo-1]||makeCase();
+  $("vstatus").style.color="";
+  renderCase();
+}
+
+function endDay(){
+  let earned=0,correct=0;
+  s.pending.forEach(r=>{if(r.correct===true){earned+=5;correct++}});
+  s.money=Math.max(0,s.money+earned-15);
+  const wrong=s.pending.filter(r=>r.correct===false).length;
+  const leaked=s.pending.some(r=>r.action==="통과"&&r.correct===false);
+  const txt=leaked?"오늘 통과시킨 사람 중 수상한 인물이 있었다는 보고가 들어왔습니다."
+    :wrong?"몇 건의 판정 실수가 장부에 남았습니다."
+    :"오늘 성문은 무사했습니다. 장부도 깔끔합니다.";
+  const summary=s.pending.map((r,i)=>`
+    <div class="summary-item">
+      <b>사건 ${i+1} · ${esc(r.name)}</b>
+      <span class="${r.correct===true?'correct':r.correct===false?'wrong':''}">${esc(r.action)} · ${r.correct===null?"비공식":r.correct?"적중 ✅":"오판 ❌"}</span>
+    </div>
+  `).join("")+`
+    <div class="summary-item"><b>생활비</b> -15G</div>
+    <div class="summary-item"><b>현재 잔액</b> ${s.money}G</div>
+  `;
+  showStory("근무 종료 · 판정 감사",txt,leaked?"brawl":wrong?"danger":"quarters",summary,"밤으로",()=>{closeModal("storyModal");night()});
+}
+
+/* ====================================================
+   NIGHT PHASE
+==================================================== */
+function night(){
+  const notices=resolveDelayed();
+  const leaked=s.pending.some(r=>r.action==="통과"&&r.correct===false);
+  const wrong=s.pending.filter(r=>r.correct===false).length;
+  const rumor=leaked?"오늘 성문에서 수상한 자를 실수로 들여보냈다더라."
+    :s.mistakes>2?"오늘 검문에서 실수가 좀 있었다더라."
+    :"오늘 카를스반 성문은 철통이었다더군.";
+  const noticeText=notices.length?" "+notices.join(" "):"";
+  const nightSummary=`
+    <div class="night-grid">
+      <div class="night-option" data-night="tavern">
+        <h3>🍺 선술집</h3>
+        <div class="cost">-8G</div>
+        <div class="desc">소문을 듣는다. 내일 힌트 획득.</div>
+      </div>
+      <div class="night-option" data-night="home">
+        <h3>🛏️ 숙소</h3>
+        <div class="cost">무료</div>
+        <div class="desc">조용한 밤. 장부 검토.</div>
+      </div>
+      <div class="night-option" data-night="gamble">
+        <h3>🎲 주사위판</h3>
+        <div class="cost">-5G</div>
+        <div class="desc">운에 맡긴다. 12G 획득 또는 손실.</div>
+      </div>
+      <div class="night-option" data-night="market">
+        <h3>🏪 야시장</h3>
+        <div class="cost">-5G</div>
+        <div class="desc">정보 구입. 내일 특정 케이스 유형 힌트.</div>
+      </div>
+    </div>
+    <div class="summary-item"><b>현재 주머니</b> ${s.money}G</div>
+    <div class="summary-item"><b>부패도</b> ${s.corruption}회</div>
+  `;
+  showStory("해가 졌습니다",rumor+noticeText,"tavern",nightSummary,"밤을 마친다",()=>nightChoice("home"));
+  document.querySelectorAll(".night-option").forEach(el=>{
+    el.onclick=()=>{
+      document.querySelectorAll(".night-option").forEach(e=>e.style.outline="");
+      el.style.outline="3px solid var(--gold)";
+      nightChoice(el.dataset.night);
+    };
+  });
+}
+
+function nightChoice(kind){
+  const leaked=s.pending.some(r=>r.action==="통과"&&r.correct===false);
+  if(kind==="tavern"){
+    if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}
+    s.money-=8;
+    if(leaked){
+      showStory("선술집 난동","실수로 들여보낸 자가 술집에서 난동을 부리고 있습니다. 당신을 알아보고 의자를 집어듭니다.","brawl",`
+        <div class="night-grid">
+          <div class="night-option" data-night="kick"><h3>💪 난동꾼 제압</h3><div class="desc">경비병답게 쫓아낸다</div></div>
+          <div class="night-option" data-night="leave"><h3>🚪 자리를 피한다</h3><div class="desc">더 큰 소란을 피한다</div></div>
+        </div>
+      `,"상황을 정리한다",()=>nightChoice("leave"));
+      document.querySelectorAll(".night-option").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));
+      return;
+    }
+    // 술집 이벤트 (랜덤)
+    const events=[
+      {title:"선술집 소문",text:"술잔 사이로 오늘 성문 이야기가 들립니다. 내일 오크 단체 관광객이 온다더군요.",art:"tavern",bonus:"내일 힌트: 오크 입국자 다수"},
+      {title:"동료의 귀띔",text:"같은 부대 동료가 슬쩍 말합니다. '요즘 서쪽에서 위조 인장이 많이 돌아다닌다더라.'",art:"tavern",bonus:"내일 힌트: 위조 인장 주의"},
+      {title:"정보 상인",text:"구석 자리에서 누군가 귀에 대고 속삭입니다. '내일 수배자가 여장하고 들어온다더라...'",art:"tavern",bonus:"내일 힌트: 신원 위장 주의"},
+    ];
+    const ev=pick(events);
+    showStory(ev.title,ev.text,"tavern",`<div class="summary-item"><b>획득 정보</b>${ev.bonus}</div>`,"밤을 마친다",()=>advanceDay());
+    return;
+  }
+  if(kind==="kick"){
+    s.heat=Math.max(0,s.heat-1);
+    showStory("난동꾼 퇴장","난동꾼을 제압해 술집 밖으로 쫓아냈습니다. 오늘의 실수를 직접 수습한 셈입니다.","checkpoint",`<div class="summary-item"><b>소문</b> 성문뿐 아니라 술집에서도 문제를 해결했다는 이야기가 퍼집니다.</div>`,"다음 근무일",()=>advanceDay());
+    return;
+  }
+  if(kind==="leave"){
+    showStory("술집을 빠져나오다","더 큰 싸움으로 번지기 전에 자리를 피했습니다.","danger",`<div class="summary-item"><b>결과</b> 오늘의 실수는 그대로 장부에 남았습니다.</div>`,"다음 근무일",()=>advanceDay());
+    return;
+  }
+  if(kind==="gamble"){
+    if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}
+    s.money-=5;
+    if(chance(0.45)){
+      s.money+=12;
+      showStory("운이 따랐다!","오늘은 주사위가 당신 편이었습니다. +7G를 벌었습니다.","checkpoint",`<div class="summary-item"><b>현재 잔액</b> ${s.money}G</div>`,"다음 근무일",()=>advanceDay());
+    } else {
+      showStory("운이 없었다","주사위판에서 동전을 잃었습니다.","danger",`<div class="summary-item"><b>현재 잔액</b> ${s.money}G</div>`,"다음 근무일",()=>advanceDay());
+    }
+    return;
+  }
+  if(kind==="market"){
+    if(s.money<5){toast("야시장에 갈 돈이 부족합니다.");return;}
+    s.money-=5;
+    const hints=["내일 전염병 의심자가 올 수 있다.","내일 용병단이 대거 입국 예정.","위조 인장 주의보가 떴다."];
+    showStory("야시장 정보 구입","정보 상인에게서 내일 검문 관련 정보를 샀습니다.","tavern",`<div class="summary-item"><b>구입 정보</b> ${pick(hints)}</div>`,"다음 근무일",()=>advanceDay());
+    return;
+  }
+  // home (default)
+  showStory("숙소","오늘의 장부를 머릿속으로 되짚으며 잠자리에 들었습니다.","quarters",`<div class="summary-item">무료 · 조용한 밤</div>`,"다음 근무일",()=>advanceDay());
+}
+
 function resolveDelayed(){
   const notices=[];
   s.delayed.forEach(x=>x.after--);
@@ -1022,238 +2222,119 @@ function resolveDelayed(){
   s.delayed=s.delayed.filter(x=>x.after>0);
   due.forEach(x=>{
     if(x.type==="noble"){
-      const action=x.wrongAction||"비공식 처리";
-      notices.push("며칠 전 성문에서 처리한 사람이 귀족 가문의 사람으로 밝혀졌습니다. 당시 "+action+" 처분에 대한 조사가 시작되었습니다.");
-      if(action==="경비대 호출"||action==="입경 거부"){
-        notices.push("상관이 차갑게 말합니다. \"검문관의 목은 한 번뿐이다.\"");
-      }
+      notices.push(`며칠 전 성문에서 처리한 사람이 귀족 가문의 사람으로 밝혀졌습니다. 당시 ${x.wrongAction||"비공식 처리"} 처분에 대한 조사가 시작되었습니다.`);
       if(s.corruption>0){
         s.familyRisk++;
-        notices.push("장부와 목격자의 진술이 맞지 않습니다. 성문 근무자의 이름이 조용히 조사 대상에 올랐습니다.");
+        notices.push("장부와 목격자의 진술이 맞지 않습니다. 성문 근무자의 이름이 조사 대상에 올랐습니다.");
       }
     }
   });
   return notices;
 }
-const SCENE_IMAGES={
-  calm:"assets/images/scene_quarters.jpg",
-  tavern:"assets/images/scene_tavern.jpg",
-  brawl:"assets/images/scene_brawl.jpg",
-  hero:"assets/images/checkpoint_bg.jpg",
-  danger:"assets/images/scene_brawl.jpg"
-};
 
-function storyArt(kind){
-  const src=SCENE_IMAGES[kind]||SCENE_IMAGES.calm;
-  return "<div class='story-art-frame'><img src='"+src+"' alt='"+kind+"' class='story-scene-img'></div>";
+function advanceDay(){
+  closeModal("storyModal");
+  if(s.day>=5){finishGame();return;}
+  s.day++;s.caseNo=0;s.time=360;s.mistakes=0;
+  s.correct=0;s.denied=0;s.arrested=0;s.pending=[];s.prevLog=[];
+  resetWanted();makeCases();renderRules();renderPrevLog();nextCase();
 }
-function showStory(title,text,kind,summary,next,fn){$("modalTitle").textContent=title;$("modalText").innerHTML=storyArt(kind)+"<div class='story-caption'>"+esc(text)+"</div>";$("summary").innerHTML=summary||"";$("modalNext").style.display="block";$("modalNext").textContent=next;$("modalNext").onclick=fn;$("modal").classList.add("show")}
-function night(){
- const st=s.pending.reduce((a,r)=>{if(r.correct===true)a.ok++;if(r.correct===false)a.wrong++;if(r.action==="통과"&&r.correct===false)a.leaked++;if(r.action==="경비대 호출"&&r.correct===true)a.guards++;return a},{ok:0,wrong:0,leaked:0,guards:0});
- const notices=resolveDelayed();
- const rumor=st.leaked?"오늘 성문에서 수상한 자를 실수로 들여보냈다더라.":st.guards?"오늘 경비가 튼튼해서 수상한 놈들이 줄줄이 돌아갔다더군.":st.wrong?"오늘 검문에서 실수가 좀 있었다더라.":"오늘 카를스반 성문은 철통이었다더라.";
- showStory("해가 졌습니다",rumor+(notices.length?" "+notices.join(" "):""),"tavern",
- "<div class='summary-item event-choice' data-night='tavern'><b>선술집</b><br>8동전 · 소문을 듣는다</div><div class='summary-item event-choice' data-night='home'><b>숙소</b><br>무료 · 조용한 밤</div><div class='summary-item event-choice' data-night='gamble'><b>주사위판</b><br>5동전 · 운에 맡긴다</div><div class='summary-item'><b>현재 주머니</b><br>"+s.money+" 동전</div>","밤을 마친다",()=>nightChoice("home"));
- document.querySelectorAll(".event-choice").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));
-}
-function nightChoice(kind){
- const st=s.pending.reduce((a,r)=>{if(r.action==="통과"&&r.correct===false)a.leaked++;if(r.correct===false)a.wrong++;return a},{leaked:0,wrong:0});
- if(kind==="tavern"){
-  if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return}s.money-=8;
-  if(st.leaked){
-   showStory("선술집 난동", "실수로 들여보낸 자가 술집에서 난동을 부리고 있습니다. 당신을 알아보고 의자를 집어듭니다.", "brawl","<div class='summary-item event-choice' data-night='kick'><b>난동꾼을 제압한다</b><br>경비병답게 쫓아낸다</div><div class='summary-item event-choice' data-night='leave'><b>모른 척한다</b><br>더 큰 소란을 피한다</div>","상황을 정리한다",()=>nightChoice("leave"));
-   document.querySelectorAll(".event-choice").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));return;
-  }
-  showStory("선술집의 소문","술잔 사이로 오늘 성문 이야기가 들립니다. "+(st.wrong?"오늘 검문이 조금 어수선했다는 소문도 섞여 있습니다.":"경비가 단단했다는 이야기가 들립니다."),"tavern","<div class='summary-item'>소문을 더 들었습니다. 내일 성문 분위기를 파악할 수 있습니다.</div>","밤을 마친다",()=>advanceDay());return;
- }
- if(kind==="kick"){s.heat=Math.max(0,s.heat-1);showStory("난동꾼 퇴장","난동꾼을 제압해 술집 밖으로 쫓아냈습니다. 오늘의 실수를 직접 수습한 셈입니다.","hero","<div class='summary-item'>소문: 당신이 성문뿐 아니라 술집에서도 문제를 해결했다는 이야기가 퍼집니다.</div>","다음 근무일",()=>advanceDay());return}
- if(kind==="leave"){showStory("술집을 빠져나오다","더 큰 싸움으로 번지기 전에 자리를 피했습니다. 그러나 실수로 들여보낸 사람의 소문은 남았습니다.","danger","<div class='summary-item'>오늘의 실수는 그대로 장부에 남았습니다.</div>","다음 근무일",()=>advanceDay());return}
- if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return}s.money-=5;if(chance(.45)){s.money+=12;showStory("운이 따랐다","오늘은 주사위가 당신 편이었습니다. +7 동전을 벌었습니다.","hero","<div class='summary-item'>현재 잔액 "+s.money+" 동전</div>","다음 근무일",()=>advanceDay())}else showStory("운이 없었다","주사위판에서 동전 다섯 닢을 잃었습니다.","danger","<div class='summary-item'>현재 잔액 "+s.money+" 동전</div>","다음 근무일",()=>advanceDay());return}
- showStory("숙소","오늘의 장부를 머릿속으로 되짚으며 잠자리에 들었습니다.","calm","<div class='summary-item'>무료 · 조용한 밤</div>","다음 근무일",()=>advanceDay());
-}
-function advanceDay(){$("modal").classList.remove("show");if(s.day>=5){finishGame();return}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];resetWanted();makeCases();rules();nextCase()}
-function setupMobilePanels(){
-  document.querySelectorAll(".mobile-toggle").forEach(btn=>{
-    const target=$(btn.dataset.target);
-    if(!target)return;
-    target.classList.add("mobile-collapsed");
-    btn.setAttribute("aria-expanded","false");
-    btn.onclick=()=>{
-      const open=!target.classList.contains("mobile-collapsed");
-      target.classList.toggle("mobile-collapsed",open);
-      btn.setAttribute("aria-expanded",String(!open));
-      if(btn.dataset.target==="leftPanel"){
-        btn.textContent=open?"📖 검문 수첩 · 규정 / 수배전단 펼치기":"📕 검문 수첩 · 규정 / 수배전단 접기";
-      }else if(btn.dataset.target==="rightPanel"){
-        btn.textContent=open?"👤 방문객 기록 펼치기":"👤 방문객 기록 접기";
-      }else if(btn.dataset.target==="mobileDocPanel"){
-        btn.textContent=open?"📜 서류 / 검사도구 펼치기":"📜 서류 / 검사도구 접기";
-      }
-    };
-  });
-}
+
+/* ====================================================
+   ENDINGS
+==================================================== */
 function finishGame(){
- const nobleTrouble=s.delayed.length>0||s.familyRisk>0,corrupt=s.corruption>=4,rich=s.money>=45,poor=s.money<=0;
- let title,text,art;
- if(nobleTrouble&&corrupt){title="처형대의 새벽";text="귀족 사건과 뒷거래가 한꺼번에 드러났습니다. 마지막 근무는 성문에서 끝났습니다.";art="danger"}
- else if(nobleTrouble){title="목숨값을 치르다";text="며칠 전 성문에서 처리한 사건이 귀족 가문과 연결되었습니다. 결국 성문을 떠나야 했습니다.";art="brawl"}
- else if(rich&&!corrupt){title="성문의 모범 경비병";text="5일 동안 장부와 원칙을 지켰습니다. 정식 경비병으로 인정받았습니다.";art="hero"}
- else if(corrupt&&rich){title="돈 냄새를 아는 경비병";text="뒷거래로 돈은 벌었지만 그 소문도 함께 퍼졌습니다.";art="tavern"}
- else if(poor){title="빈 주머니의 마지막 근무";text="5일을 버텼지만 생활비와 실수의 대가가 컸습니다.";art="calm"}
- else{title="오늘도 살아남았다";text="완벽하지도 영웅적이지도 않았지만 5일 동안 성문을 지켜냈습니다.";art="hero"}
- showStory(title,text,art,"<div class='summary-item'><b>최종 소지금</b><br>"+s.money+" 동전</div><div class='summary-item'><b>뒷돈 수락</b><br>"+s.corruption+"회</div><div class='summary-item'><b>가족 위험도</b><br>"+s.familyRisk+"</div>","처음으로",()=>location.reload());
+  const nobleTrouble=s.delayed.length>0||s.familyRisk>0;
+  const corrupt=s.corruption>=4;
+  const rich=s.money>=50;
+  const poor=s.money<=0;
+  let title,text,art;
+  if(nobleTrouble&&corrupt){title="처형대의 새벽";text="귀족 사건과 뒷거래가 한꺼번에 드러났습니다. 마지막 근무는 성문에서 끝나지 않았습니다.";art="danger"}
+  else if(nobleTrouble){title="목숨값을 치르다";text="며칠 전 성문에서 처리한 사건이 귀족 가문과 연결되었습니다. 결국 성문을 떠나야 했습니다.";art="brawl"}
+  else if(rich&&!corrupt){title="성문의 모범 경비병";text="5일 동안 장부와 원칙을 지켰습니다. 정식 경비병으로 인정받았습니다.";art="checkpoint"}
+  else if(corrupt&&rich){title="돈 냄새를 아는 경비병";text="뒷거래로 돈은 벌었지만 그 소문도 함께 퍼졌습니다.";art="tavern"}
+  else if(poor){title="빈 주머니의 마지막 근무";text="5일을 버텼지만 생활비와 실수의 대가가 컸습니다.";art="quarters"}
+  else{title="오늘도 살아남았다";text="완벽하지도 영웅적이지도 않았지만, 5일 동안 성문을 지켜냈습니다.";art="checkpoint"}
+  showStory(title,text,art,`
+    <div class="summary-grid">
+      <div class="summary-item"><b>최종 소지금</b> ${s.money}G</div>
+      <div class="summary-item"><b>뒷돈 수락</b> ${s.corruption}회</div>
+      <div class="summary-item"><b>가족 위험도</b> ${s.familyRisk}</div>
+      <div class="summary-item"><b>위험도</b> ${s.heat}</div>
+    </div>
+  `,"처음으로",()=>location.reload());
 }
 
-function endDay(){
- let earned=0,correct=0;s.pending.forEach(r=>{if(r.correct===true){earned+=5;correct++}});
- s.money=Math.max(0,s.money+earned-15);s.correct=correct;s.mistakes=s.pending.filter(r=>r.correct===false).length;
- const wrong=s.mistakes,leaked=s.pending.some(r=>r.action==="통과"&&r.correct===false);
- const text=leaked?"오늘 통과시킨 사람 중 한 명이 수상한 인물이었다는 보고가 들어왔습니다.":wrong?"몇 건의 판정 실수가 장부에 남았습니다.":"오늘 성문은 무사했습니다. 장부도 깔끔합니다.";
- showStory("근무 종료 · 판정 감사",text,leaked?"danger":wrong?"brawl":"calm",s.pending.map((r,i)=>"<div class='summary-item'><b>사건 "+(i+1)+" · "+esc(r.name)+"</b><br>"+esc(r.action)+" · "+(r.correct===null?"비공식 처리":r.correct?"적중":"오판")+" · "+(r.correct===true?"+5":r.correct===false?"0":"비공개")+"</div>").join("")+"<div class='summary-item'><b>생활비</b><br>-15 동전</div><div class='summary-item'><b>현재 잔액</b><br>"+s.money+" 동전</div>","밤으로",()=>{$("modal").classList.remove("show");night()});
+/* ====================================================
+   MODAL HELPERS
+==================================================== */
+function showStory(title,text,artKey,summaryHTML,nextLabel,fn){
+  $("storyTitle").textContent=title;
+  $("storyArtImg").src=SCENE_IMAGES[artKey]||SCENE_IMAGES["quarters"];
+  $("storyArtImg").alt=title;
+  $("storyCaption").textContent=text;
+  $("storySummary").innerHTML=summaryHTML||"";
+  $("storyNext").textContent=nextLabel;
+  $("storyNext").onclick=fn;
+  openModal("storyModal");
 }
 
-function openSealBook(city){
-  $("sealModal").classList.add("show");
-  $("compareResult").style.display="none";
-  const selected=SEALS[city]?city:SEAL_CITIES[0];
-  $("sealGrid").innerHTML=SEAL_CITIES.map(x=>"<div class='seal-card"+(x===selected?" active":"")+"' data-city='"+esc(x)+"'>"+sealSvg(x)+"<strong>"+esc(x)+"</strong><small>"+esc(SEALS[x].title)+"</small></div>").join("");
-  document.querySelectorAll(".seal-card").forEach(el=>el.onclick=()=>showSealReference(el.dataset.city));
-  showSealReference(selected);
-}
-function showSealReference(city){
-  const q=SEALS[city];
-  document.querySelectorAll(".seal-card").forEach(el=>el.classList.toggle("active",el.dataset.city===city));
-  $("sealReference").innerHTML="<div class='seal-ref'><div class='bigseal'>"+sealSvg(city)+"</div><div><h3>"+esc(city)+" · "+esc(q.title)+"</h3><p><b>관할:</b> "+esc(q.domain)+"</p><p><b>테두리:</b> "+esc(q.edge)+"</p><p><b>중심 문양:</b> "+esc(q.core)+"</p><p><b>식별점:</b> "+esc(q.mark)+"</p><p class='hint'>공식 견본은 이 네 요소를 기준으로 비교합니다.</p></div></div>";
-  $("compareSealBtn").dataset.city=city;
-}
-function compareSeal(city){
-  if(!s.case)return;
-  const same=s.case.documentSeal===city;
-  const q=SEALS[city];
-  const result=same
-    ?"대조 기록: 현재 통행증의 테두리·중심 문양·식별점이 "+esc(q.title)+" 견본과 일치합니다."
-    :"대조 기록: 현재 통행증 인장의 중심 문양 또는 테두리 구조가 "+esc(q.title)+" 공식 견본과 일치하지 않습니다.";
-  addEvidence(result,5);
-  $("compareResult").textContent=result;
-  $("compareResult").style.display="block";
-}
-$("sealBookBtn").onclick=()=>openSealBook(s.case?s.case.from:"카를스반");$("sealInspectClose").onclick=()=>$("sealInspectModal").classList.remove("show");$("sealInspectCompare").onclick=()=>{$("sealInspectModal").classList.remove("show");openSealBook(s.case?s.case.from:"카를스반");setTimeout(()=>compareSeal(s.case?s.case.from:"카를스반"),0)};$("cargoClose").onclick=()=>$("cargoModal").classList.remove("show");$("askClose").onclick=()=>$("askModal").classList.remove("show");
-$("compareSealBtn").onclick=()=>compareSeal($("compareSealBtn").dataset.city||s.case?.from||"카를스반");
-$("closeSealBtn").onclick=()=>$("sealModal").classList.remove("show");
+function openModal(id){document.getElementById(id).classList.add("show")}
+function closeModal(id){document.getElementById(id).classList.remove("show")}
+function closeAllModals(){document.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show"))}
 
-function labelAction(a){return a==="pass"?"통과":a==="deny"?"거부":"경비대 호출"}
+/* 배경 클릭으로 모달 닫기 */
+document.querySelectorAll(".modal").forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove("show")});
 
-function nextCase(){$("sealModal").classList.remove("show");if($("sealInspectModal"))$("sealInspectModal").classList.remove("show");if($("cargoModal"))$("cargoModal").classList.remove("show");if($("askModal"))$("askModal").classList.remove("show");
-  if(s.caseNo>=8||s.time>=1080){endDay();return}
-  s.caseNo++;s.tools=[];s.case=s.cases[s.caseNo-1]||makeCase();render();
+/* ====================================================
+   RULEBOOK TOGGLE
+==================================================== */
+let rulebookOpen=true;
+function toggleRulebook(){
+  rulebookOpen=!rulebookOpen;
+  $("rulebookContent").style.display=rulebookOpen?"block":"none";
+  $("rulebookToggle").textContent=rulebookOpen?"▼":"▶";
 }
 
-function log(t){const d=document.createElement("div");d.textContent=t;$("log").prepend(d)}
-
+/* ====================================================
+   TOAST
+==================================================== */
 function toast(t){
-  const d=document.createElement("div");d.textContent=t;
-  d.style="position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#201814;color:#f4e4c2;border:2px solid #9b7746;padding:11px 18px;z-index:30;max-width:90%;text-align:center;box-shadow:0 4px 18px #0008";
-  document.body.appendChild(d);setTimeout(()=>d.remove(),1500);
+  const existing=document.querySelector(".toast");
+  if(existing)existing.remove();
+  const d=document.createElement("div");
+  d.className="toast";d.textContent=t;
+  document.body.appendChild(d);
+  setTimeout(()=>{d.style.opacity="0";d.style.transition="opacity 0.3s";},1300);
+  setTimeout(()=>d.remove(),1600);
 }
 
-let faceLabHair="black",faceLabFeatures=new Set();
-const FEATURE_NAMES={leftDot:"왼쪽 볼 점",rightDot:"오른쪽 점",cheekScar:"볼 흉터",chinScar:"턱 흉터",knifeScar:"칼자국",earRing:"귀걸이"};
-const HAIR_NAMES={black:"검은색",brown:"갈색",blond:"금발",red:"붉은색",gray:"회색"};
-
-function renderFaceLayers(){
-  $("faceHair").className="face-hair hair-"+faceLabHair;
-  let h="";
-  if(faceLabFeatures.has("leftDot"))h+='<span class="face-dot left"></span>';
-  if(faceLabFeatures.has("rightDot"))h+='<span class="face-dot right"></span>';
-  if(faceLabFeatures.has("cheekScar"))h+='<span class="face-scar cheek"></span>';
-  if(faceLabFeatures.has("chinScar"))h+='<span class="face-scar chin"></span>';
-  if(faceLabFeatures.has("knifeScar"))h+='<span class="face-cut"></span>';
-  $("faceLayers").innerHTML=h;
-  document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.classList.toggle("active",b.dataset.hair===faceLabHair));
-  document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.classList.toggle("active",faceLabFeatures.has(b.dataset.feature)));
+/* ====================================================
+   TITLE SCREEN CONTROLS
+==================================================== */
+function startGameFromTitle(){
+  const ts = $("titleScreen");
+  if(!ts) return;
+  ts.style.opacity = "0";
+  setTimeout(()=>{
+    ts.style.display = "none";
+    toast("⚔️ 제 1일차 관문소 근무를 시작합니다.");
+  }, 400);
 }
 
-function openFaceLab(){
-  const v=s.case;
-  if(!v)return;
-  $("faceLabVisitorView").innerHTML=renderVisualPortrait(v);
-  if(wanted.active){
-    $("faceLabWantedView").innerHTML=renderVisualPortrait(wanted);
-    $("faceLabWantedInfo").innerHTML="<b>"+esc(wanted.name)+"</b><br>"+esc(wanted.hair)+" · "+esc(wanted.eye)+"빛 눈 · "+esc(wanted.feature);
-  }else{
-    $("faceLabWantedView").innerHTML="<div style='color:#7d6a54;display:grid;place-items:center;height:100%;font-size:11px'>오늘의 수배전단 없음</div>";
-    $("faceLabWantedInfo").innerHTML="현재 추적 중인 수배자가 없습니다.";
-  }
-  $("faceMatchFeedback").style.display="none";
-  renderFaceLayers();
-  $("faceLabModal").classList.add("show");
+function returnToTitle(){
+  const ts = $("titleScreen");
+  if(!ts) return;
+  ts.style.display = "flex";
+  setTimeout(()=>{
+    ts.style.opacity = "1";
+  }, 20);
 }
 
-$("faceLabBtn").onclick=openFaceLab;
-document.querySelectorAll("#hairOptions .face-option").forEach(b=>b.onclick=()=>{faceLabHair=b.dataset.hair;renderFaceLayers()});
-document.querySelectorAll("#featureOptions .face-option").forEach(b=>b.onclick=()=>{
-  const k=b.dataset.feature;
-  if(faceLabFeatures.has(k))faceLabFeatures.delete(k);
-  else faceLabFeatures.add(k);
-  renderFaceLayers();
-});
-
-$("faceCheckVisitorBtn").onclick=()=>{
-  const v=s.case;
-  if(!v)return;
-  const actualHair=getHairClass(v.hair);
-  const hairMatch=(actualHair===faceLabHair);
-  const vFeature=String(v.feature||"");
-  const expectedMarks=[];
-  if(/왼쪽.*점/.test(vFeature))expectedMarks.push("leftDot");
-  if(/오른쪽.*점/.test(vFeature))expectedMarks.push("rightDot");
-  if(/볼.*흉터/.test(vFeature))expectedMarks.push("cheekScar");
-  if(/턱.*흉터/.test(vFeature))expectedMarks.push("chinScar");
-  if(/칼|베인|자국/.test(vFeature))expectedMarks.push("knifeScar");
-  if(/은고리|귀걸이/.test(vFeature))expectedMarks.push("earRing");
-
-  const chosenFeatures=Array.from(faceLabFeatures);
-  const featureMatch=(expectedMarks.length===0&&chosenFeatures.length===0)||(chosenFeatures.length>0&&chosenFeatures.every(f=>expectedMarks.includes(f)));
-  const chosenFeatureStr=chosenFeatures.map(f=>FEATURE_NAMES[f]).join(", ")||"특징 없음";
-  const chosenHairStr=HAIR_NAMES[faceLabHair];
-
-  let msg="";
-  if(hairMatch&&featureMatch){
-    msg="✅ 실물 대조 일치: 관찰한 머리색("+chosenHairStr+") 및 특징("+chosenFeatureStr+")이 실제 인물 일러스트와 정확히 일치합니다.";
-    showInspectFeedback("얼굴 실물 대조",msg,false);
-    addEvidence("얼굴 특징 대조: "+msg,3);
-  }else{
-    msg="⚠️ 실물 대조 불일치: 관찰한 조합("+chosenHairStr+", "+chosenFeatureStr+")이 실제 일러스트와 일치하지 않습니다. 실물 확대경을 다시 확인하십시오.";
-    showInspectFeedback("얼굴 실물 대조",msg,true);
-  }
-  $("faceMatchFeedback").innerHTML="<b>"+esc(msg)+"</b>";
-  $("faceMatchFeedback").style.display="block";
-};
-
-$("faceCheckWantedBtn").onclick=()=>{
-  const v=s.case;
-  if(!v)return;
-  if(!wanted.active){
-    toast("오늘은 추적 중인 수배전단이 없습니다.");
-    return;
-  }
-  const isWanted=(v.type==="wanted");
-  let msg="";
-  if(isWanted){
-    msg="🚨 [수배자 일치 경보!] 현재 방문객의 얼굴 일러스트(머리: "+wanted.hair+", 눈: "+wanted.eye+", 특징: "+wanted.feature+")가 수배전단과 100% 일치합니다! 즉시 경비대를 호출하십시오!";
-    showInspectFeedback("수배전단 대조",msg,true);
-    addEvidence("수배전단 대조: 수배자 용모 일치 확인!",5);
-  }else{
-    msg="🛡️ 수배전단 대조: 현재 방문객의 용모는 수배전단과 일치하지 않습니다. (일반 방문객 판별)";
-    showInspectFeedback("수배전단 대조",msg,false);
-    addEvidence("수배전단 대조: 수배자와 용모 불일치",5);
-  }
-  $("faceMatchFeedback").innerHTML="<b>"+esc(msg)+"</b>";
-  $("faceMatchFeedback").style.display="block";
-};
-
-$("faceCloseBtn").onclick=()=>$("faceLabModal").classList.remove("show");
-setupMobilePanels();resetWanted();makeCases();rules();nextCase();
+/* ====================================================
+   INIT
+==================================================== */
+resetWanted();makeCases();renderRules();renderPrevLog();nextCase();
 </script>
 </body>
 </html>
