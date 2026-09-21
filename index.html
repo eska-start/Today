@@ -229,6 +229,7 @@ function makeCase(){
     b.second="친척 집에 잠시 들러야 해서요.";
   }
   // CASE IMAGE: 수배자 사건 / 용도: 당일 수배전단의 초상화와 동일 인물을 생성.
+  // IMAGE CASE ASSET: 수배자 NPC / 용도: 수배전단 초상과 동일 인물로 보이는 방문객 캐릭터 이미지로 교체
   if(type==="wanted"){
     b.name=wanted.name;
     b.face=wanted.face;
@@ -250,6 +251,7 @@ function makeCase(){
     b.healthCert=false;b.speech="조금 피곤할 뿐입니다. 그냥 지나가게 해주십시오.";
     b.clues=["체온","기침/반점","건강증명서"];
   }
+  // IMAGE CASE ASSET: 마물 위장 NPC / 용도: 인간처럼 보이지만 눈·그림자·표정에 비정상성이 있는 몬스터 캐릭터 이미지로 교체
   if(type==="monster"){
     b.face=pick(["🧟","🧙","🧑‍🦱"]);b.eyes=pick(["황금색","세로 동공","회백색"]);b.feature="그림자가 한 박자 늦음";
     b.magicReaction="성수에서 금속성 거품 반응";b.speech="나는... 사람입니다. 왜 그렇게 쳐다보십니까?";
