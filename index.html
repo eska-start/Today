@@ -32,7 +32,7 @@ button{font:inherit;cursor:pointer}
 .desk{background:linear-gradient(135deg,#775239,#493225);padding:12px}
 .documents{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .doc{background:var(--paper);color:#2b241d;min-height:205px;padding:10px;border:2px solid #745638;box-shadow:3px 5px 8px #0006;position:relative}
-.doc h3{margin:0 0 7px;font-size:13px}.doc p{margin:4px 0;font-size:11px}.doc .stampmark{position:absolute;right:9px;top:9px;width:40px;height:40px;border:3px double #832d2d;border-radius:50%;display:grid;place-items:center;color:#832d2d;font-size:9px;font-weight:bold;transform:rotate(-8deg)}
+.doc h3{margin:0 0 7px;font-size:13px}.doc p{margin:4px 0;font-size:11px}.sealstamp{position:absolute;right:8px;top:8px;width:76px;height:76px;transform:rotate(-7deg)}.sealstamp svg{width:100%;height:100%;display:block}.bookbtn{width:100%;margin-top:9px;padding:9px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;box-shadow:2px 3px #0005;font-weight:bold}.book-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.seal-card{background:#ead9b8;border:2px solid #765a39;padding:7px;color:#30261f;text-align:center;cursor:pointer}.seal-card.active{outline:3px solid #b0823c}.seal-card strong{display:block;font-size:11px;margin-top:4px}.seal-card small{display:block;font-size:9px;line-height:1.35;margin-top:3px}.seal-ref{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;background:#e7d3a9;border:2px solid #765a39;padding:10px;margin:8px 0}.seal-ref .bigseal{width:105px;height:105px}.seal-ref h3{margin:0 0 5px;font-size:15px}.seal-ref p{margin:3px 0;font-size:11px}.comparebar{display:flex;gap:8px;margin-top:10px}.comparebar button{flex:1;padding:10px;border:2px solid #5b422c;background:#33251d;color:#fff}.compare-result{padding:8px;margin-top:8px;background:#efe0bd;border:2px solid #765a39;color:#30261f;font-size:11px;line-height:1.45}
 .doc .line{border-top:1px solid #ad946e;margin:7px 0}.doc .hint{font-size:10px;color:#665039}.blur{filter:blur(1.2px)}
 .toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
 .tool,.decision{border:2px solid #392820;background:#261c18;color:#ead9b5;padding:9px 11px;box-shadow:2px 3px #0006}.tool.active{outline:2px solid var(--gold)}.tool.locked{opacity:.45;cursor:not-allowed}
@@ -62,7 +62,7 @@ button{font:inherit;cursor:pointer}
 <aside class="panel left">
   <h2>영주의 하사문</h2>
   <div id="rules"></div>
-  <div class="wanted"><div class="wanted-head"><b>수배전단</b><span id="wantedStatus"></span></div><div id="wantedFace" class="wanted-face">?</div><div id="wantedDetails"></div></div>
+  <div class="wanted"><div class="wanted-head"><b>수배전단</b><span id="wantedStatus"></span></div><div id="wantedFace" class="wanted-face">?</div><div id="wantedDetails"></div></div><button id="sealBookBtn" class="bookbtn">📖 각지의 인장 수첩 열기</button>
 </aside>
 <section>
   <div class="scene">
@@ -98,6 +98,14 @@ button{font:inherit;cursor:pointer}
 </main></div>
 
 <div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div>
+<div class="modal" id="sealModal"><div class="modalbox">
+  <h2>영주의 검문 수첩 · 각지의 인장</h2>
+  <p id="sealBookIntro">통행증의 <b>발급 도시</b>를 먼저 확인한 뒤 해당 도시의 공식 인장 견본과 현재 문서를 눈으로 대조하십시오.</p>
+  <div id="sealGrid" class="book-grid"></div>
+  <div id="sealReference"></div>
+  <div class="comparebar"><button id="compareSealBtn">현재 통행증과 대조 기록</button><button id="closeSealBtn">수첩 닫기</button></div>
+  <div id="compareResult" class="compare-result" style="display:none"></div>
+</div></div>
 
 <script>
 const RULES=[
@@ -115,6 +123,22 @@ const FACES=["🧑‍🌾","👩‍🦰","🧔","🧝","🧕","👨‍🌾","�
 const EYES=["갈색","회색","청색","녹색","짙은 갈색"];
 const HAIR=["검은 머리","갈색 머리","짧은 금발","붉은 머리","회색 머리"];
 const FEATURES=["왼쪽 볼 점","오른쪽 턱 흉터","두꺼운 눈썹","손가락에 잉크 얼룩","왼쪽 귀에 은고리","짧게 깎은 머리","특징 없음"];
+const SEALS={
+  "카를스반":{domain:"왕도 직할령",title:"왕실 성문 인장",sigil:"♜",edge:"이중 원형 테두리",core:"성문 위 왕관",mark:"하단에 세 점"},
+  "하르덴":{domain:"북부 곡창지대",title:"곡창 수비대 인장",sigil:"✣",edge:"두꺼운 원형 테두리",core:"세 갈래 밀 이삭",mark:"오른쪽 작은 홈"},
+  "벨로아":{domain:"서부 상업도시",title:"상인 길드 인장",sigil:"⚖",edge:"얇은 이중 테두리",core:"저울과 열쇠",mark:"상단 짧은 선"},
+  "노르드":{domain:"북부 군관령",title:"변경군 인장",sigil:"◇",edge:"방패형 안쪽 테두리",core:"창을 세운 방패",mark:"좌우 네 점"},
+  "아르델":{domain:"동부 성직령",title:"성좌 관리 인장",sigil:"✦",edge:"여덟 갈래 별무늬",core:"팔각 성좌",mark:"중앙 작은 원"},
+  "서부 황야":{domain:"황무지 변경소",title:"황야 통행 인장",sigil:"⌁",edge:"거친 단일 테두리",core:"뿔 달린 늑대머리",mark:"하단 사선 두 줄"},
+  "로엔":{domain:"남부 항구령",title:"항만 세관 인장",sigil:"⚓",edge:"밧줄무늬 테두리",core:"닻과 파도",mark:"좌측 세 갈퀴"},
+  "브레시아":{domain:"남동 변경백령",title:"변경백 관인",sigil:"✠",edge:"십자형 테두리",core:"사자와 칼날",mark:"상단 두 점"}
+};
+const SEAL_CITIES=Object.keys(SEALS);
+function sealSvg(city){
+  const q=SEALS[city]||SEALS["카를스반"];
+  const safe=q.sigil.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return '<svg viewBox="0 0 120 120" aria-label="'+city+' 인장"><circle cx="60" cy="60" r="54" fill="#87312f" opacity=".92"/><circle cx="60" cy="60" r="45" fill="none" stroke="#e7c99c" stroke-width="2"/><circle cx="60" cy="60" r="49" fill="none" stroke="#4d211f" stroke-width="3" stroke-dasharray="2 4"/><text x="60" y="73" text-anchor="middle" font-size="42" fill="#ead9b8" font-family="Georgia,serif">'+safe+'</text><path d="M25 88 Q60 103 95 88" fill="none" stroke="#ead9b8" stroke-width="2"/><circle cx="35" cy="30" r="2.5" fill="#ead9b8"/><circle cx="60" cy="24" r="2.5" fill="#ead9b8"/><circle cx="85" cy="30" r="2.5" fill="#ead9b8"/></svg>';
+}
 
 const TYPE_META={
  normal:{label:"일반 방문객",action:"pass"},
@@ -146,7 +170,7 @@ function makeBasic(){
   const name=pick(NAMES),from=pick(ORIGINS),job=pick(JOBS),purpose=pick(PURPOSES);
   const height=165+Math.floor(Math.random()*24);
   return {name,from,job,purpose,stay:(1+Math.floor(Math.random()*4))+"일",face:pick(FACES),eyes:pick(EYES),hair:pick(HAIR),feature:pick(FEATURES),height,
-    sealStyle:pick(["가는 선의 왕관 문양","삼중 원 안의 사자 문양","네모난 창문 문양","붉은 월계 문양"]),
+    documentSeal:from,sealCondition:"정상",
     speech:"통행증을 제출하겠습니다.",
     second:"성 안에서 "+purpose+"를 처리한 뒤 돌아갈 예정입니다.",
     cargo:pick(["밀자루","염료 상자","철제 공구","말린 약초","천 두루마리"]),
@@ -168,9 +192,10 @@ function makeCase(){
     b.speech="어제 발급받은 통행증입니다. 오늘은 꼭 들어가야 합니다.";
   }
   if(type==="forged"){
-    b.sealStyle=pick(["삼중 원 안의 사자 문양","붉은 월계 문양"]);
-    b.sealOdd=true;b.clues=["인장 가장자리","왕실 문양 선 굵기"];
-    b.speech="벨로아 관청에서 발급받았습니다.";
+    const wrong=pick(SEAL_CITIES.filter(x=>x!==b.from));
+    b.documentSeal=wrong;b.sealCondition="의심";
+    b.clues=["인장 수첩 대조","문양의 중심부","테두리 구조"];
+    b.speech="관청에서 발급받았습니다. 인장은 원래 이런 모양입니다.";
   }
   if(type==="mismatch"){
     b.job="대장장이";b.purpose="약초 판매";b.cargo="약초 꾸러미";
@@ -273,6 +298,7 @@ function rules(){
 function availableTools(){
   const tools=[
     ["seal","🔍 인장 확대","seal"],
+    ["sealbook","📖 인장 수첩","sealbook"],
     ["appearance","👁 외모 대조","appearance"],
     ["cargo","🧳 소지품 수색","cargo"],
     ["ask","💬 재질문","ask"]
@@ -293,9 +319,9 @@ function render(){
   const weapon=s.day>=5&&v.job==="용병"?("<p><b>무기:</b> "+esc(v.cargo)+"</p>"):"";
   const symbol=s.day>=4&&v.symbol!=="없음"?("<p><b>복장 기록:</b> 특이한 문양이 있다는 진술</p>"):"";
   $("documents").innerHTML=
-    "<div class='doc'><div class='stampmark'>"+esc(v.sealStyle.split(" ")[0])+"</div><h3>통행 허가증</h3>"+
-    "<p><b>성명:</b> "+esc(v.name)+"</p><p><b>발급 도시:</b> "+esc(v.from)+"</p><p><b>직업:</b> "+esc(v.docJob||v.job)+"</p><p><b>방문 목적:</b> "+esc(v.docPurpose||v.purpose)+"</p><p><b>체류:</b> "+esc(v.stay)+"</p><div class='line'></div><p><b>유효일:</b> "+esc(v.expiry||"금일 포함")+"</p><p class='hint'>인장 세부선은 육안만으로 식별하기 어렵다.</p></div>"+
-    "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품·진술을 대조하십시오.</p></div>";
+    "<div class='doc'><div class='sealstamp'>"+sealSvg(v.documentSeal)+"</div><h3>통행 허가증</h3>"+
+    "<p><b>성명:</b> "+esc(v.name)+"</p><p><b>발급 도시:</b> "+esc(v.from)+"</p><p><b>직업:</b> "+esc(v.docJob||v.job)+"</p><p><b>방문 목적:</b> "+esc(v.docPurpose||v.purpose)+"</p><p><b>체류:</b> "+esc(v.stay)+"</p><div class='line'></div><p><b>유효일:</b> "+esc(v.expiry||"금일 포함")+"</p><p class='hint'>이 인장이 어느 영지의 관인인지 수첩에서 찾아 대조하십시오.</p></div>"+
+    "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품을 대조하십시오.</p></div>";
   $("toolbar").innerHTML=availableTools().map(t=>"<button class='tool' data-tool='"+t[0]+"'>"+t[1]+"</button>").join("");
   document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>inspect(b.dataset.tool));
   $("caseNumber").textContent="사건 "+s.caseNo+"/8";
@@ -313,8 +339,10 @@ function inspect(tool){
   const v=s.case;
   let clue="";
   if(tool==="seal"){
-    clue=v.sealOdd?"인장 확대: 원형 테두리와 중심 문양의 선 두께가 서로 어긋나며 가장자리에 번짐이 보입니다.":"인장 확대: 테두리 압력과 문양의 선 굵기가 일정하고, 왁스 눌림도 자연스럽습니다.";
+    const q=SEALS[v.documentSeal];
+    clue="인장 확대: "+q.edge+" / 중심 문양은 "+q.core+" / 식별점은 "+q.mark+"로 기록됩니다. 공식 견본과 비교하십시오.";
   }
+  if(tool==="sealbook"){openSealBook(v.from);return;}
   if(tool==="appearance"){
     const p=(v.type==="wanted"&&wanted.active)?"수배전단과 대조: "+(v.height===wanted.height?"키가 일치합니다.":"키 차이가 있습니다.")+" "+(v.eyes===wanted.eye?"눈 색이 일치합니다.":"눈 색이 다릅니다.")+" "+(v.feature===wanted.feature?"특징이 일치합니다.":"기재된 특징과 다릅니다."):("외모 기록: "+v.height+"cm, "+v.eyes+" 눈, "+v.feature+".");
     clue=p;
@@ -338,9 +366,39 @@ function judge(action){
   setTimeout(nextCase,520);
 }
 
+function openSealBook(city){
+  $("sealModal").classList.add("show");
+  $("compareResult").style.display="none";
+  const selected=SEALS[city]?city:SEAL_CITIES[0];
+  $("sealGrid").innerHTML=SEAL_CITIES.map(x=>"<div class='seal-card"+(x===selected?" active":"")+"' data-city='"+esc(x)+"'>"+sealSvg(x)+"<strong>"+esc(x)+"</strong><small>"+esc(SEALS[x].title)+"</small></div>").join("");
+  document.querySelectorAll(".seal-card").forEach(el=>el.onclick=()=>showSealReference(el.dataset.city));
+  showSealReference(selected);
+}
+function showSealReference(city){
+  const q=SEALS[city];
+  document.querySelectorAll(".seal-card").forEach(el=>el.classList.toggle("active",el.dataset.city===city));
+  $("sealReference").innerHTML="<div class='seal-ref'><div class='bigseal'>"+sealSvg(city)+"</div><div><h3>"+esc(city)+" · "+esc(q.title)+"</h3><p><b>관할:</b> "+esc(q.domain)+"</p><p><b>테두리:</b> "+esc(q.edge)+"</p><p><b>중심 문양:</b> "+esc(q.core)+"</p><p><b>식별점:</b> "+esc(q.mark)+"</p><p class='hint'>공식 견본은 이 네 요소를 기준으로 비교합니다.</p></div></div>";
+  $("compareSealBtn").dataset.city=city;
+}
+function compareSeal(city){
+  if(!s.case)return;
+  const same=s.case.documentSeal===city;
+  const q=SEALS[city];
+  const result=same
+    ?"대조 기록: 현재 통행증의 테두리·중심 문양·식별점이 "+esc(q.title)+" 견본과 일치합니다."
+    :"대조 기록: 현재 통행증 인장의 중심 문양 또는 테두리 구조가 "+esc(q.title)+" 공식 견본과 일치하지 않습니다.";
+  addEvidence(result,5);
+  $("compareResult").textContent=result;
+  $("compareResult").style.display="block";
+}
+$("sealBookBtn").onclick=()=>openSealBook(s.case?s.case.from:"카를스반");
+$("compareSealBtn").onclick=()=>compareSeal($("compareSealBtn").dataset.city||s.case?.from||"카를스반");
+$("closeSealBtn").onclick=()=>$("sealModal").classList.remove("show");
+
 function labelAction(a){return a==="pass"?"통과":a==="deny"?"거부":"경비대 호출"}
 
 function nextCase(){
+  $("sealModal").classList.remove("show");
   if(s.caseNo>=8||s.time>=1080){endDay();return}
   s.caseNo++;s.tools=[];s.case=s.cases[s.caseNo-1]||makeCase();render();
 }
