@@ -523,6 +523,7 @@ button{font:inherit;cursor:pointer}
 </main></div>
 
 <div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div>
+<div class="modal" id="sealInspectModal"><div class="modalbox seal-inspect-box"><h2>인장 확대 검사</h2><div id="sealInspectVisual"></div><div id="sealInspectText" class="compare-result"></div><button id="sealInspectCompare">이 인장을 공식 견본과 대조</button><button id="sealInspectClose" style="margin-top:7px">닫기</button></div></div>
 <div class="modal" id="faceLabModal"><div class="modalbox"><h2>얼굴 특징 조합판</h2><p>기존 검문 도구와 별개로 얼굴 특징을 겹쳐 기록합니다.</p><div class="face-lab"><div class="face-preview"><div class="face-canvas"><div class="face-skin"></div><div class="face-hair" id="faceHair"></div><div class="face-eye left"></div><div class="face-eye right"></div><div class="face-nose"></div><div class="face-mouth"></div><div class="face-layer" id="faceLayers"></div></div></div><div class="face-options"><h3>머리색</h3><div class="face-option-grid" id="hairOptions"><button class="face-option" data-hair="black">검은색</button><button class="face-option" data-hair="brown">갈색</button><button class="face-option" data-hair="blond">금발</button><button class="face-option" data-hair="red">붉은색</button><button class="face-option" data-hair="gray">회색</button></div><h3 style="margin-top:12px">특징 · 복수 선택</h3><div class="face-option-grid" id="featureOptions"><button class="face-option" data-feature="leftDot">왼쪽 점</button><button class="face-option" data-feature="rightDot">오른쪽 점</button><button class="face-option" data-feature="cheekScar">볼 흉터</button><button class="face-option" data-feature="chinScar">턱 흉터</button><button class="face-option" data-feature="knifeScar">칼자국</button><button class="face-option" data-feature="bread">빵 모양 자국</button></div><div class="face-note">인장 확대·인장 수첩·외모 대조·소지품 수색·재질문 등 기존 FM 검문은 그대로 유지됩니다.</div><button id="faceApplyBtn" class="face-lab-btn">관찰 기록에 추가</button><button id="faceCloseBtn" class="face-lab-btn">닫기</button></div></div></div></div><div class="modal" id="sealModal"><div class="modalbox">
   <h2>영주의 검문 수첩 · 각지의 인장</h2>
   <p id="sealBookIntro">통행증의 <b>발급 도시</b>를 먼저 확인한 뒤 해당 도시의 공식 인장 견본과 현재 문서를 눈으로 대조하십시오.</p>
@@ -784,10 +785,7 @@ function addEvidence(text,minutes=10){
 function inspect(tool){
   const v=s.case;
   let clue="";
-  if(tool==="seal"){
-    const q=SEALS[v.documentSeal];
-    clue="인장 확대: "+q.edge+" / 중심 문양은 "+q.core+" / 식별점은 "+q.mark+"로 기록됩니다. 공식 견본과 비교하십시오.";
-  }
+  if(tool==="seal"){ openSealInspect(v.documentSeal); return; }
   if(tool==="sealbook"){openSealBook(v.from);return;}
   // IMAGE CHECK: 외모 대조 / 용도: 방문객 캐릭터 이미지와 수배전단 이미지를 비교하는 검사.
   if(tool==="appearance"){
@@ -887,6 +885,13 @@ function finishGame(){
   $("modal").classList.add("show");
 }
 function endDay(){let earned=0,correct=0;s.pending.forEach(r=>{if(r.correct===true){earned+=5;correct++;}});s.money=Math.max(0,s.money+earned-15);s.correct=correct;s.mistakes=s.pending.filter(r=>r.correct===false).length;$("modalTitle").textContent="근무 종료 · 판정 감사";$("modalText").innerHTML="<p>오늘 장부를 대조했습니다. 이제야 각 판정의 결과가 공개됩니다.</p>";$("summary").innerHTML=s.pending.map((r,i)=>{const result=r.correct===null?"비공식 처리":"당시 판단 "+(r.correct?"적중":"오판");const reward=r.correct===true?"+5":r.correct===false?"0":"비공개";return "<div class='summary-item'><b>사건 "+(i+1)+" · "+esc(r.name)+"</b><br>"+esc(r.action)+"<br>"+result+" · "+reward+" 동전</div>";}).join("")+"<div class='summary-item'><b>생활비</b><br>-15 동전</div><div class='summary-item'><b>현재 잔액</b><br>"+s.money+" 동전</div><div class='summary-item'><b>수상한 거래</b><br>"+s.corruption+"회</div>";$("modalNext").textContent="밤으로";$("modalNext").onclick=()=>{$("modal").classList.remove("show");night();};$("modal").classList.add("show");}
+function openSealInspect(city){
+  const q=SEALS[city]||SEALS["카를스반"];
+  $("sealInspectVisual").innerHTML="<div class='seal-ref'><div class='bigseal' style='width:180px;height:180px'>"+sealSvg(city)+"</div><div><h3>"+esc(city)+" · "+esc(q.title)+"</h3><p><b>테두리:</b> "+esc(q.edge)+"</p><p><b>중심 문양:</b> "+esc(q.core)+"</p><p><b>식별점:</b> "+esc(q.mark)+"</p><p class='hint'>확대된 인장을 확인한 뒤 공식 견본과 대조할 수 있습니다.</p></div></div>";
+  $("sealInspectText").textContent="관찰 기록: "+q.edge+" / "+q.core+" / "+q.mark;
+  $("sealInspectCompare").onclick=()=>{ $("sealInspectModal").classList.remove("show"); openSealBook(city); setTimeout(()=>compareSeal(city),0); };
+  $("sealInspectModal").classList.add("show");
+}
 function openSealBook(city){
   $("sealModal").classList.add("show");
   $("compareResult").style.display="none";
@@ -914,7 +919,7 @@ function compareSeal(city){
 }
 $("sealBookBtn").onclick=()=>openSealBook(s.case?s.case.from:"카를스반");
 $("compareSealBtn").onclick=()=>compareSeal($("compareSealBtn").dataset.city||s.case?.from||"카를스반");
-$("closeSealBtn").onclick=()=>$("sealModal").classList.remove("show");
+$("closeSealBtn").onclick=()=>$("sealModal").classList.remove("show");$("sealInspectClose").onclick=()=>$("sealInspectModal").classList.remove("show");
 
 function labelAction(a){return a==="pass"?"통과":a==="deny"?"거부":"경비대 호출"}
 
