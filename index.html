@@ -1,35 +1,370 @@
-<!doctype html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>오늘도 근무 중 이상 무!</title>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>오늘도 근무 중 이상 무!</title>
 <style>
-:root{--bg:#171313;--panel:#281e19;--paper:#ead9b8;--gold:#c99b45;--red:#7e2525;--green:#496b4c}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle,#493a30,#171313 70%);color:#eadcbf;font-family:Georgia,"Noto Serif KR",serif}button{font:inherit;cursor:pointer}.app{padding:10px;min-height:100vh}.top{max-width:1500px;margin:auto;background:#241c18;border:2px solid #80663f;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 30px #0008}.title{font-size:clamp(18px,2.5vw,30px);font-weight:bold}.sub{font-size:11px;color:#c8b897}.stats{display:flex;gap:12px;white-space:nowrap;font-weight:bold}.coin{color:#e9c45c}.danger{color:#df7d6d}.layout{max-width:1500px;margin:10px auto;display:grid;grid-template-columns:235px minmax(480px,1fr) 285px;gap:10px}.panel,.desk{border:2px solid #6d5537;box-shadow:0 10px 28px #0008}.panel{background:linear-gradient(#382a23,#241b17);padding:13px}.panel h2{font-size:16px;color:#e5c98d;border-bottom:1px solid #806b4c;padding-bottom:7px;margin:0 0 8px}.rule{font-size:12px;padding:7px 0;border-bottom:1px solid #514138;line-height:1.45}.wanted{margin-top:12px;background:#e9d7ae;color:#332820;padding:9px;border:3px solid #5c4530}.wanted .face{height:75px;background:#b59c73;display:grid;place-items:center;font-size:42px;margin:5px 0}.scene{height:480px;position:relative;overflow:hidden;background:linear-gradient(#58676b 0 54%,#3e3028 54%);border:2px solid #5c4934}.sky{position:absolute;inset:0 0 45%;background:linear-gradient(#29363b,#68716c)}.wall{position:absolute;left:0;right:0;bottom:43%;height:150px;background:repeating-linear-gradient(90deg,#625448 0 68px,#51443b 68px 72px),repeating-linear-gradient(0deg,transparent 0 36px,#342b27 36px 39px)}.gate{position:absolute;bottom:39%;left:50%;transform:translateX(-50%);width:45%;height:245px;border:22px solid #392b25;border-bottom:0;border-radius:160px 160px 0 0;background:repeating-linear-gradient(90deg,#171313 0 12px,#382720 12px 19px);box-shadow:inset 0 0 40px #000}.flag{position:absolute;top:35px;left:8%;font-size:40px}.visitor{position:absolute;bottom:38%;left:50%;transform:translateX(-50%);z-index:2;text-align:center}.portrait{font-size:105px;filter:drop-shadow(0 7px 5px #0008)}.speech{background:#efe0bd;color:#2b241d;border:3px solid #44352a;padding:7px 10px;min-width:220px;font-size:13px}.desk{background:linear-gradient(135deg,#775239,#493225);padding:12px}.documents{display:grid;grid-template-columns:1fr 1fr;gap:9px}.doc{background:var(--paper);color:#2b241d;min-height:160px;padding:10px;border:2px solid #745638;box-shadow:3px 5px 8px #0006}.doc h3{margin:0 0 7px;font-size:13px}.doc p{margin:4px 0;font-size:11px}.seal{float:right;width:36px;height:36px;border:3px double #832d2d;border-radius:50%;display:grid;place-items:center;color:#832d2d;font-size:9px;font-weight:bold}.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.tool,.decision{border:2px solid #392820;background:#261c18;color:#ead9b5;padding:9px 11px;box-shadow:2px 3px #0006}.tool.active{outline:2px solid var(--gold)}.decision{flex:1;min-width:120px;font-weight:bold}.pass{background:#3f6348}.deny{background:#6f3b36}.arrest{background:#632b2b}.visitor-card{background:#f5e8cc;color:#2b241d;padding:10px;border:3px solid #5d4933}.bigface{height:130px;background:#b49b73;display:grid;place-items:center;font-size:85px;border:2px solid #6d563d;margin-bottom:7px}.field{display:flex;justify-content:space-between;border-bottom:1px dashed #9a815d;padding:4px 0;font-size:11px}.field span:last-child{font-weight:bold}.status{margin-top:8px;padding:7px;background:#2d2520;color:#eeddbb;font-size:11px}.log{margin-top:10px;font-size:10px;max-height:125px;overflow:auto}.log div{padding:4px 0;border-bottom:1px solid #59463b}.note{text-align:center;font-size:10px;color:#c8b897;margin-top:6px}.modal{position:fixed;inset:0;background:#000a;display:none;place-items:center;padding:20px;z-index:20}.modal.show{display:grid}.modalbox{max-width:550px;width:100%;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29}@media(max-width:1000px){.layout{grid-template-columns:1fr}.left,.right{display:none}}@media(max-width:600px){.app{padding:4px}.stats{font-size:11px;gap:5px}.scene{height:400px}.documents{grid-template-columns:1fr}.doc{min-height:135px}.decision{min-width:30%;padding:8px 4px;font-size:11px}}
-</style></head><body><div class="app">
-<header class="top"><div><div class="title">오늘도 근무 중 이상 무!</div><div class="sub">ALL CLEAR TODAY! · 카를스반 영지 성문 검문소</div></div><div class="stats"><span>제 <b id="day">1</b>일차</span><span id="clock">06:00</span><span class="coin">◉ <b id="money">30</b></span><span class="danger">실수 <b id="mistakes">0</b></span></div></header>
-<main class="layout"><aside class="panel left"><h2>영주의 하사문</h2><div id="rules"></div><div class="wanted"><b>수배전단</b><div class="face">?</div><small id="wantedText"></small></div></aside>
-<section><div class="scene"><div class="sky"></div><div class="wall"></div><div class="flag">⚑</div><div class="gate"></div><div class="visitor"><div id="portrait" class="portrait">🧑‍🌾</div><div id="speech" class="speech">통행증을 제출하겠습니다.</div></div></div>
-<div class="desk"><div id="documents" class="documents"></div><div class="toolbar"><button class="tool" data-tool="seal">🔍 인장 감정</button><button class="tool" data-tool="cargo">🧳 소지품 수색</button><button class="tool" data-tool="ask">💬 재질문</button></div><div class="toolbar"><button class="decision pass" data-action="pass">🟢 성문 통과</button><button class="decision deny" data-action="deny">🟠 거부</button><button class="decision arrest" data-action="arrest">🔴 경비대 호출</button></div><div class="note">서류·외모·소지품을 모두 대조하십시오.</div></div></section>
-<aside class="panel right"><h2>방문객 기록</h2><div class="visitor-card"><div id="bigface" class="bigface">🧑‍🌾</div><div class="field"><span>이름</span><span id="vname">-</span></div><div class="field"><span>출신지</span><span id="vfrom">-</span></div><div class="field"><span>직업</span><span id="vjob">-</span></div><div class="field"><span>방문 목적</span><span id="vpurpose">-</span></div><div class="field"><span>체류</span><span id="vstay">-</span></div><div class="status" id="vstatus">검사를 시작하십시오.</div></div><div class="log" id="log"></div></aside></main></div>
-<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><button id="modalNext">확인</button></div></div>
+:root{--bg:#171313;--panel:#281e19;--paper:#ead9b8;--gold:#c99b45;--red:#7e2525;--green:#496b4c;--ink:#2b241d;--muted:#bfae91}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle,#493a30,#171313 70%);color:#eadcbf;font-family:Georgia,"Noto Serif KR",serif}
+button{font:inherit;cursor:pointer}
+.app{padding:10px;min-height:100vh}
+.top{max-width:1500px;margin:auto;background:#241c18;border:2px solid #80663f;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 10px 30px #0008}
+.title{font-size:clamp(18px,2.5vw,30px);font-weight:bold}.sub{font-size:11px;color:#c8b897}
+.stats{display:flex;gap:12px;white-space:nowrap;font-weight:bold}.coin{color:#e9c45c}.danger{color:#df7d6d}
+.layout{max-width:1500px;margin:10px auto;display:grid;grid-template-columns:245px minmax(500px,1fr) 320px;gap:10px}
+.panel,.desk{border:2px solid #6d5537;box-shadow:0 10px 28px #0008}
+.panel{background:linear-gradient(#382a23,#241b17);padding:13px}.panel h2{font-size:16px;color:#e5c98d;border-bottom:1px solid #806b4c;padding-bottom:7px;margin:0 0 8px}
+.rule{font-size:12px;padding:7px 0;border-bottom:1px solid #514138;line-height:1.45}.rule.lock{opacity:.45}
+.wanted{margin-top:12px;background:#e9d7ae;color:#332820;padding:9px;border:3px solid #5c4530}
+.wanted .wanted-head{display:flex;justify-content:space-between;align-items:center}.wanted .wanted-face{height:70px;background:#b59c73;display:grid;place-items:center;font-size:40px;margin:5px 0}
+.wanted small{display:block;line-height:1.45}.tag{display:inline-block;padding:2px 6px;margin:2px;border:1px solid #8f774e;background:#f0dfbd;font-size:10px}
+.scene{height:500px;position:relative;overflow:hidden;background:linear-gradient(#58676b 0 54%,#3e3028 54%);border:2px solid #5c4934}
+.sky{position:absolute;inset:0 0 45%;background:linear-gradient(#29363b,#68716c)}
+.wall{position:absolute;left:0;right:0;bottom:43%;height:150px;background:repeating-linear-gradient(90deg,#625448 0 68px,#51443b 68px 72px),repeating-linear-gradient(0deg,transparent 0 36px,#342b27 36px 39px)}
+.gate{position:absolute;bottom:39%;left:50%;transform:translateX(-50%);width:45%;height:245px;border:22px solid #392b25;border-bottom:0;border-radius:160px 160px 0 0;background:repeating-linear-gradient(90deg,#171313 0 12px,#382720 12px 19px);box-shadow:inset 0 0 40px #000}
+.flag{position:absolute;top:35px;left:8%;font-size:40px}
+.visitor{position:absolute;bottom:36%;left:50%;transform:translateX(-50%);z-index:2;text-align:center;min-width:270px}
+.portrait{font-size:100px;filter:drop-shadow(0 7px 5px #0008)}.speech{background:#efe0bd;color:#2b241d;border:3px solid #44352a;padding:7px 10px;min-width:240px;font-size:13px;box-shadow:0 4px 10px #0005}
+.traits{position:absolute;left:12px;bottom:12px;display:flex;flex-wrap:wrap;gap:4px;max-width:44%}.trait{background:#201814dd;border:1px solid #8a6a40;color:#ead9b5;padding:4px 6px;font-size:10px}
+.casebar{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:7px 0 0;font-size:11px}.caseid{color:#dcc08a}.used{color:#b8aa92}
+.desk{background:linear-gradient(135deg,#775239,#493225);padding:12px}
+.documents{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.doc{background:var(--paper);color:#2b241d;min-height:205px;padding:10px;border:2px solid #745638;box-shadow:3px 5px 8px #0006;position:relative}
+.doc h3{margin:0 0 7px;font-size:13px}.doc p{margin:4px 0;font-size:11px}.doc .stampmark{position:absolute;right:9px;top:9px;width:40px;height:40px;border:3px double #832d2d;border-radius:50%;display:grid;place-items:center;color:#832d2d;font-size:9px;font-weight:bold;transform:rotate(-8deg)}
+.doc .line{border-top:1px solid #ad946e;margin:7px 0}.doc .hint{font-size:10px;color:#665039}.blur{filter:blur(1.2px)}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.tool,.decision{border:2px solid #392820;background:#261c18;color:#ead9b5;padding:9px 11px;box-shadow:2px 3px #0006}.tool.active{outline:2px solid var(--gold)}.tool.locked{opacity:.45;cursor:not-allowed}
+.decision{flex:1;min-width:120px;font-weight:bold}.pass{background:#3f6348}.deny{background:#6f3b36}.arrest{background:#632b2b}
+.visitor-card{background:#f5e8cc;color:#2b241d;padding:10px;border:3px solid #5d4933}
+.bigface{height:115px;background:#b49b73;display:grid;place-items:center;font-size:80px;border:2px solid #6d563d;margin-bottom:7px}
+.field{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed #9a815d;padding:4px 0;font-size:11px}.field span:last-child{font-weight:bold;text-align:right}
+.status{margin-top:8px;padding:7px;background:#2d2520;color:#eeddbb;font-size:11px;line-height:1.45}
+.evidence{margin-top:9px;background:#efe0bd;color:#312820;border:2px solid #765a39;padding:8px}.evidence h3{font-size:12px;margin:0 0 6px}.evidence-row{font-size:10px;padding:4px 0;border-bottom:1px solid #c4ab81}.evidence-row:last-child{border-bottom:0}
+.log{margin-top:10px;font-size:10px;max-height:125px;overflow:auto}.log div{padding:4px 0;border-bottom:1px solid #59463b}
+.note{text-align:center;font-size:10px;color:#c8b897;margin-top:6px}
+.modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:20px;z-index:20}.modal.show{display:grid}
+.modalbox{max-width:620px;width:100%;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.summary-item{border:1px solid #9a815d;padding:7px;background:#ead7af;font-size:11px}
+@media(max-width:1100px){.layout{grid-template-columns:1fr 320px}.left{display:none}}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.right{display:none}.scene{height:410px}}
+@media(max-width:600px){.app{padding:4px}.stats{font-size:11px;gap:5px}.scene{height:380px}.documents{grid-template-columns:1fr}.doc{min-height:150px}.decision{min-width:30%;padding:8px 4px;font-size:11px}.visitor{bottom:34%}.portrait{font-size:84px}.traits{max-width:70%}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div><div class="title">오늘도 근무 중 이상 무!</div><div class="sub">ALL CLEAR TODAY! · 카를스반 영지 성문 검문소</div></div>
+  <div class="stats"><span>제 <b id="day">1</b>일차</span><span id="clock">06:00</span><span class="coin">◉ <b id="money">30</b></span><span class="danger">실수 <b id="mistakes">0</b></span></div>
+</header>
+<main class="layout">
+<aside class="panel left">
+  <h2>영주의 하사문</h2>
+  <div id="rules"></div>
+  <div class="wanted"><div class="wanted-head"><b>수배전단</b><span id="wantedStatus"></span></div><div id="wantedFace" class="wanted-face">?</div><div id="wantedDetails"></div></div>
+</aside>
+<section>
+  <div class="scene">
+    <div class="sky"></div><div class="wall"></div><div class="flag">⚑</div><div class="gate"></div>
+    <div class="visitor"><div id="portrait" class="portrait">🧑‍🌾</div><div id="speech" class="speech">통행증을 제출하겠습니다.</div></div>
+    <div id="sceneTraits" class="traits"></div>
+  </div>
+  <div class="casebar"><span id="caseNumber" class="caseid">사건 1/8</span><span id="used" class="used">검사 0회 · 예상 근무시간 06:45</span></div>
+  <div class="desk">
+    <div id="documents" class="documents"></div>
+    <div id="toolbar" class="toolbar"></div>
+    <div class="toolbar"><button class="decision pass" data-action="pass">🟢 성문 통과</button><button class="decision deny" data-action="deny">🟠 입경 거부</button><button class="decision arrest" data-action="arrest">🔴 경비대 호출</button></div>
+    <div class="note">중요: 검사 도구는 단서를 보여줄 뿐, 판정은 검문관이 내립니다.</div>
+  </div>
+</section>
+<aside class="panel right">
+  <h2>방문객 기록</h2>
+  <div class="visitor-card">
+    <div id="bigface" class="bigface">🧑‍🌾</div>
+    <div class="field"><span>이름</span><span id="vname">-</span></div>
+    <div class="field"><span>출신지</span><span id="vfrom">-</span></div>
+    <div class="field"><span>직업</span><span id="vjob">-</span></div>
+    <div class="field"><span>방문 목적</span><span id="vpurpose">-</span></div>
+    <div class="field"><span>체류</span><span id="vstay">-</span></div>
+    <div class="field"><span>키</span><span id="vheight">-</span></div>
+    <div class="field"><span>눈</span><span id="veyes">-</span></div>
+    <div class="field"><span>특징</span><span id="vfeature">-</span></div>
+    <div class="status" id="vstatus">서류와 실제 인물을 대조하십시오.</div>
+  </div>
+  <div class="evidence"><h3>검문 기록</h3><div id="evidenceList"><div class="evidence-row">아직 확보한 단서가 없습니다.</div></div></div>
+  <div class="log" id="log"></div>
+</aside>
+</main></div>
+
+<div class="modal" id="modal"><div class="modalbox"><h2 id="modalTitle"></h2><p id="modalText"></p><div id="summary" class="summary-grid"></div><button id="modalNext">다음 근무일</button></div></div>
+
 <script>
-const DAYS=[["통행증 유효기간 확인","영지 인장 확인","발급 도시와 방문객 정보 대조"],["통행증 기본 규칙","수배전단의 점·흉터·키 대조","수배자는 즉시 경비대 호출"],["신체 검사서 확인","열병/기침 증상 관찰","의심 환자는 거부"],["교단 징표 확인","성수 반응 검사 가능","마물 의심자는 경비대 호출"],["마법사 등록증 확인","용병 무기 반납 여부","특수 직군 서류 대조"]];
-const V=[
-["마르코 벨","하르덴","농부","곡물 거래","1일","🧑‍🌾",1,1,"밀자루","정상 방문객","곡물 시장에 갑니다.","오늘 장이 열리는 날이라서요."],
-["엘리나 로슈","벨로아","상인","염료 판매","3일","👩‍🦰",1,0,"염료 상자","인장 위조","염료를 팔러 왔습니다.","상자에는 붉은 염료뿐입니다."],
-["도란","카를스반","대장장이","납품","1일","🧔",0,1,"철괴","기간 만료","대장간에 철을 납품합니다.","어제 발급받은 통행증입니다."],
-["세르 라인","노르드","용병","호위","7일","🧝",1,1,"검 1자루","정상 용병","상단을 호위합니다.","무기는 경비대에 맡기겠습니다."],
-["???","서부 황야","여행자","친척 방문","2일","🧟",1,1,"빈 자루","마물 위장","나는... 사람입니다.","성 안에는 무엇이 있습니까?"],
-["페르나","아르델","사제","성당 방문","2일","🧕",1,1,"성서","정상 사제","기도를 드리러 왔습니다.","교단의 축복을 받았습니다."],
-["카인","벨로아","상인","귀족 접견","1일","🧑‍💼",1,1,"봉인된 상자","밀수품","영주님께 선물을 전합니다.","열어보실 필요는 없습니다."],
-["루드","하르덴","농부","가족 방문","1일","👨‍🌾",1,1,"채소","정상 방문객","가족을 만나러 왔습니다.","아내가 안에서 기다립니다."]
+const RULES=[
+  ["통행증 유효기간 확인","영지 인장 형상 대조","발급 도시와 방문객 정보 대조"],
+  ["통행증 기본 규칙","수배전단의 점·흉터·키 대조","수배자는 즉시 경비대 호출"],
+  ["신체 검사서 확인","열·기침·발진 증상 관찰","의심 환자는 입경 거부"],
+  ["교단 징표 확인","성수 반응 검사 가능","마물/이단 의심자는 추가 확인"],
+  ["마법사 등록증 확인","용병 무기 반납 여부","특수 직군 서류 대조"]
 ];
-let s={day:1,money:30,mistakes:0,done:0,idx:0,v:null};
-const $=x=>document.getElementById(x);
-function rules(){const a=DAYS[Math.min(s.day-1,4)];$("day").textContent=s.day;$("rules").innerHTML=a.map((x,i)=>"<div class='rule'><b>"+(i+1)+".</b> "+x+"</div>").join("");$("wantedText").textContent=s.day>=2?"수배자: 왼쪽 눈썹 위 긴 흉터 · 키 178cm":"1일차에는 수배자가 없습니다."}
-function next(){if(s.done>=8){end();return} s.v=V[(s.idx+s.day-1)%V.length];s.idx++;render()}
-function render(){const v=s.v;$("portrait").textContent=v[5];$("bigface").textContent=v[5];$("vname").textContent=v[0];$("vfrom").textContent=v[1];$("vjob").textContent=v[2];$("vpurpose").textContent=v[3];$("vstay").textContent=v[4];$("speech").textContent=v[11];$("vstatus").textContent="서류와 실제 인물을 대조하십시오.";let valid=s.day===1?v[6]:1;$("documents").innerHTML="<div class='doc'><div class='seal'>"+(v[7]?"정품":"위조")+"</div><h3>통행 허가증</h3><p><b>성명:</b> "+v[0]+"</p><p><b>발급:</b> "+v[1]+"</p><p><b>직업:</b> "+v[2]+"</p><p><b>목적:</b> "+v[3]+"</p><p><b>유효:</b> "+(valid?"유효":"만료")+"</p></div><div class='doc'><h3>신분·물품 신고서</h3><p><b>체류:</b> "+v[4]+"</p><p><b>신고품:</b> "+v[8]+"</p><p><b>진술:</b> "+v[10]+"</p><p style='margin-top:12px'>방문객의 말과 문서를 비교하십시오.</p></div>"}
+const NAMES=["마르코 벨","엘리나 로슈","도란","세르 라인","페르나","루드","카인","베른","아델","토마","레오","시라","오르트","미라","가렌","니아"];
+const ORIGINS=["하르덴","벨로아","카를스반","노르드","아르델","서부 황야","로엔","브레시아"];
+const JOBS=["농부","상인","대장장이","용병","사제","약초꾼","서기관","마부","어부","직공"];
+const PURPOSES=["곡물 거래","염료 판매","납품","호위","성당 방문","가족 방문","장부 전달","마차 수리","약초 판매","친척 방문"];
+const FACES=["🧑‍🌾","👩‍🦰","🧔","🧝","🧕","👨‍🌾","🧑‍💼","👩‍🌾","🧙","🧑‍🔧"];
+const EYES=["갈색","회색","청색","녹색","짙은 갈색"];
+const HAIR=["검은 머리","갈색 머리","짧은 금발","붉은 머리","회색 머리"];
+const FEATURES=["왼쪽 볼 점","오른쪽 턱 흉터","두꺼운 눈썹","손가락에 잉크 얼룩","왼쪽 귀에 은고리","짧게 깎은 머리","특징 없음"];
+
+const TYPE_META={
+ normal:{label:"일반 방문객",action:"pass"},
+ expired:{label:"기간 만료",action:"deny"},
+ forged:{label:"인장 이상",action:"deny"},
+ mismatch:{label:"신분 불일치",action:"deny"},
+ lie:{label:"진술 불일치",action:"deny"},
+ wanted:{label:"수배자",action:"arrest"},
+ smuggle:{label:"밀수",action:"arrest"},
+ monster:{label:"마물 위장",action:"arrest"},
+ plague:{label:"전염병 의심",action:"deny"},
+ heretic:{label:"이단 의심",action:"arrest"},
+ mage:{label:"마법사 규정 위반",action:"deny"},
+ merc:{label:"용병 규정 위반",action:"deny"}
+};
+
+let wanted={
+  active:false,name:"",face:"?",height:178,eye:"회색",feature:"왼쪽 볼 점"
+};
+
+const $=id=>document.getElementById(id);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const chance=p=>Math.random()<p;
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+
+let s={day:1,money:30,mistakes:0,caseNo:0,time:360,tools:[],case:null,cases:[],correct:0,denied:0,arrested:0};
+
+function makeBasic(){
+  const name=pick(NAMES),from=pick(ORIGINS),job=pick(JOBS),purpose=pick(PURPOSES);
+  const height=165+Math.floor(Math.random()*24);
+  return {name,from,job,purpose,stay:(1+Math.floor(Math.random()*4))+"일",face:pick(FACES),eyes:pick(EYES),hair:pick(HAIR),feature:pick(FEATURES),height,
+    sealStyle:pick(["가는 선의 왕관 문양","삼중 원 안의 사자 문양","네모난 창문 문양","붉은 월계 문양"]),
+    speech:"통행증을 제출하겠습니다.",
+    second:"성 안에서 "+purpose+"를 처리한 뒤 돌아갈 예정입니다.",
+    cargo:pick(["밀자루","염료 상자","철제 공구","말린 약초","천 두루마리"]),
+    cargoDeclared:true, health:"정상", symbol:"없음", type:"normal", clues:[], verdict:"pass"};
+}
+
+function makeCase(){
+  const b=makeBasic(), day=s.day;
+  const available=["normal","expired","forged","mismatch","lie"];
+  if(day>=2)available.push("wanted","smuggle");
+  if(day>=3)available.push("plague");
+  if(day>=4)available.push("monster","heretic");
+  if(day>=5)available.push("mage","merc");
+  const type=pick(available);
+  b.type=type;b.verdict=TYPE_META[type].action;
+
+  if(type==="expired"){
+    b.stay="1일"; b.expiry="어제"; b.clues=["문서 하단 날짜","방문객 진술"];
+    b.speech="어제 발급받은 통행증입니다. 오늘은 꼭 들어가야 합니다.";
+  }
+  if(type==="forged"){
+    b.sealStyle=pick(["삼중 원 안의 사자 문양","붉은 월계 문양"]);
+    b.sealOdd=true;b.clues=["인장 가장자리","왕실 문양 선 굵기"];
+    b.speech="벨로아 관청에서 발급받았습니다.";
+  }
+  if(type==="mismatch"){
+    b.job="대장장이";b.purpose="약초 판매";b.cargo="약초 꾸러미";
+    b.docJob="상인";b.clues=["직업 표기","손의 흔적","신고 목적"];
+    b.feature="손바닥에 굳은살";b.speech="저는 상인입니다. 약초를 팔러 왔습니다.";
+    b.second="대장간 일은 오래 전에 그만뒀습니다.";
+  }
+  if(type==="lie"){
+    b.purpose="친척 방문";b.cargo="장부 꾸러미";b.docPurpose="성당 방문";
+    b.clues=["방문 목적","진술의 세부사항","소지품"];
+    b.speech="성당에 기도하러 왔습니다. 하룻밤이면 됩니다.";
+    b.second="친척 집에 잠시 들러야 해서요.";
+  }
+  if(type==="wanted"){
+    wanted={active:true,name:b.name,face:b.face,height:b.height,eye:b.eyes,feature:b.feature};
+    b.speech="마차가 늦어서 발이 묶였습니다. 빨리 지나가게 해주십시오.";
+    b.clues=["수배전단","얼굴","키","특징"];
+  }
+  if(type==="smuggle"){
+    b.cargo=pick(["봉인된 검은 상자","이중 바닥 나무상자","납으로 감싼 작은 통"]);
+    b.cargoDeclared=false;b.hiddenCargo=pick(["금지된 향료","불법 화약","왕실 금화","봉인된 알 하나"]);
+    b.speech="신고할 물건은 없습니다. 상자 안은 사적인 물건뿐입니다.";
+    b.second="상자는 도중에 받은 겁니다. 저는 열어본 적이 없습니다.";
+    b.clues=["화물 무게","이중 바닥","봉인 상태"];
+  }
+  if(type==="plague"){
+    b.health="열 39도";b.symptoms=pick(["마른기침","붉은 반점","심한 오한"]);
+    b.healthCert=false;b.speech="조금 피곤할 뿐입니다. 그냥 지나가게 해주십시오.";
+    b.clues=["체온","기침/반점","건강증명서"];
+  }
+  if(type==="monster"){
+    b.face=pick(["🧟","🧙","🧑‍🦱"]);b.eyes=pick(["황금색","세로 동공","회백색"]);b.feature="그림자가 한 박자 늦음";
+    b.magicReaction="성수에서 금속성 거품 반응";b.speech="나는... 사람입니다. 왜 그렇게 쳐다보십니까?";
+    b.second="성 안에서는 무엇을 먹을 수 있습니까?";
+    b.clues=["성수 반응","눈동자","그림자","말투"];
+  }
+  if(type==="heretic"){
+    b.symbol=pick(["검은 태양 문양","뒤집힌 왕관","세 갈래 뿔 문양"]);
+    b.holyReaction="성수 접촉 부위가 검게 변함";b.feature="목깃 안쪽의 작은 문양";
+    b.speech="저는 단순한 순례자입니다. 아무 문제 없습니다.";
+    b.clues=["교단 징표","성수 반응","복장 안쪽"];
+  }
+  if(type==="mage"){
+    b.job="마법사";b.reg=(chance(.45));b.registered=b.reg;
+    b.docSpecial=b.reg?"마법사 등록번호 기재":"등록번호 공란";
+    b.cargo="지팡이와 수정병";b.speech=b.reg?"등록증을 제출하겠습니다.":"그냥 학자일 뿐입니다. 지팡이는 연구도구입니다.";
+    b.clues=["특수 등록증","등록번호","마법 도구"];
+    b.verdict=b.reg?"pass":"deny";
+  }
+  if(type==="merc"){
+    b.job="용병";b.weaponReturned=chance(.35);b.cargo=b.weaponReturned?"무기 반납증":"검 1자루";
+    b.speech=b.weaponReturned?"무기는 성문 경비대에 맡겼습니다.":"경호 임무라 무기를 가지고 있어야 합니다.";
+    b.clues=["용병 신분증","무기","반납증"];
+    b.verdict=b.weaponReturned?"pass":"deny";
+  }
+  if(type==="normal"){
+    if(chance(.35)){b.feature=pick(["짧은 오른쪽 턱 흉터","손에 잉크 얼룩","한쪽 귀 은고리"]);b.speech="마차가 밀려서 조금 늦었습니다."}
+    b.clues=["직업과 손 상태","방문 목적","화물 신고"];
+  }
+  return b;
+}
+
+function resetWanted(){
+  if(s.day<2){wanted={active:false,name:"",face:"?",height:178,eye:"회색",feature:"왼쪽 볼 점"};return}
+  if(!wanted.active||chance(.55)){
+    const n=pick(NAMES),face=pick(FACES),height=170+Math.floor(Math.random()*13),eye=pick(EYES),feature=pick(FEATURES.filter(x=>x!=="특징 없음"));
+    wanted={active:true,name:n,face,height,eye,feature};
+  }
+}
+
+function makeCases(){
+  const arr=[];
+  for(let i=0;i<8;i++){
+    let c,guard=0;
+    do{c=makeCase();guard++}while(arr.some(x=>x.type===c.type)&&chance(.7)&&guard<10);
+    if(c.type==="wanted"&&!wanted.active)continue;
+    arr.push(c);
+  }
+  while(arr.length<8)arr.push(makeCase());
+  s.cases=arr;
+}
+
+function rules(){
+  $("day").textContent=s.day;
+  $("rules").innerHTML=RULES.map((row,i)=>row.map((x,j)=>{
+    const unlocked=i<s.day?"":" lock";
+    return "<div class='rule"+unlocked+"'><b>"+(i+1)+"-"+(j+1)+".</b> "+esc(x)+(i>=s.day?" <small>(후일 해금)</small>":"")+"</div>";
+  }).join("")).join("");
+  if(s.day<2){$("wantedStatus").textContent="없음";$("wantedFace").textContent="—";$("wantedDetails").textContent="오늘은 수배전단이 없습니다."}
+  else{
+    $("wantedStatus").textContent=wanted.active?"추적 중":"기록 없음";$("wantedFace").textContent=wanted.face;
+    $("wantedDetails").innerHTML="<small><b>이름:</b> "+esc(wanted.name)+"</small><small><b>키:</b> "+wanted.height+"cm · <b>눈:</b> "+esc(wanted.eye)+"</small><small><b>특징:</b> "+esc(wanted.feature)+"</small>";
+  }
+}
+
+function availableTools(){
+  const tools=[
+    ["seal","🔍 인장 확대","seal"],
+    ["appearance","👁 외모 대조","appearance"],
+    ["cargo","🧳 소지품 수색","cargo"],
+    ["ask","💬 재질문","ask"]
+  ];
+  if(s.day>=3)tools.push(["medical","🌡 신체 검사","medical"]);
+  if(s.day>=4)tools.push(["holy","💧 성수 반응","holy"]);
+  return tools;
+}
+
+function render(){
+  const v=s.case;
+  $("portrait").textContent=v.face;$("bigface").textContent=v.face;$("speech").textContent=v.speech;
+  $("vname").textContent=v.name;$("vfrom").textContent=v.from;$("vjob").textContent=v.job;$("vpurpose").textContent=v.docPurpose||v.purpose;$("vstay").textContent=v.stay;$("vheight").textContent=v.height+"cm";$("veyes").textContent=v.eyes;$("vfeature").textContent=v.feature;
+  $("vstatus").textContent="판정 전에 증거를 확보하십시오.";
+  $("sceneTraits").innerHTML=["키 "+v.height+"cm","눈 "+v.eyes,v.hair,v.feature].map(x=>"<span class='trait'>"+esc(x)+"</span>").join("");
+  const healthLine=s.day>=3?"<p><b>건강:</b> "+esc(v.health)+(v.healthCert?" · 증명서 있음":" · 증명서 미확인")+"</p>":"";
+  const special=s.day>=5&&v.job==="마법사"?("<p><b>마법사 등록:</b> "+esc(v.docSpecial||"문서에 기재 없음")+"</p>"):"";
+  const weapon=s.day>=5&&v.job==="용병"?("<p><b>무기:</b> "+esc(v.cargo)+"</p>"):"";
+  const symbol=s.day>=4&&v.symbol!=="없음"?("<p><b>복장 기록:</b> 특이한 문양이 있다는 진술</p>"):"";
+  $("documents").innerHTML=
+    "<div class='doc'><div class='stampmark'>"+esc(v.sealStyle.split(" ")[0])+"</div><h3>통행 허가증</h3>"+
+    "<p><b>성명:</b> "+esc(v.name)+"</p><p><b>발급 도시:</b> "+esc(v.from)+"</p><p><b>직업:</b> "+esc(v.docJob||v.job)+"</p><p><b>방문 목적:</b> "+esc(v.docPurpose||v.purpose)+"</p><p><b>체류:</b> "+esc(v.stay)+"</p><div class='line'></div><p><b>유효일:</b> "+esc(v.expiry||"금일 포함")+"</p><p class='hint'>인장 세부선은 육안만으로 식별하기 어렵다.</p></div>"+
+    "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품·진술을 대조하십시오.</p></div>";
+  $("toolbar").innerHTML=availableTools().map(t=>"<button class='tool' data-tool='"+t[0]+"'>"+t[1]+"</button>").join("");
+  document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>inspect(b.dataset.tool));
+  $("caseNumber").textContent="사건 "+s.caseNo+"/8";
+  $("used").textContent="검사 "+s.tools.length+"회 · 현재 시각 "+fmt(s.time);
+  $("evidenceList").innerHTML=s.tools.length?s.tools.map(x=>"<div class='evidence-row'>"+esc(x)+"</div>").join(""):"<div class='evidence-row'>아직 확보한 단서가 없습니다.</div>";
+}
+
+function fmt(min){const h=Math.floor(min/60),m=min%60;return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")}
+
+function addEvidence(text,minutes=10){
+  s.tools.push(text);s.time=Math.min(1080,s.time+minutes);render();toast("단서를 기록했습니다.");
+}
+
+function inspect(tool){
+  const v=s.case;
+  let clue="";
+  if(tool==="seal"){
+    clue=v.sealOdd?"인장 확대: 원형 테두리와 중심 문양의 선 두께가 서로 어긋나며 가장자리에 번짐이 보입니다.":"인장 확대: 테두리 압력과 문양의 선 굵기가 일정하고, 왁스 눌림도 자연스럽습니다.";
+  }
+  if(tool==="appearance"){
+    const p=(v.type==="wanted"&&wanted.active)?"수배전단과 대조: "+(v.height===wanted.height?"키가 일치합니다.":"키 차이가 있습니다.")+" "+(v.eyes===wanted.eye?"눈 색이 일치합니다.":"눈 색이 다릅니다.")+" "+(v.feature===wanted.feature?"특징이 일치합니다.":"기재된 특징과 다릅니다."):("외모 기록: "+v.height+"cm, "+v.eyes+" 눈, "+v.feature+".");
+    clue=p;
+  }
+  if(tool==="cargo") clue=v.cargoDeclared===false?"수색 결과: 신고 목록에 없는 이중 구조와 비정상적인 무게 중심이 확인됩니다.":"수색 결과: 신고 화물과 실제 화물의 형태·무게가 대체로 일치합니다.";
+  if(tool==="ask") clue="재질문 답변: "+v.second;
+  if(tool==="medical") clue=v.health==="정상"?"검사 결과: 체온과 호흡에서 특이사항이 보이지 않습니다.":"검사 결과: "+v.health+" · "+v.symptoms+"이 확인됩니다.";
+  if(tool==="holy") clue=v.holyReaction||v.magicReaction||"성수 검사: 눈에 띄는 반응이 없습니다.";
+  addEvidence(clue);
+}
+
+function judge(action){
+  const v=s.case;if(!v)return;
+  const correct=action===v.verdict;
+  const used=s.tools.length;
+  const elapsed=40+used*10+(action==="arrest"?5:0);
+  s.time=Math.min(1080,s.time+elapsed);
+  if(correct){s.correct++;s.money+=5;if(action==="deny")s.denied++;if(action==="arrest")s.arrested++;log("정상 처리: "+v.name+" · "+labelAction(action)+" · 확보 단서 "+used+"개");toast("처리 기록을 남겼습니다. +5 동전")}
+  else{s.mistakes++;if(s.mistakes>=2)s.money-=10;log("오판 기록: "+v.name+" · "+labelAction(action)+" · 확보 단서 "+used+"개");toast(s.mistakes===1?"경고 기록":"오판 기록 · -10 동전")}
+  $("money").textContent=s.money;$("mistakes").textContent=s.mistakes;$("vstatus").textContent="판정 완료 — 다음 사건으로 이동합니다.";
+  setTimeout(nextCase,520);
+}
+
+function labelAction(a){return a==="pass"?"통과":a==="deny"?"거부":"경비대 호출"}
+
+function nextCase(){
+  if(s.caseNo>=8||s.time>=1080){endDay();return}
+  s.caseNo++;s.tools=[];s.case=s.cases[s.caseNo-1]||makeCase();render();
+}
+
 function log(t){const d=document.createElement("div");d.textContent=t;$("log").prepend(d)}
-document.querySelectorAll(".tool").forEach(b=>b.onclick=function(){document.querySelectorAll(".tool").forEach(x=>x.classList.remove("active"));b.classList.add("active");const v=s.v;if(b.dataset.tool==="seal")toast(v[7]?"인장 문양이 정품과 일치합니다.":"인장이 미세하게 어긋납니다. 위조 흔적입니다.");if(b.dataset.tool==="cargo")toast(v[9]==="밀수품"?"봉인 아래에서 금지품이 감지됩니다.":"특별한 밀수품은 발견되지 않았습니다.");if(b.dataset.tool==="ask")toast("방문객: "+v[10])});
-document.querySelectorAll(".decision").forEach(b=>b.onclick=function(){judge(b.dataset.action)});
-function judge(a){const v=s.v;let c;if(v[9]==="마물 위장"||v[9]==="밀수품")c=a==="arrest";else if(v[9]==="인장 위조"||v[9]==="기간 만료")c=a==="deny";else c=a==="pass";if(c){s.money+=5;toast("정확한 판정! +5 동전");$("vstatus").textContent="판정 완료 — 이상 무.";log("정확: "+v[0]+" · "+a)}else{s.mistakes++;if(s.mistakes>=2)s.money-=10;toast(s.mistakes>=2?"오판! -10 동전":"오판! 1회 경고");$("vstatus").textContent="판정 오류 — 기록됨.";log("오판: "+v[0]+" · "+a)}$("money").textContent=s.money;$("mistakes").textContent=s.mistakes;s.done++;setTimeout(next,650)}
-function toast(t){const d=document.createElement("div");d.textContent=t;d.style="position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#201814;color:#f4e4c2;border:2px solid #9b7746;padding:11px 18px;z-index:30";document.body.appendChild(d);setTimeout(()=>d.remove(),1600)}
-function end(){$("modalTitle").textContent="근무 종료";$("modalText").textContent="오늘의 심사가 끝났습니다. 처리 8건 · 보유 동전 "+s.money+"개. 다음 날 새로운 규칙이 추가됩니다."; $("modal").classList.add("show");$("modalNext").onclick=function(){$("modal").classList.remove("show");s.day++;s.done=0;s.idx=0;s.mistakes=0;s.money=Math.max(0,s.money-15);rules();next()}}
-rules();next();
-</script></body></html>
+
+function endDay(){
+  const living=15;s.money=Math.max(0,s.money-living);
+  $("modalTitle").textContent="근무 종료";
+  const total=s.correct;
+  $("modalText").innerHTML="오늘 확보한 사건 기록을 정산했습니다. 다음 날부터 새로운 규정이 추가됩니다.";
+  $("summary").innerHTML="<div class='summary-item'><b>정확 처리</b><br>"+total+"건</div><div class='summary-item'><b>오판</b><br>"+s.mistakes+"건</div><div class='summary-item'><b>거부</b><br>"+s.denied+"건</div><div class='summary-item'><b>경비대 호출</b><br>"+s.arrested+"건</div><div class='summary-item'><b>생활비</b><br>-15 동전</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";
+  $("modalNext").textContent=s.day<5?"다음 근무일":"다음 날";
+  $("modal").classList.add("show");
+  $("modalNext").onclick=()=>{
+    $("modal").classList.remove("show");
+    s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;
+    resetWanted();makeCases();rules();nextCase();
+  };
+}
+
+function toast(t){
+  const d=document.createElement("div");d.textContent=t;
+  d.style="position:fixed;left:50%;bottom:25px;transform:translateX(-50%);background:#201814;color:#f4e4c2;border:2px solid #9b7746;padding:11px 18px;z-index:30;max-width:90%;text-align:center;box-shadow:0 4px 18px #0008";
+  document.body.appendChild(d);setTimeout(()=>d.remove(),1500);
+}
+
+resetWanted();makeCases();rules();nextCase();
+</script>
+</body>
+</html>
