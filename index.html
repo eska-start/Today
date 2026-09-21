@@ -348,6 +348,11 @@ function render(){
     "<div class='doc'><h3>신분·물품 신고서</h3><p><b>신고 화물:</b> "+esc(v.cargo)+"</p><p><b>진술:</b> "+esc(v.speech)+"</p>"+healthLine+special+weapon+symbol+"<div class='line'></div><p class='hint'>신고 내용과 실제 물품을 대조하십시오.</p></div>";
   $("toolbar").innerHTML=availableTools().map(t=>"<button class='tool' data-tool='"+t[0]+"'>"+t[1]+"</button>").join("");
   document.querySelectorAll(".tool").forEach(b=>b.onclick=()=>inspect(b.dataset.tool));
+  // DECISION BUTTONS: 통과/거부/경비대 호출은 render 이후에도 항상 현재 사건의 judge()를 호출해야 함
+  document.querySelectorAll(".decision").forEach(b=>{
+    b.onclick=()=>judge(b.dataset.action);
+    b.disabled=false;
+  });
   $("caseNumber").textContent="사건 "+s.caseNo+"/8";
   $("used").textContent="검사 "+s.tools.length+"회 · 현재 시각 "+fmt(s.time);
   $("evidenceList").innerHTML=s.tools.length?s.tools.map(x=>"<div class='evidence-row'>"+esc(x)+"</div>").join(""):"<div class='evidence-row'>아직 확보한 단서가 없습니다.</div>";
