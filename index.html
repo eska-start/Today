@@ -47,9 +47,263 @@ button{font:inherit;cursor:pointer}
 .modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:20px;z-index:20}.modal.show{display:grid}
 .modalbox{max-width:620px;width:100%;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29}
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.summary-item{border:1px solid #9a815d;padding:7px;background:#ead7af;font-size:11px}.night-choice{cursor:pointer}.night-choice:hover{outline:2px solid #a57b40}
-@media(max-width:1100px){.layout{grid-template-columns:1fr 320px}.left{display:none}}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.right{display:none}.scene{height:410px}}
-@media(max-width:600px){.app{padding:4px}.stats{font-size:11px;gap:5px}.scene{height:380px}.documents{grid-template-columns:1fr}.doc{min-height:150px}.decision{min-width:30%;padding:8px 4px;font-size:11px}.visitor{bottom:34%}.portrait{font-size:84px}.traits{max-width:70%}}
+/* PC LAYOUT: 3열 고정 구조. 800px 초과에서는 기존 화면을 그대로 사용. */
+@media(min-width:801px){
+  .layout{grid-template-columns:245px minmax(500px,1fr) 320px}
+  .left,.right{display:block}
+}
+
+/* TABLET / SMALL LAPTOP: PC 구조를 유지하되 좌측 정보를 접지 않음. */
+@media(max-width:1100px) and (min-width:801px){
+  .layout{grid-template-columns:220px minmax(0,1fr) 285px;gap:8px}
+  .panel{padding:10px}
+  .scene{height:450px}
+}
+
+/* MOBILE LAYOUT: PC 화면을 축소하지 않고 모바일 전용 세로 구조로 전환.
+   좌측 규정/수배전단 → 중앙 검문 → 우측 방문객 기록 순으로 모두 표시. */
+@media(max-width:800px){
+  body{background:linear-gradient(#251c18,#130f0d)}
+  .app{padding:5px}
+  .top{
+    padding:9px 10px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:6px;
+    align-items:start
+  }
+  .title{font-size:20px;line-height:1.2}
+  .sub{font-size:10px}
+  .stats{
+    width:100%;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:4px;
+    font-size:11px
+  }
+  .stats span{
+    background:#1b1512;
+    border:1px solid #5c4934;
+    padding:5px 4px;
+    text-align:center;
+    min-width:0
+  }
+
+  .layout{
+    max-width:none;
+    width:100%;
+    margin:7px auto 0;
+    display:flex;
+    flex-direction:column;
+    gap:8px
+  }
+
+  /* 모바일에서는 좌/우 패널을 숨기지 않는다. */
+  .left,.right{
+    display:block;
+    width:100%;
+    order:unset
+  }
+  .left{order:1}
+  .layout>section{order:2}
+  .right{order:3}
+
+  .panel{
+    padding:9px;
+    border-width:2px
+  }
+  .panel h2{
+    font-size:14px;
+    margin-bottom:6px
+  }
+
+  /* 규정판은 모바일 2열로 압축 */
+  #rules{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 7px
+  }
+  #rules .rule{
+    font-size:10px;
+    padding:5px 0;
+    min-height:36px
+  }
+  .wanted{
+    margin-top:7px;
+    padding:7px
+  }
+  .wanted .wanted-face{
+    height:56px;
+    font-size:32px
+  }
+  .wanted small{font-size:9px}
+
+  .bookbtn{
+    margin-top:7px;
+    padding:8px;
+    font-size:11px
+  }
+
+  /* 중앙 검문 화면 */
+  .scene{
+    height:330px;
+    border-width:2px
+  }
+  .wall{height:110px}
+  .gate{height:180px;border-width:17px}
+  .visitor{
+    min-width:0;
+    width:90%;
+    bottom:34%
+  }
+  .portrait{font-size:76px}
+  .speech{
+    min-width:0;
+    width:100%;
+    font-size:11px;
+    padding:6px 8px
+  }
+  .traits{
+    left:7px;
+    bottom:7px;
+    max-width:88%
+  }
+  .trait{
+    font-size:9px;
+    padding:3px 5px
+  }
+  .casebar{
+    margin-top:5px;
+    font-size:10px
+  }
+
+  .desk{padding:8px}
+  .documents{
+    grid-template-columns:1fr;
+    gap:7px
+  }
+  .doc{
+    min-height:0;
+    padding:8px
+  }
+  .doc p{font-size:10px}
+  .doc h3{font-size:12px}
+  .sealstamp{
+    width:62px;
+    height:62px
+  }
+
+  /* 검사 도구: 모바일 2열 */
+  .toolbar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:7px
+  }
+  .tool,.decision{
+    width:100%;
+    min-width:0;
+    padding:9px 5px;
+    font-size:10px;
+    line-height:1.2
+  }
+  .decision{
+    min-height:42px
+  }
+
+  /* 방문객 기록: 모바일에서도 우측 패널 전체를 유지 */
+  .visitor-card{
+    padding:8px
+  }
+  .bigface{
+    height:90px;
+    font-size:64px
+  }
+  .field{
+    font-size:10px;
+    padding:5px 0
+  }
+  .status{
+    font-size:10px;
+    padding:6px
+  }
+  .evidence{
+    margin-top:7px;
+    padding:7px
+  }
+  .evidence-row{font-size:9px}
+  .log{
+    max-height:110px;
+    font-size:9px
+  }
+
+  /* 모달도 휴대폰 화면 안에서 잘리지 않도록 스크롤 허용 */
+  .modal{
+    padding:8px
+  }
+  .modalbox{
+    width:100%;
+    max-width:none;
+    max-height:calc(100vh - 16px);
+    overflow:auto;
+    padding:12px
+  }
+  .summary-grid{
+    grid-template-columns:1fr;
+    gap:5px
+  }
+
+  /* 인장 수첩 */
+  .book-grid{
+    grid-template-columns:1fr 1fr;
+    gap:5px
+  }
+  .seal-card{
+    padding:5px
+  }
+  .seal-card strong{font-size:10px}
+  .seal-card small{font-size:8px}
+  .seal-ref{
+    grid-template-columns:82px 1fr;
+    gap:8px;
+    padding:7px
+  }
+  .seal-ref .bigseal{
+    width:78px;
+    height:78px
+  }
+  .seal-ref h3{font-size:12px}
+  .seal-ref p{font-size:9px}
+  .comparebar{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px
+  }
+  .comparebar button{
+    padding:9px 5px;
+    font-size:10px
+  }
+
+  /* 얼굴 특징 조합판 */
+  .face-lab{grid-template-columns:1fr}
+  .face-preview{min-height:250px}
+  .face-option{
+    font-size:10px;
+    padding:7px 5px
+  }
+}
+
+/* 아주 좁은 휴대폰만 한 단계 더 압축 */
+@media(max-width:420px){
+  .title{font-size:18px}
+  .stats{font-size:10px}
+  .scene{height:300px}
+  .portrait{font-size:68px}
+  .gate{height:160px}
+  #rules .rule{font-size:9px}
+  .tool,.decision{font-size:9px;padding:8px 4px}
+  .visitor-card{padding:7px}
+}
 .face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:300px;display:grid;place-items:center}.face-canvas{width:220px;height:270px;position:relative}.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48%;background:#c8956e;border:3px solid #513b2c}.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}.face-eye.left{left:68px}.face-eye.right{left:137px}.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;z-index:3}.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;z-index:3}.face-layer{position:absolute;inset:0;z-index:5}.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}.face-scar{position:absolute;width:48px;height:7px;border-top:3px solid #713e36;border-radius:50%;transform:rotate(-18deg)}.face-scar.cheek{left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg)}.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}.face-option.active{outline:2px solid #d3a95d;background:#4b3829}.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}@media(max-width:600px){.face-lab{grid-template-columns:1fr}}</style>
 </head>
 <body>
