@@ -47,6 +47,121 @@ button{font:inherit;cursor:pointer}
 .modal{position:fixed;inset:0;background:#000b;display:none;place-items:center;padding:20px;z-index:20}.modal.show{display:grid}
 .modalbox{max-width:620px;width:100%;background:#f5e8cc;color:#2b241d;border:4px solid #5a4430;padding:18px}.modalbox button{width:100%;padding:11px;background:#33251d;color:white;border:2px solid #513a29}
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}.summary-item{border:1px solid #9a815d;padding:7px;background:#ead7af;font-size:11px}.night-choice{cursor:pointer}.night-choice:hover{outline:2px solid #a57b40}
+
+/* MOBILE COLLAPSIBLE UI */
+.mobile-toggle{display:none}
+.mobile-collapsible{display:block}
+
+@media(max-width:800px){
+  .layout>section{order:1}
+  .left{order:2}
+  .right{order:3}
+
+  /* 성문 장면이 모바일 진입 시 첫 화면의 중심 */
+  .scene{
+    height:390px;
+    margin-bottom:2px
+  }
+  .casebar{
+    background:#1d1613;
+    border:1px solid #604b35;
+    padding:6px 7px
+  }
+
+  .mobile-toggle{
+    display:block;
+    width:100%;
+    padding:10px 9px;
+    background:#2d211a;
+    color:#ead9b5;
+    border:2px solid #80613b;
+    font-weight:bold;
+    font-size:11px;
+    text-align:left
+  }
+  .mobile-toggle[aria-expanded="true"]{
+    outline:2px solid #c99b45;
+  }
+  .mobile-collapsible{
+    display:block;
+  }
+  .mobile-collapsible.mobile-collapsed{
+    display:none;
+  }
+
+  /* 서류와 검사도구는 기본 접힘. 판정 버튼은 항상 바로 보이게 */
+  .mobile-doc-toggle{
+    margin-bottom:0
+  }
+  .mobile-doc-toggle + .mobile-collapsible{
+    margin-top:7px
+  }
+
+  .desk{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    padding:7px
+  }
+  .desk>.mobile-doc-toggle{order:1}
+  .desk>.mobile-collapsible{order:2}
+  .desk>.toolbar{order:3}
+  .desk>.note{order:4}
+
+  /* 메인 판정 버튼을 성문 바로 아래에서 항상 노출 */
+  .desk>.toolbar:not(.mobile-collapsible .toolbar){
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:0
+  }
+  .desk>.toolbar:not(.mobile-collapsible .toolbar) .decision{
+    min-height:44px
+  }
+
+  /* 좌우 패널은 버튼만 보이는 상태로 시작 */
+  .left,.right{
+    padding:7px
+  }
+  .left>.mobile-collapsible,
+  .right>.mobile-collapsible{
+    margin-top:7px
+  }
+
+  /* 수첩 내부도 모바일에서는 2열로 짧게 */
+  #rules{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 6px
+  }
+  #rules .rule{
+    font-size:9px;
+    padding:4px 0;
+    min-height:32px
+  }
+
+  .wanted{
+    margin-top:6px
+  }
+
+  .visitor-card{
+    padding:7px
+  }
+  .bigface{
+    height:100px;
+    font-size:68px
+  }
+
+  /* 증거/로그는 기록 버튼을 눌렀을 때 확인 가능하도록 비교적 짧게 */
+  .evidence{
+    max-height:190px;
+    overflow:auto
+  }
+  .log{
+    max-height:90px
+  }
+}
+
 /* PC LAYOUT: 3열 고정 구조. 800px 초과에서는 기존 화면을 그대로 사용. */
 @media(min-width:801px){
   .layout{grid-template-columns:245px minmax(500px,1fr) 320px}
@@ -304,7 +419,40 @@ button{font:inherit;cursor:pointer}
   .tool,.decision{font-size:9px;padding:8px 4px}
   .visitor-card{padding:7px}
 }
-.face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:300px;display:grid;place-items:center}.face-canvas{width:220px;height:270px;position:relative}.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48%;background:#c8956e;border:3px solid #513b2c}.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}.face-eye.left{left:68px}.face-eye.right{left:137px}.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;z-index:3}.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;z-index:3}.face-layer{position:absolute;inset:0;z-index:5}.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}.face-scar{position:absolute;width:48px;height:7px;border-top:3px solid #713e36;border-radius:50%;transform:rotate(-18deg)}.face-scar.cheek{left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg)}.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}.face-option.active{outline:2px solid #d3a95d;background:#4b3829}.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}@media(max-width:600px){.face-lab{grid-template-columns:1fr}}</style>
+.face-lab-btn{margin-top:7px;width:100%;padding:8px;background:#4a3626;color:#ead9b5;border:2px solid #80613b;font-weight:bold}.face-lab{display:grid;grid-template-columns:minmax(220px,1fr) 1fr;gap:12px}.face-preview{background:#d9c39b;border:3px solid #654b34;min-height:300px;display:grid;place-items:center}.face-canvas{width:220px;height:270px;position:relative}.face-skin{position:absolute;left:32px;top:42px;width:156px;height:190px;border-radius:48%;background:#c8956e;border:3px solid #513b2c}.face-hair{position:absolute;left:24px;top:20px;width:172px;height:82px;border-radius:70% 70% 35% 35%;background:#30231e;z-index:2}.face-eye{position:absolute;top:116px;width:15px;height:9px;border-radius:50%;background:#3b281f;z-index:3}.face-eye.left{left:68px}.face-eye.right{left:137px}.face-nose{position:absolute;left:105px;top:125px;width:10px;height:48px;border-right:2px solid #815a45;z-index:3}.face-mouth{position:absolute;left:88px;top:188px;width:44px;height:12px;border-bottom:3px solid #663e38;z-index:3}.face-layer{position:absolute;inset:0;z-index:5}.face-dot{position:absolute;width:9px;height:9px;background:#39221c;border-radius:50%}.face-dot.left{left:77px;top:151px}.face-dot.right{left:144px;top:151px}.face-scar{position:absolute;width:48px;height:7px;border-top:3px solid #713e36;border-radius:50%;transform:rotate(-18deg)}.face-scar.cheek{left:47px;top:165px}.face-scar.chin{width:39px;left:128px;top:181px;transform:rotate(28deg)}.face-cut{position:absolute;width:5px;height:62px;background:#713e36;left:84px;top:111px;transform:rotate(27deg)}.face-bread{position:absolute;left:83px;top:178px;width:58px;height:30px;border-bottom:9px dotted #53362c;border-radius:50%}.face-options h3{margin:0 0 7px;font-size:13px;color:#e5c98d}.face-option-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.face-option{padding:7px;border:2px solid #745638;background:#33251d;color:#ead9b5;text-align:left}.face-option.active{outline:2px solid #d3a95d;background:#4b3829}.face-note{font-size:10px;color:#c7b692;margin-top:8px;line-height:1.4}@media(max-width:600px){.face-lab{grid-template-columns:1fr}}
+<style>
+/* FINAL MOBILE OVERRIDES: mobile-first main scene + collapsible secondary panels */
+@media(max-width:800px){
+  .layout{display:flex!important;flex-direction:column!important}
+  .layout>section{order:1!important}
+  .layout>.left{order:2!important}
+  .layout>.right{order:3!important}
+
+  .mobile-collapsible.mobile-collapsed{display:none!important}
+
+  /* 서류/검사도구 접기 상태에서도 판정 버튼은 유지 */
+  #mobileDocPanel{display:block}
+  #mobileDocPanel.mobile-collapsed{display:none!important}
+
+  .desk>.mobile-doc-toggle{display:block!important;order:1}
+  .desk>.mobile-collapsible{order:2}
+  .desk>.toolbar:not(#toolbar){order:3!important}
+  .desk>.note{order:4}
+
+  .desk{
+    display:flex!important;
+    flex-direction:column!important;
+  }
+
+  .scene{height:390px!important}
+  .left,.right{display:block!important}
+}
+@media(max-width:420px){
+  .scene{height:340px!important}
+}
+</style>
+
+</style>
 </head>
 <body>
 <div class="app">
@@ -314,10 +462,13 @@ button{font:inherit;cursor:pointer}
 </header>
 <main class="layout">
 <aside class="panel left">
+  <button class="mobile-toggle" data-target="leftPanel" aria-expanded="false">📖 검문 수첩 · 규정 / 수배전단 펼치기</button>
+  <div id="leftPanel" class="mobile-collapsible">
   <h2>영주의 하사문</h2>
   <div id="rules"></div>
   <!-- IMAGE SLOT: 수배전단 초상화 / 용도: 당일 수배자의 얼굴 사진·목탄 초상화. 실제 중세 수배전단 느낌의 이미지로 교체 -->
 <div class="wanted"><div class="wanted-head"><b>수배전단</b><span id="wantedStatus"></span></div><div id="wantedFace" class="wanted-face">?</div><div id="wantedDetails"></div></div><button id="sealBookBtn" class="bookbtn">📖 각지의 인장 수첩 열기</button>
+  </div>
 </aside>
 <section>
   <div class="scene">
@@ -339,13 +490,18 @@ button{font:inherit;cursor:pointer}
   </div>
   <div class="casebar"><span id="caseNumber" class="caseid">사건 1/8</span><span id="used" class="used">검사 0회 · 예상 근무시간 06:45</span></div>
   <div class="desk">
+    <button class="mobile-toggle mobile-doc-toggle" data-target="mobileDocPanel" aria-expanded="false">📜 서류 / 검사도구 펼치기</button>
+    <div id="mobileDocPanel" class="mobile-collapsible">
     <div id="documents" class="documents"></div>
     <div id="toolbar" class="toolbar"></div>
+    </div>
     <div class="toolbar"><button class="decision pass" data-action="pass">🟢 성문 통과</button><button class="decision deny" data-action="deny">🟠 입경 거부</button><button class="decision arrest" data-action="arrest">🔴 경비대 호출</button><button class="decision secret" data-action="secret">⚫ 뒷골목 처리</button><button id="bribeDecision" class="decision bribe" data-action="bribe" style="display:none">🪙 뒷돈 수락</button></div>
     <div class="note">중요: 검사 도구는 단서를 보여줄 뿐, 판정은 검문관이 내립니다.</div>
   </div>
 </section>
 <aside class="panel right">
+  <button class="mobile-toggle" data-target="rightPanel" aria-expanded="false">👤 방문객 기록 펼치기</button>
+  <div id="rightPanel" class="mobile-collapsible">
   <h2>방문객 기록</h2>
   <button id="faceLabBtn" class="face-lab-btn">👤 얼굴 특징 조합판</button><div class="visitor-card">
     <!-- IMAGE SLOT: 검문 기록 초상화 / 용도: 현재 방문객의 얼굴 확대 이미지. 수배전단과 직접 대조하는 핵심 이미지 -->
@@ -362,6 +518,7 @@ button{font:inherit;cursor:pointer}
   </div>
   <div class="evidence"><h3>검문 기록</h3><div id="evidenceList"><div class="evidence-row">아직 확보한 단서가 없습니다.</div></div></div>
   <div class="log" id="log"></div>
+  </div>
 </aside>
 </main></div>
 
@@ -670,7 +827,26 @@ function resolveDelayed(){
   return notices;
 }
 function night(){const notices=resolveDelayed();$("modalTitle").textContent="해가 졌습니다";$("modalText").innerHTML=(notices.length?notices.map(x=>"<p>"+esc(x)+"</p>").join(""):"오늘은 별다른 소식이 없습니다.")+"<p>오늘 번 돈을 어디에 쓸까요?</p>";$("summary").innerHTML="<div class='summary-item night-choice' data-night='tavern'><b>🍺 선술집</b><br>8동전 · 술과 소문</div><div class='summary-item night-choice' data-night='home'><b>🏠 숙소</b><br>무료 · 조용한 밤</div><div class='summary-item night-choice' data-night='gamble'><b>🎲 주사위판</b><br>5동전 · 운에 맡긴다</div><div class='summary-item'><b>현재 주머니</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="밤을 마친다";document.querySelectorAll(".night-choice").forEach(el=>el.onclick=()=>nightChoice(el.dataset.night));$("modal").classList.add("show");}
-function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");if(s.day>=5){finishGame();return;}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];resetWanted();makeCases();rules();nextCase();};}
+function nightChoice(kind){if(kind==="tavern"){if(s.money<8){toast("선술집에 들어갈 돈이 부족합니다.");return;}s.money-=8;s.rumors.push("선술집 소문: 내일 아침 동쪽 마차가 평소보다 일찍 온다.");s.heat=Math.max(0,s.heat-1);$("modalText").innerHTML="<p>선술집에서 하루의 긴장을 풀었습니다.</p><p>술잔 사이로 성문에 관한 소문도 하나 주워들었습니다.</p>";}else if(kind==="gamble"){if(s.money<5){toast("주사위판에 걸 돈이 부족합니다.");return;}s.money-=5;if(chance(.45)){s.money+=12;$("modalText").innerHTML="<p>오늘은 운이 따라주었습니다. 주머니가 조금 묵직해졌습니다.</p>";}else $("modalText").innerHTML="<p>오늘 운은 별로였습니다. 동전 다섯 닢을 잃었습니다.</p>";}else $("modalText").innerHTML="<p>숙소로 돌아와 조용히 장화를 벗었습니다.</p>";$("summary").innerHTML="<div class='summary-item'><b>밤의 선택</b><br>"+(kind==="tavern"?"선술집":kind==="gamble"?"주사위판":"숙소")+"</div><div class='summary-item'><b>잔액</b><br>"+s.money+" 동전</div>";$("modalNext").textContent="다음 근무일";$("modalNext").onclick=()=>{$("modal").classList.remove("show");if(s.day>=5){finishGame();return;}s.day++;s.caseNo=0;s.time=360;s.mistakes=0;s.correct=0;s.denied=0;s.arrested=0;s.pending=[];
+document.querySelectorAll(".mobile-toggle").forEach(btn=>{
+  const target=$(btn.dataset.target);
+  if(!target)return;
+  target.classList.add("mobile-collapsed");
+  btn.onclick=()=>{
+    const open=!target.classList.contains("mobile-collapsed");
+    target.classList.toggle("mobile-collapsed",open);
+    btn.setAttribute("aria-expanded",String(!open));
+    if(btn.dataset.target==="leftPanel"){
+      btn.textContent=open?"📖 검문 수첩 · 규정 / 수배전단 펼치기":"📕 검문 수첩 · 규정 / 수배전단 접기";
+    }else if(btn.dataset.target==="rightPanel"){
+      btn.textContent=open?"👤 방문객 기록 펼치기":"👤 방문객 기록 접기";
+    }else if(btn.dataset.target==="mobileDocPanel"){
+      btn.textContent=open?"📜 서류 / 검사도구 펼치기":"📜 서류 / 검사도구 접기";
+    }
+  };
+});
+
+resetWanted();makeCases();rules();nextCase();};}
 function finishGame(){
   const nobleTrouble=s.delayed.length>0||s.familyRisk>0;
   const corrupt=s.corruption>=4;
