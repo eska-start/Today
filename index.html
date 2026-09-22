@@ -198,25 +198,25 @@ img{display:block}
 }
 /* IMAGE SLOT: 방문객 캐릭터 스프라이트 — char_*.jpg (던전밥풍) */
 .char-sprite{
-  width:230px;height:300px;
+  width:240px;height:315px;
   display:flex;align-items:flex-end;justify-content:center;
-  filter:drop-shadow(0 16px 16px rgba(0,0,0,0.95));
+  filter:drop-shadow(0 16px 14px rgba(0,0,0,0.92));
   transition:transform 0.3s ease;
   position:relative;
-  border-radius:8px 8px 0 0;
-  overflow:hidden;
-  border:2px solid #5a4228;
-  border-bottom:none;
-  background:rgba(20,15,10,0.6);
+  border-radius:0;
+  overflow:visible;
+  border:none;
+  background:transparent;
 }
 .char-sprite img{
   width:100%;height:100%;
-  object-fit:cover;object-position:top center;
+  object-fit:contain;object-position:bottom center;
+  user-select:none;
 }
-.char-sprite.body-tall{transform:scale(1.04);transform-origin:bottom center}
-.char-sprite.body-short{transform:scale(0.92);transform-origin:bottom center}
-.char-sprite.body-stout{width:250px}
-.char-sprite.body-thin{width:190px}
+.char-sprite.body-tall{height:335px;transform:scale(1.06);transform-origin:bottom center}
+.char-sprite.body-short{height:265px;transform:scale(0.92);transform-origin:bottom center}
+.char-sprite.body-stout{width:275px;transform:scaleX(1.15);transform-origin:bottom center}
+.char-sprite.body-thin{width:205px;transform:scaleX(0.90);transform-origin:bottom center}
 
 /* 성별 뚜렷한 배지 */
 .badge-male{
@@ -1047,27 +1047,27 @@ img{display:block}
     <p style="font-size:11px;color:#6b533b;margin-bottom:12px">카를스반 북부 관문소를 찾아오는 다양한 남녀 모험가와 이종족, 그리고 의문의 방문객들입니다.</p>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;max-height:420px;overflow-y:auto;padding-right:6px">
       <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
-        <img src="assets/images/characters/char_male_tall.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <img src="assets/images/characters/char_male_tall.png" style="width:50px;height:65px;object-fit:contain;background:#2d2118;border:1px solid #5a4228;border-radius:3px">
         <div style="font-size:11px"><b style="color:#2a4a75">♂ 남성 모험가/전사</b><br>라이오스풍 강직한 검사. 뚜렷한 남성 턱선과 갑옷을 착용합니다.</div>
       </div>
       <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
-        <img src="assets/images/characters/char_female_tall.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <img src="assets/images/characters/char_female_tall.png" style="width:50px;height:65px;object-fit:contain;background:#2d2118;border:1px solid #5a4228;border-radius:3px">
         <div style="font-size:11px"><b style="color:#802b48">♀ 여성 기사/성기사</b><br>파린풍 금발 땋은 머리의 여기사. 우아하고 뚜렷한 여성 체형.</div>
       </div>
       <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
-        <img src="assets/images/characters/char_noble_bribe.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <img src="assets/images/characters/char_noble_bribe.png" style="width:50px;height:65px;object-fit:contain;background:#2d2118;border:1px solid #5a4228;border-radius:3px">
         <div style="font-size:11px"><b style="color:#b87c28">💰 부유한 귀족</b><br>탐욕스럽고 거만한 귀족. 은밀한 금화 주머니를 건네며 통과를 요구.</div>
       </div>
       <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
-        <img src="assets/images/characters/char_orc_tourist.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <img src="assets/images/characters/char_orc_tourist.png" style="width:50px;height:65px;object-fit:contain;background:#2d2118;border:1px solid #5a4228;border-radius:3px">
         <div style="font-size:11px"><b style="color:#3e633a">🧭 오크 관광객</b><br>지도와 나침반을 든 순박한 오크. 순수한 여행 목적의 방문객.</div>
       </div>
       <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
-        <img src="assets/images/characters/char_mage_unregistered.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <img src="assets/images/characters/char_mage_unregistered.png" style="width:50px;height:65px;object-fit:contain;background:#2d2118;border:1px solid #5a4228;border-radius:3px">
         <div style="font-size:11px"><b style="color:#38527a">⚡ 미등록 마법사</b><br>스파크가 튀는 지팡이를 쥐고 벌벌 떠는 서기관/학자풍 청년.</div>
       </div>
       <div style="background:#eddcb7;padding:8px;border:1px solid #7c6242;border-radius:4px;display:flex;gap:8px;align-items:center">
-        <img src="assets/images/characters/char_plague_visitor.jpg" style="width:50px;height:65px;object-fit:cover;border:1px solid #5a4228;border-radius:3px">
+        <img src="assets/images/characters/char_plague_visitor.png" style="width:50px;height:65px;object-fit:contain;background:#2d2118;border:1px solid #5a4228;border-radius:3px">
         <div style="font-size:11px"><b style="color:#783b3b">🥀 전염병 의심 여성</b><br>숄을 두르고 기침을 참으며 눈치를 살피는 여성 유랑민.</div>
       </div>
     </div>
@@ -1209,23 +1209,104 @@ const RULES = [
 // 남성/여성 뚜렷한 외형 구분 및 종족/군상별 14종 캐릭터 완비
 const CHAR_SPRITES = {
   // 남성 군상 (뚜렷한 남성 턱선, 체형, 가죽 및 판금 장비)
-  male_tall:    "assets/images/characters/char_male_tall.jpg",
-  male_short:   "assets/images/characters/char_male_short.jpg",
-  male_stout:   "assets/images/characters/char_male_stout.jpg",
-  male_thin:    "assets/images/characters/char_male_thin.jpg",
+  male_tall:    "assets/images/characters/char_male_tall.png",
+  male_short:   "assets/images/characters/char_male_short.png",
+  male_stout:   "assets/images/characters/char_male_stout.png",
+  male_thin:    "assets/images/characters/char_male_thin.png",
   // 여성 군상 (금발 땋은 머리 기사, 여성 전용 흉갑, 섬세한 이목구비 및 체형)
-  female_tall:  "assets/images/characters/char_female_tall.jpg",
-  female_short: "assets/images/characters/char_female_short.jpg",
-  female_stout: "assets/images/characters/char_female_stout.jpg",
-  female_thin:  "assets/images/characters/char_female_thin.jpg",
+  female_tall:  "assets/images/characters/char_female_tall.png",
+  female_short: "assets/images/characters/char_female_short.png",
+  female_stout: "assets/images/characters/char_female_stout.png",
+  female_thin:  "assets/images/characters/char_female_thin.png",
   // 특수 군상
-  noble_bribe:     "assets/images/characters/char_noble_bribe.jpg",
-  orc_tourist:     "assets/images/characters/char_orc_tourist.jpg",
-  monster_disguise:"assets/images/characters/char_monster_disguise.jpg",
-  ghost_visitor:   "assets/images/characters/char_ghost_visitor.jpg",
-  plague_visitor:  "assets/images/characters/char_plague_visitor.jpg",
-  mage_unregistered:"assets/images/characters/char_mage_unregistered.jpg",
+  noble_bribe:     "assets/images/characters/char_noble_bribe.png",
+  orc_tourist:     "assets/images/characters/char_orc_tourist.png",
+  monster_disguise:"assets/images/characters/char_monster_disguise.png",
+  ghost_visitor:   "assets/images/characters/char_ghost_visitor.png",
+  plague_visitor:  "assets/images/characters/char_plague_visitor.png",
+  mage_unregistered:"assets/images/characters/char_mage_unregistered.png",
 };
+
+/* IN-GAME CHROMA KEY & DESPILL PIPELINE:
+   마젠타(#FF00FF) 투명화 및 외곽선 핑크 잔여색(Spill) 100% 제거 */
+const chromaCache = new Map();
+
+function applyChromaKey(imgElement, src) {
+  if(!imgElement || !src) return;
+
+  // 이미 투명 PNG이거나 캐싱된 경우 즉시 적용
+  if(src.endsWith(".png")){
+    imgElement.src = src;
+    return;
+  }
+  if(chromaCache.has(src)){
+    imgElement.src = chromaCache.get(src);
+    return;
+  }
+
+  // 1순위: 동명 투명 PNG가 존재하는지 확인하고 즉시 매핑
+  const pngPath = src.replace(/\.jpg$/i, ".png");
+  const testImg = new Image();
+  testImg.onload = () => {
+    chromaCache.set(src, pngPath);
+    imgElement.src = pngPath;
+  };
+  testImg.onerror = () => {
+    // 2순위: 투명 PNG 부재 시 런타임 캔버스 크로마키 + 강력한 디스필(Despill) 수행
+    runChromaKeyWithDespill(imgElement, src);
+  };
+  testImg.src = pngPath;
+}
+
+function runChromaKeyWithDespill(imgElement, src) {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.onload = () => {
+    try {
+      const cvs = document.createElement("canvas");
+      cvs.width = img.naturalWidth || img.width;
+      cvs.height = img.naturalHeight || img.height;
+      const ctx = cvs.getContext("2d");
+      ctx.drawImage(img, 0, 0);
+
+      const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+      const d = imgData.data;
+      const len = d.length;
+
+      for (let i = 0; i < len; i += 4) {
+        let r = d[i], g = d[i+1], b = d[i+2];
+        const dist = Math.sqrt((r - 255)**2 + g**2 + (b - 254)**2);
+        const excess = Math.max(0, Math.min(r, b) - g);
+
+        if (dist < 80 || (excess > 65 && g < 75)) {
+          // 완전 배경 투명화
+          d[i+3] = 0;
+        } else if (dist < 120 || (excess > 40 && g < 90)) {
+          // 경계선 페더링 및 마젠타 디스필(Despill)
+          const factor = Math.min(1.0, Math.max(0.0, (dist - 80) / 40));
+          d[i+3] = Math.floor(d[i+3] * factor);
+          // 초과 마젠타를 깎아내어 핑크 테두리 제거 (어두운 외곽선으로 중화)
+          d[i] = Math.max(0, Math.floor(r - excess * 0.95));
+          d[i+2] = Math.max(0, Math.floor(b - excess * 0.95));
+        } else if (excess > 30) {
+          // 외곽선 안쪽 미세 스필 감쇄
+          d[i] = Math.max(0, Math.floor(r - excess * 0.7));
+          d[i+2] = Math.max(0, Math.floor(b - excess * 0.7));
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+      const transparentDataUrl = cvs.toDataURL("image/png");
+      chromaCache.set(src, transparentDataUrl);
+      imgElement.src = transparentDataUrl;
+    } catch(err) {
+      imgElement.src = src.replace(/\.jpg$/i, ".png");
+    }
+  };
+  img.onerror = () => {
+    imgElement.src = src.replace(/\.jpg$/i, ".png");
+  };
+  img.src = src;
+}
 
 /* IMAGE ASSET MAP — 씬 이미지 */
 // IMAGE SLOT: scene_*.jpg — 야간 이벤트별 배경 이미지
@@ -1650,7 +1731,8 @@ function renderRules(){
   } else {
     $("wantedStatus").textContent="추적 중";
     const wImg=CHAR_SPRITES[wanted.spriteKey]||CHAR_SPRITES["male_tall"];
-    $("wantedPortrait").innerHTML=`<img src="${wImg}" alt="${esc(wanted.name)}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+    $("wantedPortrait").innerHTML=`<img id="wantedImg" alt="${esc(wanted.name)}" style="width:100%;height:100%;object-fit:contain;object-position:bottom center">`;
+    applyChromaKey($("wantedImg"), wImg);
     $("wantedInfo").innerHTML=`
       <b>이름:</b> ${esc(wanted.name)} (${esc(wanted.gender)})<br>
       <b>키:</b> ${wanted.height}cm · ${heightWord(wanted.height)}<br>
@@ -1671,11 +1753,11 @@ function renderCase(){
   // 캐릭터 스프라이트
   const img=v.faceImage||CHAR_SPRITES["male_tall"];
   $("charSprite").className="char-sprite "+(v.bodyCss||"")+(v.specialEffect?" "+v.specialEffect:"");
-  $("charImg").src=img;
+  applyChromaKey($("charImg"), img);
   $("charImg").alt=v.name;
 
   // 방문객 초상화
-  $("visitorPortraitImg").src=img;
+  applyChromaKey($("visitorPortraitImg"), img);
 
   // 말풍선 (성별 아이콘 & 색상 강조)
   const gIcon = v.gender === "여성" ? "♀ " : "♂ ";
@@ -1955,10 +2037,12 @@ function compareSeal(){
 /* 얼굴 대조판 */
 function openFaceLab(){
   const v=s.case;if(!v)return;
-  $("faceVisitorView").innerHTML=`<img src="${v.faceImage}" alt="${esc(v.name)}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+  $("faceVisitorView").innerHTML=`<img id="faceVisImg" alt="${esc(v.name)}" style="width:100%;height:100%;object-fit:contain;object-position:bottom center">`;
+  applyChromaKey($("faceVisImg"), v.faceImage);
   if(wanted.active&&s.day>=2){
     const wImg=CHAR_SPRITES[wanted.spriteKey]||CHAR_SPRITES["male_tall"];
-    $("faceWantedView").innerHTML=`<img src="${wImg}" alt="${esc(wanted.name)}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+    $("faceWantedView").innerHTML=`<img id="faceWanImg" alt="${esc(wanted.name)}" style="width:100%;height:100%;object-fit:contain;object-position:bottom center">`;
+    applyChromaKey($("faceWanImg"), wImg);
     $("faceWantedHint").innerHTML=`<b>${esc(wanted.name)}</b> · ${esc(wanted.hair)} · ${esc(wanted.eye)}빛 눈 · ${esc(wanted.feature)}`;
   } else {
     $("faceWantedView").innerHTML=`<div style="color:#9a8468;display:grid;place-items:center;height:100%;font-size:11px">오늘 수배전단 없음</div>`;
