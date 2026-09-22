@@ -169,7 +169,7 @@ img{display:block}
 /* IMAGE SLOT: checkpoint_bg.jpg — 관문소 배경 */
 .scene{
   position:relative;
-  height:460px;
+  height:530px;
   overflow:hidden;
   background:url('assets/images/checkpoint_bg.jpg') center bottom / cover no-repeat;
   border:2px solid var(--border);
@@ -177,30 +177,42 @@ img{display:block}
 }
 .scene-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.3) 100%);
+  background:linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.25) 100%);
   pointer-events:none;
 }
 /* 대기줄 카운터 */
 .queue-info{
-  position:absolute;top:8px;left:8px;
-  background:rgba(20,14,8,0.85);
+  position:absolute;top:10px;left:10px;
+  background:rgba(20,14,8,0.88);
   border:1px solid var(--border2);
-  padding:4px 10px;
-  font-size:10px;color:#c8b897;
+  padding:5px 12px;
+  font-size:11px;color:#c8b897;
+  z-index:5;
 }
-/* 방문객 영역 */
+/* 방문객 영역 — 심사대 바로 앞 1인칭 현장감 및 캐릭터 위주 구도 */
 .visitor-area{
   position:absolute;
   bottom:0;left:50%;
   transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;
-  min-width:260px;
+  width:100%;
+  max-width:540px;
+  z-index:2;
 }
-/* IMAGE SLOT: 방문객 캐릭터 스프라이트 — char_*.jpg (던전밥풍) */
+/* 심사대 창구 카운터 난간 */
+.counter-rail{
+  position:absolute;bottom:0;left:0;right:0;height:16px;
+  background:linear-gradient(180deg,#3d2c1e,#231810);
+  border-top:3px solid #6b4e28;
+  box-shadow:0 -4px 12px rgba(0,0,0,0.6);
+  z-index:4;
+  pointer-events:none;
+}
+/* IMAGE SLOT: 방문객 캐릭터 스프라이트 — 캐릭터 위주 대형 흉상 */
 .char-sprite{
-  width:240px;height:315px;
+  width:430px;height:490px;
   display:flex;align-items:flex-end;justify-content:center;
-  filter:drop-shadow(0 16px 14px rgba(0,0,0,0.92));
+  filter:drop-shadow(0 18px 18px rgba(0,0,0,0.88));
   transition:transform 0.3s ease;
   position:relative;
   border-radius:0;
@@ -213,10 +225,10 @@ img{display:block}
   object-fit:contain;object-position:bottom center;
   user-select:none;
 }
-.char-sprite.body-tall{height:335px;transform:scale(1.06);transform-origin:bottom center}
-.char-sprite.body-short{height:265px;transform:scale(0.92);transform-origin:bottom center}
-.char-sprite.body-stout{width:275px;transform:scaleX(1.15);transform-origin:bottom center}
-.char-sprite.body-thin{width:205px;transform:scaleX(0.90);transform-origin:bottom center}
+.char-sprite.body-tall{height:525px;transform:scale(1.06);transform-origin:bottom center}
+.char-sprite.body-short{height:440px;transform:scale(0.93);transform-origin:bottom center}
+.char-sprite.body-stout{width:490px;transform:scaleX(1.14);transform-origin:bottom center}
+.char-sprite.body-thin{width:380px;transform:scaleX(0.92);transform-origin:bottom center}
 
 /* 성별 뚜렷한 배지 */
 .badge-male{
@@ -232,17 +244,21 @@ img{display:block}
   font-weight:700 !important;
 }
 
-/* 말풍선 */
+/* 말풍선 — 캐릭터 머리를 가리지 않고 상단에 쾌적하게 플로팅 */
 .speech-bubble{
+  position:absolute;
+  top:12px;left:50%;
+  transform:translateX(-50%);
   background:var(--paper2);
   color:var(--ink);
   border:2px solid #44352a;
-  padding:8px 12px;
+  padding:8px 16px;
   font-size:12px;line-height:1.6;
-  box-shadow:0 4px 12px rgba(0,0,0,0.6);
-  position:relative;
-  max-width:280px;
-  margin-bottom:4px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.7);
+  min-width:280px;
+  max-width:440px;
+  text-align:center;
+  z-index:6;
 }
 .speech-bubble::after{
   content:'';
@@ -894,20 +910,24 @@ img{display:block}
       <div class="scene-overlay"></div>
       <div class="queue-info">대기 <span id="queueCount">7</span>명 · <span id="caseNumber">사건 1/8</span></div>
 
-      <!-- 방문객 -->
+      <!-- 말풍선 — 상단 중앙 플로팅 -->
+      <div class="speech-bubble" id="speechBubble">
+        <div class="speech-speaker" id="speechSpeaker">방문객</div>
+        <div id="speechText">통행증을 제출하겠습니다.</div>
+      </div>
+
+      <!-- 방문객 (대형 상반신 캐릭터 위주) -->
       <div class="visitor-area">
-        <!-- IMAGE SLOT: char_*.jpg — 방문객 캐릭터 스프라이트 -->
-        <div class="speech-bubble" id="speechBubble">
-          <div class="speech-speaker" id="speechSpeaker">방문객</div>
-          <div id="speechText">통행증을 제출하겠습니다.</div>
-        </div>
         <div id="charSprite" class="char-sprite">
-          <img src="assets/images/characters/char_male_tall.jpg" id="charImg" alt="방문객">
+          <img src="assets/images/characters/char_male_tall.png" id="charImg" alt="방문객">
         </div>
       </div>
 
       <!-- 특징 배지 -->
       <div class="trait-badges" id="traitBadges"></div>
+
+      <!-- 심사대 창구 카운터 난간 -->
+      <div class="counter-rail"></div>
     </div>
 
     <!-- 케이스 바 -->
